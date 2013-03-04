@@ -1,8 +1,10 @@
 package com.example.whatsforlunch;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class Database_Manager {
 	
@@ -19,6 +21,41 @@ public class Database_Manager {
 	
 	
 	//TODO: write constructor and methods for this class
+	public void addRow(String rowStringOne, String rowStringTwo)
+	{
+		// this is a key value pair holder used by android's SQLite functions
+		ContentValues values = new ContentValues();
+	 
+		// this is how you add a value to a ContentValues object
+		// we are passing in a key string and a value string each time
+		values.put(TABLE_ROW_ONE, rowStringOne);
+		values.put(TABLE_ROW_TWO, rowStringTwo);
+	 
+		// ask the database object to insert the new data 
+		try
+		{
+			db.insert(TABLE_NAME, null, values);
+		}
+		catch(Exception e)
+		{
+			Log.e("DB ERROR", e.toString()); // prints the error message to the log
+			e.printStackTrace(); // prints the stack trace to the log
+		}
+	}
+	
+	public void deleteRow(long rowID)
+	{
+		// ask the database manager to delete the row of given id
+		try
+		{
+		    db.delete(TABLE_NAME, TABLE_ROW_ID + "=" + rowID, null);
+	    }
+		catch (Exception e)
+		{
+			Log.e("DB ERROR", e.toString());
+			e.printStackTrace();
+		}
+	}
 	
 		//the beginnings our SQLiteOpenHelper class
 	private class CustomSQLiteOpenHelper extends SQLiteOpenHelper{
