@@ -46,11 +46,19 @@
 
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="date"
+        android:text="@string/hello_world" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="0dp"
         android:text="@string/enter_foods_shopping_trip_so_far"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
