@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class Database_Manager {
+public class Database_Manager {//test comment
 	
 	private SQLiteDatabase db; // reference to database manager class
 	private final String DB_NAME = "foods";
