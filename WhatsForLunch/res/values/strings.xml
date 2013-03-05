@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="button_save">Save</string>
+    <string name="empty">Empty</string>
     <string name="app_name">WhatsForLunch</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -19,13 +21,13 @@
     <string name="review_trip_delete">Delete</string>
     <string name="review_trip_confirm">Confirm</string>
     <string name="review_trip_edit">Edit Trip</string>
-    <string name="review_trip_sample_food">Sample food</string>
+    <string name="review_trip_list_title">Shopping List</string>
     <string name="settings_push_notifications">Push Notifications</string>
     <string name="settings_reminder">Days before reminder</string>
     <string name="settings_on_off">On/Off</string>
-    <string name="title_activity_display__shopping__trip">Display_Shopping_Trip</string>
-    <string name="title_activity_create__trip">Create_Trip</string>
     <string name="title_activity_enter__foods">Enter_Foods</string>
     <string name="title_activity_user__settings">User_Settings</string>
+    <string name="enter_foods_add">Add</string>
+    <string name="title_activity_display__trip">Display_Trip</string>
 
 </resources>
