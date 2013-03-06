@@ -25,9 +25,23 @@
     <string name="settings_push_notifications">Push Notifications</string>
     <string name="settings_reminder">Days before reminder</string>
     <string name="settings_on_off">On/Off</string>
+    
+    
     <string name="title_activity_enter__foods">Enter_Foods</string>
     <string name="title_activity_user__settings">User_Settings</string>
     <string name="enter_foods_add">Add</string>
     <string name="title_activity_display__trip">Display_Trip</string>
+    
+    <string name="add_directions">Fill in both fields with text and click the "add" button.</string>
+    <string name="add">add</string>
+    <string name="delete_directions">To delete a row, type the "id" of the row in the field provided and press the "delete" button.</string>
+    <string name="delete">delete</string>
+    <string name="update_directions">To update a row, type the "id" of the row in the first field and type the new information into the next two fields.</string>
+    <string name="retrieve">get</string>
+    <string name="update">update</string>
+    <string name="th_id">ID</string>
+    <string name="th_text_one">Text Field One</string>
+    <string name="th_text_two">Text Field Two</string>
+
 
 </resources>
