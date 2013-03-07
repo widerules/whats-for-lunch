@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="button_save">Save</string>
+    <string name="enter_foods_save_trip">Save shopping trip</string>
     <string name="empty">Empty</string>
     <string name="app_name">WhatsForLunch</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="main_button1">New Shopping Trip</string>
-    <string name="main_button2">Edit Shopping Trip</string>
-    <string name="main_button3">See Whats For Lunch</string>
-    <string name="main_button4">User Settings</string>
-    <string name="main_button5">General Food Tips</string>
+    <string name="main_new_trip">New Shopping Trip</string>
+    <string name="main_edit_trip">Edit Shopping Trip</string>
+    <string name="main_see_whats_for_lunch">See Whats For Lunch</string>
+    <string name="main_user_settings">User Settings</string>
+    <string name="main_general_food_tips">General Food Tips</string>
     <string name="enter_foods_auto_complete">Enter food to add</string>
-    <string name="enter_foods_prompt">Choose category or enter food:</string>
+    <string name="enter_foods_prompt">Enter food:</string>
     <string name="enter_foods_category1">Category1</string>
-    <string name="enter_foods_category2">Category2</string>
-    <string name="enter_foods_shopping_trip_so_far">Shopping trip contents</string>
+    <string name="enter_foods_category2">Category2</string><string name="enter_foods_expiration_date_prompt">Enter expiration date:</string>
+    <string name="enter_foods_shopping_trip_so_far">Trip so far</string>
     <string name="review_trip_name">Trip Name (ex: Walmart 7/20)</string>
     <string name="review_trip_money">$ (Optional)</string>
     <string name="review_trip_delete">Delete</string>
@@ -29,9 +29,17 @@
     
     <string name="title_activity_enter__foods">Enter_Foods</string>
     <string name="title_activity_user__settings">User_Settings</string>
-    <string name="enter_foods_add">Add</string>
+    <string name="enter_foods_add">Add item to trip</string>
     <string name="title_activity_display__trip">Display_Trip</string>
-    
+    <string name="enter_foods_condition_radio">Select food condition</string>
+    <string name="enter_foods_category_prompt">Or pick a category:</string>
+    <string-array name="food_conditions">
+        <item>(optional) Enter food condition</item><item >Ripe</item>
+        <item >Fresh</item>
+        <item >Normal</item>
+        <item >Aged</item>
+    </string-array>
+    <string name="condition_excellent">Excellent</string>
     <string name="add_directions">Fill in both fields with text and click the "add" button.</string>
     <string name="add">add</string>
     <string name="delete_directions">To delete a row, type the "id" of the row in the field provided and press the "delete" button.</string>

@@ -3,24 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/enterFoodsLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:gravity="left|right"
     android:orientation="vertical" >
 
-    <!-- My (Carlos') layout is bad but I needed these buttons -->
-    
-	<!-- Save button for ending trip editting -->
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="250dp"
-        android:text="@string/button_save"
-        android:onClick="launchReview_Trip" />
-	
-    <!-- Enter foods prompt -->
+    <!-- Save button for ending trip editting -->
+    <!-- Enter Foods Prompt -->
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -28,7 +19,7 @@
         android:text="@string/enter_foods_prompt"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <!-- Enter foods text box -->
+    <!-- Enter food text field which supports auto complete -->
 
     <MultiAutoCompleteTextView
         android:id="@+id/multiAutoCompleteTextView1"
@@ -38,60 +29,108 @@
         android:hint="@string/enter_foods_auto_complete"
         tools:ignore="InefficientWeight" />
 
-    <Button
-        android:id="@+id/button_add_food"
-        style="?android:attr/buttonStyleSmall"
+    <!-- Prompt for user to enter expiration date -->
+
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="260dp"
-        android:text="@string/enter_foods_add"
-        android:onClick="addItemToTrip" />
+        android:text="@string/enter_foods_category_prompt"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+        
         <Button
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="25dp"
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_weight="0.50"
             android:text="@string/enter_foods_category1"
             tools:ignore="InefficientWeight" />
 
         <Button
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="25dp"
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_weight="0.50"
             android:text="@string/enter_foods_category2" />
+
     </LinearLayout>
 
-    <!-- TODO: What is this for? -->
     <EditText
         android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="date"
-        android:text="@string/hello_world" />
-
-    <!-- Makes the current trip contents view scrollable -->
-    <ScrollView 
-        android:id="@+id/EnterFoodsTripScroller"
-        android:layout_height="wrap_content"
+        android:hint="@string/enter_foods_expiration_date_prompt"
+        android:inputType="date" />
+	
+    <!--Allows user to select freshness conditons  -->
+	<!-- TODO: add prompt -->
+    <Spinner
+        android:id="@+id/spinner1"
         android:layout_width="match_parent"
-        android:scrollbars="vertical"
-        android:fillViewport="true" >"
-        
-	    <TextView
-	        android:id="@+id/ShopTripContents"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/enter_foods_shopping_trip_so_far"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
-	</ScrollView>
+        android:layout_height="wrap_content"
+        android:entries="@array/food_conditions"
+        android:prompt="@string/hello_world"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="94dp" >
+	<!-- Button to save shopping trip, goes to next screen -->
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:onClick="launchReview_Trip"
+            android:text="@string/enter_foods_save_trip" />
+
+    <!-- Button to add item to trip  -->    
+        <Button
+            android:id="@+id/Button01"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/button3"
+            android:layout_alignParentTop="true"
+            android:onClick="addItemToTrip"
+            android:text="@string/enter_foods_add" />
+
+    </RelativeLayout>
+
+    <!-- Display for current shopping trip items -->
+    <!-- Makes the current trip contents view scrollable -->
+
+    <ScrollView
+        android:id="@+id/EnterFoodsTripScroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="vertical" >
+
+        <TextView
+            android:id="@+id/ShopTripContents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_foods_shopping_trip_so_far"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+       
+    </ScrollView>
+    
+ <!-- Use to draw a line to seperate prompt and trip contents -->  
+ <!-- TODO: fix line so that it stays below trip so far, where are shopping trip items being displayed?  --> 
+ <View
+   		android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+ 
+ 
 </LinearLayout>
