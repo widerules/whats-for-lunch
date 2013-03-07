@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
-    
-    <!-- TODO: Rename buttons when design finalized? -->
-    
+        
     <!-- New Shopping Trip -->
     <Button
         android:id="@+id/enter_food_button1"
@@ -13,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dip"
-        android:text="@string/main_button1"
+        android:layout_marginTop="100dp"
+        android:text="@string/main_new_trip"
         android:onClick="launchEnterFoods" />
     
     <!-- Edit Shopping Trip -->
@@ -24,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/enter_food_button1"
-        android:text="@string/main_button2" />
+        android:text="@string/main_edit_trip" />
     
 	<!-- See What's for Lunch -->
     <Button
@@ -33,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:text="@string/main_button3" />
+        android:text="@string/main_see_whats_for_lunch" />
 
     <!-- User Settings -->
     <Button
@@ -42,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/Button03"
         android:layout_centerHorizontal="true"
-        android:text="@string/main_button4"
+        android:text="@string/main_user_settings"
         android:onClick="launchSettings" />
 
     <!-- General Food Tips -->
@@ -52,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/Button04"
-        android:text="@string/main_button5" />
+        android:text="@string/main_general_food_tips" />
 
 
 </RelativeLayout>
