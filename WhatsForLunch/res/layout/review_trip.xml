@@ -33,7 +33,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/ReviewTripMoneyField"
         android:layout_marginTop="20dp"
-        android:text="@string/review_trip_confirm" />
+        android:text="@string/review_trip_delete" />
     
     <Button
         android:id="@+id/ReviewTripEdit"
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ReviewTripEdit"
         android:layout_alignParentRight="true"
-        android:text="@string/review_trip_delete" />
+        android:text="@string/review_trip_confirm" />
 
     <TextView 
         android:id="@+id/ReviewTripShoppingListTitle"
