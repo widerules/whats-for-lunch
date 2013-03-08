@@ -24,7 +24,6 @@
     <string name="review_trip_list_title">Shopping List</string>
     <string name="settings_push_notifications">Push Notifications</string>
     <string name="settings_reminder">Days Before Reminder</string>
-    <string name="settings_on_off">On/Off</string>
     
     
     <string name="title_activity_enter__foods">Enter_Foods</string>
@@ -53,6 +52,7 @@
     <string name="settings_settings">Settings</string>
     <string name="settings_freshness_percentage_subtraction">Freshness Percentage Subtraction</string>
     <string name="trip_edit_remove">Remove</string>
+    <string name="review_trip_remove">Remove Checked Items</string>
 
 
 </resources>
