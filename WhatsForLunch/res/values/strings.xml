@@ -14,7 +14,8 @@
     <string name="enter_foods_auto_complete">Enter food to add</string>
     <string name="enter_foods_prompt">Enter food:</string>
     <string name="enter_foods_category1">Category1</string>
-    <string name="enter_foods_category2">Category2</string><string name="enter_foods_expiration_date_prompt">Enter expiration date:</string>
+    <string name="enter_foods_category2">Category2</string>
+    <string name="enter_foods_expiration_date_prompt">Enter expiration date:</string>
     <string name="enter_foods_shopping_trip_so_far">Trip so far</string>
     <string name="review_trip_name">Trip Name (ex: Walmart 7/20)</string>
     <string name="review_trip_money">$ (Optional)</string>
@@ -24,20 +25,22 @@
     <string name="review_trip_list_title">Shopping List</string>
     <string name="settings_push_notifications">Push Notifications</string>
     <string name="settings_reminder">Days Before Reminder</string>
-    
-    
+    <string name="settings_on_off">On/Off</string>
     <string name="title_activity_enter__foods">Enter_Foods</string>
     <string name="title_activity_user__settings">User_Settings</string>
     <string name="enter_foods_add">Add item to trip</string>
     <string name="title_activity_display__trip">Display_Trip</string>
     <string name="enter_foods_condition_radio">Select food condition</string>
     <string name="enter_foods_category_prompt">Or pick a category:</string>
+
     <string-array name="food_conditions">
-        <item>(optional) Enter food condition</item><item >Ripe</item>
-        <item >Fresh</item>
-        <item >Normal</item>
-        <item >Aged</item>
+        <item>(optional) Enter food condition</item>
+        <item>Ripe</item>
+        <item>Fresh</item>
+        <item>Normal</item>
+        <item>Aged</item>
     </string-array>
+
     <string name="condition_excellent">Excellent</string>
     <string name="add_directions">Fill in both fields with text and click the "add" button.</string>
     <string name="add">add</string>
@@ -49,10 +52,21 @@
     <string name="th_id">ID</string>
     <string name="th_text_one">Text Field One</string>
     <string name="th_text_two">Text Field Two</string>
+    <string name="title_activity_see_whats_for_lunch">SeeWhatsForLunch</string>
+    <string name="action_settings">Settings</string>
     <string name="settings_settings">Settings</string>
     <string name="settings_freshness_percentage_subtraction">Freshness Percentage Subtraction</string>
     <string name="trip_edit_remove">Remove</string>
+    <string name="all_foods_table_name">Name</string>
+    <string name="all_foods_table_date_purchased">Date Purchased</string>
+    <string name="all_foods_table_date_expired">Date Expired</string>
+    <string name="all_foods_table_categories">Categories</string>
+    <string name="all_foods_table_main_heading">All My Foods</string>
+    <string name="title_activity_whats_for_lunch">WhatsForLunch</string>
+    <string name="whats_for_lunch_given_recipes">My Generated Recipes</string>
+    <string name="whats_for_lunch_my_recipes">My Recipes</string>
+    <string name="whats_for_lunch_get_more_recpies">Get recipes favoring expiring foods</string>
+    <string name="whats_for_lunch_get_user_recipes">Add my recipes</string>
     <string name="review_trip_remove">Remove Checked Items</string>
-
 
 </resources>

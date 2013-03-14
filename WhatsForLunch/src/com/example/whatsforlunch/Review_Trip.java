@@ -13,8 +13,7 @@ public class Review_Trip extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		
-		TextView shopList = (TextView) findViewById(R.id.ReviewTripFoodList);
+		TextView shopList = (TextView) findViewById(R.id.ReviewTripScroller);
 		try{
 			shopList.setText(MainActivity.History.getLastTrip().getItemNamesString());
 		}catch(Exception e){
