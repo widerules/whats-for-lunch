@@ -35,6 +35,14 @@
             android:name="com.example.whatsforlunch.Review_Trip"
             android:label="@string/title_activity_display__trip" >
         </activity>
+        <activity
+            android:name="com.example.whatsforlunch.SeeWhatsForLunch"
+            android:label="@string/title_activity_see_whats_for_lunch" >
+        </activity>
+        <activity
+            android:name="com.example.whatsforlunch.WhatsForLunch"
+            android:label="@string/title_activity_whats_for_lunch" >
+        </activity>
     </application>
 
 </manifest>
