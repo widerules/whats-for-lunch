@@ -143,10 +143,8 @@ public class Database_Activity extends Activity {
 	    		// ask the database manager to add a row given the two strings
 	    		db.addRow
 	    		(
-	    				textFieldOne.getText().toString(),
-	    				textFieldTwo.getText().toString()
+	    				textFieldOne.getText().toString()
 	    		);
-	 
 	    		// request the table be updated
 		    	updateTable();
 	 

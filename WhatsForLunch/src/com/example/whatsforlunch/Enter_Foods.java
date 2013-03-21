@@ -11,7 +11,7 @@ package com.example.whatsforlunch;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.whatsforlunch.Shopping_Trip_History.ShoppingTrip;
+import com.example.whatsforlunch.FoodItem;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,13 +24,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class Enter_Foods extends Activity {
-	public static ShoppingTrip currentTrip = new ShoppingTrip();
+	//Used to build trip currently being created
+	//private static FoodItem currentTrip = new FoodItem();
+	private List<FoodItem> currentTrip = new ArrayList<FoodItem>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//clear out trip each time
-		currentTrip.clear();
 		setContentView(R.layout.enter_foods);
 	}
 
@@ -44,32 +44,47 @@ public class Enter_Foods extends Activity {
 	public void launchReview_Trip(View view){		
 		Intent intent = new Intent(this, Review_Trip.class);
 		
-		MainActivity.History.addTrip(currentTrip);
+		//MainActivity.History.addTrip(currentTrip);
 		startActivity(intent);
 	}
+	
 	public void addItemToTrip(View view){
 		
-		MultiAutoCompleteTextView editText = (MultiAutoCompleteTextView) findViewById(R.id.multiAutoCompleteTextView1);
-		String item = editText.getText().toString();
-		
-		//Current list contents
-		TextView preview = (TextView) findViewById(R.id.ShopTripContents);
+		MultiAutoCompleteTextView editText = 
+				(MultiAutoCompleteTextView) findViewById(R.id.multiAutoCompleteTextView1);
+		String itemName = editText.getText().toString();
 		
 		//TODO: Make sure this only accepts food (toothpaste is not food)
 		//Add entered item to current shopping trip
-		currentTrip.addItem(item);
+		currentTrip.add(new FoodItem(itemName));
 		
 		//Update current trip item list preview
-		preview.setText(currentTrip.getItemNamesString());
-		//Scroll to Bottom
-		TextView txtView = (TextView) findViewById(R.id.ShopTripContents);
-		ScrollView scrollView = (ScrollView) findViewById(R.id.EnterFoodsTripScroller);
-		
-		scrollView.smoothScrollTo(0, txtView.getBottom());
+		addTextToTextView(R.id.ShopTripContents, R.id.EnterFoodsTripScroller, itemName);
 		
 		//Clear item from text field after adding to shopping list
 		editText.setText("");
 		
+	}
+
+	private void addTextToTextView(int textViewId, int scrollViewId, String itemName)
+	{
+	    final TextView txtView = (TextView) findViewById(textViewId);
+        final ScrollView scrollView = (ScrollView) findViewById(scrollViewId);
+	    //append the new text to the bottom of the TextView
+        //move new text to new line if necessary
+        if(txtView.getText().toString().length() > 0){
+        	txtView.append("\n");
+        }
+	    txtView.append(itemName);
+
+	    //scroll to the bottom of the text
+	    scrollView.post(new Runnable()
+	    {
+	        public void run()
+	        {
+	        	scrollView.fullScroll(View.FOCUS_DOWN);
+	        }
+	    });
 	}
 	
 }

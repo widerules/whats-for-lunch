@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class Database_Manager {//test comment
+public class Database_Manager {
 	
 	// the activity or application that is creating an object from this class
 	Context context;
@@ -20,17 +20,18 @@ public class Database_Manager {//test comment
 	
 	//these constants are specific to the DB. change to 
 	// fit WHATS FOR LUNCH
+	//Database Name
 	private final String DB_NAME = "foods";
 	private final int DB_VERSION = 1; // version
 	
-	
-	//column names, change to suit WHATS FOR LUNCH
+	//Table Name
 	private final String TABLE_NAME = "database_table";
+	
+	//Table Column Names, change to suit WHATS FOR LUNCH
 	private final String TABLE_ROW_ID = "id";
-	private final String TABLE_ROW_ONE = "banana";
-	private final String TABLE_ROW_TWO = "spinach";
-	
-	
+	private final long 	 ITEM_DATE = 0;
+	private final String ITEM_NAME = "name";
+	private final String ITEM_CONDITION = "condition";
 	
 	
 	public Database_Manager(Context context){
@@ -46,15 +47,14 @@ public class Database_Manager {//test comment
 	//@param rowStringOne the value for the row's first column
 	//@param rowStringTwo the value for the row's second column 
 	
-	public void addRow(String rowStringOne, String rowStringTwo)
+	public void addRow(String rowStringOne)
 	{
 		// this is a key value pair holder used by android's SQLite functions
 		ContentValues values = new ContentValues();
 	 
 		// this is how you add a value to a ContentValues object
 		// we are passing in a key string and a value string each time
-		values.put(TABLE_ROW_ONE, rowStringOne);
-		values.put(TABLE_ROW_TWO, rowStringTwo);
+		values.put(ITEM_NAME, rowStringOne);
 	 
 		// ask the database object to insert the new data 
 		try
@@ -108,8 +108,7 @@ public class Database_Manager {//test comment
 	{
 		// this is a key value pair holder used by android's SQLite functions
 		ContentValues values = new ContentValues();
-		values.put(TABLE_ROW_ONE, rowStringOne);
-		values.put(TABLE_ROW_TWO, rowStringTwo);
+		values.put(ITEM_NAME, rowStringOne);
 	 
 		// ask the database object to update the database row of given rowID
 		try {db.update(TABLE_NAME, values, TABLE_ROW_ID + "=" + rowID, null);}
@@ -146,7 +145,7 @@ public class Database_Manager {//test comment
 			// ask the database object to create the cursor.
 			cursor = db.query(
 					TABLE_NAME,
-					new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO},
+					new String[]{TABLE_ROW_ID, ITEM_NAME},
 					null, null, null, null, null
 			);
 	 
@@ -210,7 +209,7 @@ public class Database_Manager {//test comment
 			cursor = db.query
 			(
 					TABLE_NAME,
-					new String[] { TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO },
+					new String[] { TABLE_ROW_ID, ITEM_NAME },
 					TABLE_ROW_ID + "=" + rowID,
 					null, null, null, null, null
 			);
@@ -265,8 +264,7 @@ public class Database_Manager {//test comment
 					TABLE_NAME +
 					" (" +
 					TABLE_ROW_ID + " integer primary key autoincrement not null," +
-					TABLE_ROW_ONE + " text," +
-					TABLE_ROW_TWO + " text" +
+					ITEM_NAME + " text," +
 					");";
 			
 			//execute the query string to the database.

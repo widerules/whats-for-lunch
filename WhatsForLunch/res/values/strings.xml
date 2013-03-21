@@ -52,6 +52,7 @@
     <string name="th_id">ID</string>
     <string name="th_text_one">Text Field One</string>
     <string name="th_text_two">Text Field Two</string>
+    <string name="title_activity_trip__edit">Trip_Edit</string>
     <string name="title_activity_see_whats_for_lunch">SeeWhatsForLunch</string>
     <string name="action_settings">Settings</string>
     <string name="settings_settings">Settings</string>

@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/enter_food_button1"
+        android:onClick="launchTripEdit"
         android:text="@string/main_edit_trip" />
     
 	<!-- See What's for Lunch -->

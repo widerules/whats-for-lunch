@@ -7,8 +7,10 @@
 
 package com.example.whatsforlunch;
 
-import com.example.whatsforlunch.R;
-import com.example.whatsforlunch.Shopping_Trip_History;
+
+import com.example.whatsforlunch.FoodItem;
+import com.example.whatsforlunch.FoodItem;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +18,13 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends Activity {
+	/**
+	 * TODO Create database to hold shopping trip history
+	 * Database can be set up to hold individual shopping trips and be able to
+	 * retrieve, search, manipulate... trips
+	 */
 	//Create shell for user's history
-	public static final Shopping_Trip_History History = new Shopping_Trip_History();
+	public static final FoodItem History = new FoodItem();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,26 +39,32 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	//Launches new shopping trip screen
-	//Commented section contains example of way to send an extra message
-	//	to the new activity screen (requires code in other files)
+	public void addTripToHistory(FoodItem trip){}
+	/**
+	 * Launches new shopping trip screen
+	 * @param view
+	 */
 	public void launchEnterFoods(View view){
 		Intent intent = new Intent(this, Enter_Foods.class);
-		//EditText editText = (EditText) findViewById(R.id.edit_message);
-		//String message = editText.getText().toString();
-		//intent.putExtra(EXTRA_MESSAGE, message);
+		startActivity(intent);
+	}
+	/**
+	 * Launches edit trip screen
+	 * @param view
+	 */
+	public void launchTripEdit(View view){
+		Intent intent = new Intent(this, Trip_Edit.class);
+		startActivity(intent);
+	}
+	/**
+	 * Launches user settings option screen
+	 * @param view
+	 */
+	public void launchSettings(View view){
+		Intent intent = new Intent(this, User_Settings.class);
 		startActivity(intent);
 	}
 	
-	//Launches user settings option screen
-	//Commented section contains example of way to send an extra message
-	//	to the new activity screen (requires code in other files)
-	public void launchSettings(View view){
-		Intent intent = new Intent(this, User_Settings.class);
-		//EditText editText = (EditText) findViewById(R.id.edit_message);
-		//String message = editText.getText().toString();
-		//intent.putExtra(EXTRA_MESSAGE, message);
-		startActivity(intent);
-	}
+	
 
 }
