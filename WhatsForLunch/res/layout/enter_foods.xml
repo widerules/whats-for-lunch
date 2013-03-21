@@ -27,7 +27,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/enter_foods_auto_complete"
-        tools:ignore="InefficientWeight" />
+        tools:ignore="InefficientWeight" 
+        android:singleLine="true"
+        android:imeOptions="actionDone"/>
 
     <!-- Prompt for user to enter expiration date -->
 
@@ -69,7 +71,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/enter_foods_expiration_date_prompt"
-        android:inputType="date" />
+        android:inputType="date" 
+        android:singleLine="true"
+        android:imeOptions="actionDone"/>
 	
     <!--Allows user to select freshness conditons  -->
 	<!-- TODO: add prompt -->
@@ -109,28 +113,33 @@
     <!-- Display for current shopping trip items -->
     <!-- Makes the current trip contents view scrollable -->
 
+	<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_foods_shopping_trip_so_far"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<!-- Use to draw a line to seperate prompt and trip contents -->  
+ 	<View
+   		android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+ 	
     <ScrollView
         android:id="@+id/EnterFoodsTripScroller"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:scrollbars="vertical" >
-
+		
         <TextView
-            android:id="@+id/ShopTripContents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/enter_foods_shopping_trip_so_far"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:id="@+id/ShopTripContents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
        
     </ScrollView>
-    
- <!-- Use to draw a line to seperate prompt and trip contents -->  
- <!-- TODO: fix line so that it stays below trip so far, where are shopping trip items being displayed?  --> 
- <View
-   		android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
  
  
 </LinearLayout>
