@@ -25,15 +25,22 @@
         </activity>
         <activity
             android:name="com.example.whatsforlunch.Enter_Foods"
-            android:label="@string/title_activity_enter__foods" >
+            android:label="@string/title_activity_enter__foods"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
             android:name="com.example.whatsforlunch.User_Settings"
-            android:label="@string/title_activity_user__settings" >
+            android:label="@string/title_activity_user__settings"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
             android:name="com.example.whatsforlunch.Review_Trip"
-            android:label="@string/title_activity_display__trip" >
+            android:label="@string/title_activity_display__trip"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.example.whatsforlunch.Trip_Edit"
+            android:label="@string/title_activity_trip__edit" >
         </activity>
         <activity
             android:name="com.example.whatsforlunch.SeeWhatsForLunch"
