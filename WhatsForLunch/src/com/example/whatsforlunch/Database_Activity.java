@@ -143,6 +143,10 @@ public class Database_Activity extends Activity {
 	    		// ask the database manager to add a row given the two strings
 	    		db.addRow
 	    		(
+	    				textFieldOne.getText().toString(),
+	    				textFieldOne.getText().toString(),
+	    				textFieldOne.getText().toString(),
+	    				textFieldOne.getText().toString(),
 	    				textFieldOne.getText().toString()
 	    		);
 	    		// request the table be updated
@@ -229,7 +233,10 @@ public class Database_Activity extends Activity {
 	    		(
 	    			Long.parseLong(updateIDField.getText().toString()),
 	    			updateTextFieldOne.getText().toString(),
-	    			updateTextFieldTwo.getText().toString()
+	    			updateTextFieldTwo.getText().toString(),
+	    			updateTextFieldOne.getText().toString(),
+	    			updateTextFieldTwo.getText().toString(),
+	    			updateTextFieldOne.getText().toString()
 	    		);
 	 
 	    		// request the table be updated
