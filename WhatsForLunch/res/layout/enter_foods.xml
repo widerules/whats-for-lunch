@@ -12,13 +12,6 @@
     <!-- Save button for ending trip editting -->
     <!-- Enter Foods Prompt -->
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_foods_prompt"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <!-- Enter food text field which supports auto complete -->
 
     <MultiAutoCompleteTextView
@@ -33,13 +26,6 @@
 
     <!-- Prompt for user to enter expiration date -->
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_foods_category_prompt"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -51,19 +37,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.50"
-            android:text="@string/enter_foods_category1"
+            android:text="@string/enter_foods_category_prompt"
             tools:ignore="InefficientWeight" />
 
-        <Button
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp"
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.50"
-            android:text="@string/enter_foods_category2" />
-
     </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/enter_foods_expandable_list"
+        android:layout_width="match_parent"
+        android:layout_height="57dp" >
+    </ExpandableListView>
 
     <EditText
         android:id="@+id/editText2"
@@ -112,6 +95,9 @@
 
     <!-- Display for current shopping trip items -->
     <!-- Makes the current trip contents view scrollable -->
+    
+ <!-- Use to draw a line to seperate prompt and trip contents -->  
+ <!-- TODO: fix line so that it stays below trip so far, where are shopping trip items being displayed?  -->
 
 	<TextView
         android:layout_width="wrap_content"
@@ -124,22 +110,39 @@
    		android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
- 	
-    <ScrollView
+
+ <ScrollView
         android:id="@+id/EnterFoodsTripScroller"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:scrollbars="vertical" >
-		
-        <TextView
-        android:id="@+id/ShopTripContents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="false"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-       
+        android:layout_height="55dp"
+        android:text="@string/enter_foods_shopping_trip_so_far"
+        android:textAppearance="?android:attr/textAppearanceLarge" >	
+ 	
+    	<LinearLayout
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content" >
+
+    	    <!-- may want make text selectable sso users can edit trip stuff immediately -->
+            <TextView
+                android:id="@+id/ShopTripContents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:textIsSelectable="true"
+                android:layout_weight=".5"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    	    <!-- may want make text selectable sso users can edit trip stuff immediately -->
+             <TextView
+                android:id="@+id/ShopTripContents2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:textIsSelectable="true"
+                android:layout_weight=".5"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
     </ScrollView>
- 
- 
+
 </LinearLayout>
