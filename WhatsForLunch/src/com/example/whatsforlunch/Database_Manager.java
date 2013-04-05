@@ -61,7 +61,6 @@ public class Database_Manager {//test comment
                 values.put(TABLE_ROW_THREE, tripname);
                 values.put(TABLE_ROW_FOUR, tripdate);
                 values.put(TABLE_ROW_FIVE, expdate);
-         
                 // ask the database object to insert the new data
                 try
                 {
@@ -159,7 +158,7 @@ public class Database_Manager {//test comment
                                         		TABLE_ROW_FOUR, TABLE_ROW_FIVE},
                                         null, null, null, null, null
                         );
-         
+                      
                         // move the cursor's pointer to position zero.
                         cursor.moveToFirst();
          
