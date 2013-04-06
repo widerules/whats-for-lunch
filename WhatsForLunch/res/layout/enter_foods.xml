@@ -15,7 +15,7 @@
     <!-- Enter food text field which supports auto complete -->
 
     <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView1"
+        android:id="@+id/itemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -49,7 +49,7 @@
     </ExpandableListView>
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/expirationDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -61,7 +61,7 @@
     <!--Allows user to select freshness conditons  -->
 	<!-- TODO: add prompt -->
     <Spinner
-        android:id="@+id/spinner1"
+        android:id="@+id/condition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/food_conditions"

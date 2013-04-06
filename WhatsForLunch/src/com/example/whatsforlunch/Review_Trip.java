@@ -1,5 +1,7 @@
 package com.example.whatsforlunch;
 
+import java.util.ArrayList;
+
 import com.example.whatsforlunch.FoodItem;
 
 import android.os.Bundle;
@@ -11,11 +13,17 @@ import android.widget.TextView;
 
 public class Review_Trip extends Activity {
 	
+	private Database_Manager db = new Database_Manager(this);
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		
-		TextView shopList = (TextView) findViewById(R.id.ReviewTripScroller);
+		ArrayList<Object> food = getShoppingTrip();
+		
+		TextView tripItemsArea = (TextView) findViewById(R.id.ReviewTripItems);
+		
+		tripItemsArea.setText(food.get(0).toString() + "\n other food");
+		
 		try{
 			//TODO Needs database to work properly so shopping trips can persist across activities
 			//shopList.setText(trip.getItemNamesString());
@@ -23,7 +31,7 @@ public class Review_Trip extends Activity {
 			Log.e("EMPTY TRIP ERROR", e.toString()); // prints the error message to the log
 			e.printStackTrace(); // prints the stack trace to the log
 		}
-		//Set the text view as the activity layout
+		
 		setContentView(R.layout.review_trip);
 	}
 
@@ -32,6 +40,10 @@ public class Review_Trip extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_review__trip, menu);
 		return true;
+	}
+	
+	private ArrayList<Object> getShoppingTrip(){
+		return db.getRowAsArray(0);
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.example.whatsforlunch;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /****FoodItem**********************************************
@@ -16,14 +18,13 @@ import java.util.List;
 public class FoodItem{
 	
 	private String itemName = "";
-	private String condition;
+	private String condition = "";
 	private String tripName = "";
 	//Date is relative to GMT
 	//Date is adjusted to midnight of the current day
 	//TODO: Might want to look into Java Calendar and Date classes
-	private long now = System.currentTimeMillis();
-	private long tripDate = now - now % 86400000;
-	private long expDate;
+	private String tripDate = Today(); 
+	private String expDate = "";
 
 	public FoodItem(){}
 	public FoodItem(String name){
@@ -39,10 +40,10 @@ public class FoodItem{
 	public void setTripName(String name){
 		this.tripName = name;
 	}
-	public void setPurchaseDate(long date){
+	public void setPurchaseDate(String date){
 		this.tripDate = date;
 	}
-	public void setExpiration(long date){
+	public void setExpiration(String date){
 		this.expDate = date;
 	}
 	public String getItemName(){
@@ -54,11 +55,18 @@ public class FoodItem{
 	public String getTripName(){
 		return tripName;
 	}
-	public long getDatePurchased(){
+	public String getDatePurchased(){
 		return tripDate;
 	}
-	public long getExpiration(){
+	public String getExpiration(){
 		return expDate;
+	}
+	private String Today(){
+		Calendar c = Calendar.getInstance();
+
+		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+		
+		return df.format(c.getTime());
 	}
 	
 }
