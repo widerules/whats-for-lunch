@@ -13,12 +13,16 @@ import java.util.List;
 
 import com.example.whatsforlunch.FoodItem;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -27,27 +31,39 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class Enter_Foods extends Activity {
-	ExpandableListView expListView;
+	
+	private Database_Manager db = new Database_Manager(this);
+	
+	private ExpandableListView expListView;
 	//Used to build trip currently being created
-	//private static FoodItem currentTrip = new FoodItem();
 	private List<FoodItem> currentTrip = new ArrayList<FoodItem>();
 	
 	//These are for the expandable list
 	//groupTitle is main heading group1-3 are children in list
-	ArrayList<String> groupTitle = new ArrayList<String>();
+	private ArrayList<String> groupTitle = new ArrayList<String>();
 
-	ArrayList<String> group1 = new ArrayList<String>();
-	ArrayList<String> group2 = new ArrayList<String>();
-	ArrayList<String> group3 = new ArrayList<String>();
+	private ArrayList<String> group1 = new ArrayList<String>();
+	private ArrayList<String> group2 = new ArrayList<String>();
+	private ArrayList<String> group3 = new ArrayList<String>();
 	
+
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.enter_foods);
+		
+		// Make sure we're running on Honeycomb or higher to use ActionBar APIs
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Show the Up button in the action bar.
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 		
 		//TODO: Make this onClick and not onCreate
 		groupTitle.add("Fruit");
@@ -270,18 +286,72 @@ public class Enter_Foods extends Activity {
 		return true;
 	}
 	
-	public void launchReview_Trip(View view){		
+	public void launchReview_Trip(View view){
 		Intent intent = new Intent(this, Review_Trip.class);
 		
-		//MainActivity.History.addTrip(currentTrip);
+		enterTripToDatabase();
+		
 		startActivity(intent);
+	}
+	
+	private void enterTripToDatabase(){
+		
+		for(FoodItem i : currentTrip){
+			try{
+				db.addRow(
+						i.getItemName(), 
+						i.getCondition(), 
+						"default", 
+						"0", 
+						i.getExpiration());
+			}catch(NullPointerException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void toggleFoodCategoriesVisibility(View view){
+		ExpandableListView expandList = (ExpandableListView) findViewById(R.id.enter_foods_expandable_list);
+		if(expandList.getVisibility() == View.VISIBLE){
+			expandList.setVisibility(View.GONE);
+		}else{
+			expandList.setVisibility(View.VISIBLE);
+		}
+		
+		
 	}
 	
 	public void addItemToTrip(View view){
 		
-		MultiAutoCompleteTextView editText = 
-				(MultiAutoCompleteTextView) findViewById(R.id.multiAutoCompleteTextView1);
-		String itemName = editText.getText().toString();
+		//Get Item Name
+		MultiAutoCompleteTextView name = 
+				(MultiAutoCompleteTextView) findViewById(R.id.itemName);
+		String itemName = name.getText().toString();
+		//Clear item field
+		name.setText("");
+		
+		//Get Expiration Date
+		EditText date = (EditText) findViewById(R.id.expirationDate);
+		String itemDate = date.getText().toString();
+		//Clear date field
+		date.setText("");
+		
+		//Get Condition
+		Spinner condition = (Spinner) findViewById(R.id.condition);
+		String itemCondition = condition.getSelectedItem().toString();
+		
+		FoodItem item = new FoodItem();
+		//Values will default to empty string if not set
+		if(itemName != null){
+			item.setItemName(itemName);
+		}
+		if(itemDate != null){
+			item.setExpiration(itemDate);
+		}
+		if(itemCondition != null){
+			item.setCondition(itemCondition);
+		}
+		currentTrip.add(item);
 		
 		//TODO: Make sure this only accepts food (toothpaste is not food)
 		//Add entered item to current shopping trip
@@ -291,9 +361,8 @@ public class Enter_Foods extends Activity {
 		addTextToTextView(R.id.ShopTripContents, R.id.EnterFoodsTripScroller, itemName);
 		
 		//second window test
-		addTextToTextView(R.id.ShopTripContents2, R.id.EnterFoodsTripScroller, itemName);
-		//Clear item from text field after adding to shopping list
-		editText.setText("");
+		addTextToTextView(R.id.ShopTripContents2, R.id.EnterFoodsTripScroller, itemCondition);
+		
 		
 	}
 
@@ -326,5 +395,22 @@ public class Enter_Foods extends Activity {
 		public class GroupHolder {
 		TextView tvGroup;
 		}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
 }
 
