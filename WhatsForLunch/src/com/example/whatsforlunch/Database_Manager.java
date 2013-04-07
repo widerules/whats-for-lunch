@@ -280,11 +280,11 @@ public class Database_Manager {//test comment
                                         TABLE_NAME +
                                         " (" +
                                         TABLE_ROW_ID + " integer primary key autoincrement not null," +
-                                        TABLE_ROW_ONE + " name," +
-                                        TABLE_ROW_TWO + " condition" +
-                                        TABLE_ROW_THREE + " trip name" +
-                                        TABLE_ROW_FOUR + " trip date" +
-                                        TABLE_ROW_FIVE + " expiration date" +
+                                        TABLE_ROW_ONE + " text," +
+                                        TABLE_ROW_TWO + " text," +
+                                        TABLE_ROW_THREE + " text," +
+                                        TABLE_ROW_FOUR + " text," +
+                                        TABLE_ROW_FIVE + " text" +
                                         ");";
                        
                         //execute the query string to the database.
