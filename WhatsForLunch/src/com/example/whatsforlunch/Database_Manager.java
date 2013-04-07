@@ -303,4 +303,23 @@ public class Database_Manager {//test comment
                 }
                
         }
+
+    	//return cursor to top
+    	public Cursor getCursor(){
+    		Cursor cursor = db.query
+                    (
+                            TABLE_NAME,
+                            new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_FIVE},     
+                            null, null, null, null, null, null
+            );
+    		
+    		cursor.moveToFirst();
+    		return cursor;
+    	}
+
+    	//returns TABLE_ROW_ONE
+    	public String tableOne(){
+    		return TABLE_ROW_ONE;
+    	}
+
 }
