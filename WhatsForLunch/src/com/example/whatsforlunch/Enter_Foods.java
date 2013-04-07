@@ -36,7 +36,7 @@ import android.widget.TextView;
 
 public class Enter_Foods extends Activity {
 	
-	private Database_Manager db = new Database_Manager(this);
+	Database_Manager db;
 	
 	private ExpandableListView expListView;
 	//Used to build trip currently being created
@@ -58,6 +58,8 @@ public class Enter_Foods extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.enter_foods);
+		
+		db = new Database_Manager(this);
 		
 		// Make sure we're running on Honeycomb or higher to use ActionBar APIs
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
