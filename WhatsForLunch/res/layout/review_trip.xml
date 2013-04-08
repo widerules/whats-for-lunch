@@ -66,14 +66,22 @@
         android:layout_below="@+id/ReviewTripShoppingListTitle"
         android:background="@android:color/darker_gray" />
     
+    <!-- TODO decide on final button behavior -->
+    <Button
+        android:id="@+id/ReviewTripRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/review_trip_remove" />
     <!-- Scrollable Shopping List -->
     <!-- TODO: add quantities and expiration dates -->
     <ScrollView 
         android:id="@+id/ReviewTripScroller"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_below="@+id/ReviewTripShoppingListTitle"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/ReviewTripShoppingListTitle"
+        android:layout_above="@id/ReviewTripRemove"
         android:scrollbars="vertical"
         android:fillViewport="true" >
         
@@ -86,15 +94,5 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/review_trip_remove" />
-
-    
 
 </RelativeLayout>

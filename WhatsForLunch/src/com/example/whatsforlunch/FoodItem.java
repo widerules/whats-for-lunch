@@ -1,9 +1,7 @@
 package com.example.whatsforlunch;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /****FoodItem**********************************************
  * Each Item consists of
@@ -17,14 +15,14 @@ import java.util.List;
 	
 public class FoodItem{
 	
-	private String itemName = "";
-	private String condition = "";
-	private String tripName = "";
+	private String itemName;
+	private String condition = "Normal";
+	private String tripName = "default trip name";
 	//Date is relative to GMT
 	//Date is adjusted to midnight of the current day
 	//TODO: Might want to look into Java Calendar and Date classes
-	private String tripDate = Today(); 
-	private String expDate = "";
+	private String tripDate = Today();
+	private String expDate = "unknown exp date";
 
 	public FoodItem(){}
 	public FoodItem(String name){

@@ -1,7 +1,6 @@
 package com.example.whatsforlunch;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
@@ -31,7 +30,7 @@ public class Trip_Edit extends ListActivity {
         myCur = myDb.getCursor();
 
         mListAdapter = new MyAdapter(Trip_Edit.this, myCur);
-        setListAdapter((ListAdapter) mListAdapter);
+        setListAdapter(mListAdapter);
     }
 
 
