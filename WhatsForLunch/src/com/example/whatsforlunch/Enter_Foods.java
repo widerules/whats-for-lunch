@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -297,14 +298,15 @@ public class Enter_Foods extends Activity {
 	}
 	
 	private void enterTripToDatabase(){
+		Log.d("DB Entry", "Entering trip items from Enter Foods");
 		
 		for(FoodItem i : currentTrip){
 			try{
 				db.addRow(
 						i.getItemName(), 
 						i.getCondition(), 
-						"default", 
-						"0", 
+						i.getTripName(), 
+						i.getDatePurchased(), 
 						i.getExpiration());
 			}catch(NullPointerException e){
 				e.printStackTrace();
@@ -333,10 +335,10 @@ public class Enter_Foods extends Activity {
 		name.setText("");
 		
 		//Get Expiration Date
-		EditText date = (EditText) findViewById(R.id.expirationDate);
-		String itemDate = date.getText().toString();
+		//EditText date = (EditText) findViewById(R.id.expirationDate);
+		//String itemDate = date.getText().toString();
 		//Clear date field
-		date.setText("");
+		//date.setText("");
 		
 		//Get Condition
 		Spinner condition = (Spinner) findViewById(R.id.condition);
@@ -347,24 +349,22 @@ public class Enter_Foods extends Activity {
 		if(itemName != null){
 			item.setItemName(itemName);
 		}
-		if(itemDate != null){
-			item.setExpiration(itemDate);
-		}
+		//if(itemDate != null){
+		//	item.setExpiration(itemDate);
+		//}
 		if(itemCondition != null){
 			item.setCondition(itemCondition);
 		}
-		currentTrip.add(item);
-		
 		//TODO: Make sure this only accepts food (toothpaste is not food)
-		//Add entered item to current shopping trip
-		currentTrip.add(new FoodItem(itemName));
+		//"We do not recognize this item. Are you sure this is a food item."
+		//"We do not recognize this item. You may need to enter your own expiration date."
+		currentTrip.add(item); 
 		
 		//Update current trip item list preview
 		addTextToTextView(R.id.ShopTripContents, R.id.EnterFoodsTripScroller, itemName);
 		
 		//second window test
 		addTextToTextView(R.id.ShopTripContents2, R.id.EnterFoodsTripScroller, itemCondition);
-		
 		
 	}
 
@@ -382,7 +382,8 @@ public class Enter_Foods extends Activity {
 	    //scroll to the bottom of the text
 	    scrollView.post(new Runnable()
 	    {
-	        public void run()
+	        @Override
+			public void run()
 	        {
 	        	scrollView.fullScroll(View.FOCUS_DOWN);
 	        }

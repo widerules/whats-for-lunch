@@ -9,8 +9,6 @@ package com.example.whatsforlunch;
 
 
 import com.example.whatsforlunch.FoodItem;
-import com.example.whatsforlunch.FoodItem;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;

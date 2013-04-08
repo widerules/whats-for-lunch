@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -38,7 +37,8 @@ public class Database_Manager {//test comment
        
         public Database_Manager(Context context){
                 this.context = context;
-               
+                
+                Log.d("DB Ref Creation", "Creating database from: " + context);
                 // create or open the database
                 CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(context);
                 this.db = helper.getWritableDatabase();
@@ -279,12 +279,12 @@ public class Database_Manager {//test comment
                         String newTableQueryString = "create table " +
                                         TABLE_NAME +
                                         " (" +
-                                        TABLE_ROW_ID + " integer primary key autoincrement not null," +
-                                        TABLE_ROW_ONE + " text," +
-                                        TABLE_ROW_TWO + " text," +
-                                        TABLE_ROW_THREE + " text," +
-                                        TABLE_ROW_FOUR + " text," +
-                                        TABLE_ROW_FIVE + " text" +
+                                        TABLE_ROW_ID + " integer primary key autoincrement not null, " +
+                                        TABLE_ROW_ONE + " text, " +
+                                        TABLE_ROW_TWO + " text, " +
+                                        TABLE_ROW_THREE + " text, " +
+                                        TABLE_ROW_FOUR + " text, " +
+                                        TABLE_ROW_FIVE + " text " +
                                         ");";
                        
                         //execute the query string to the database.
