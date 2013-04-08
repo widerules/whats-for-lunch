@@ -318,8 +318,12 @@ public class Database_Manager {//test comment
     	}
 
     	//returns TABLE_ROW_ONE
-    	public String tableOne(){
+    	public String getName(){
     		return TABLE_ROW_ONE;
+    	}
+    	
+    	public String getTripName(){
+    		return TABLE_ROW_THREE;
     	}
 
 }

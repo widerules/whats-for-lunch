@@ -9,12 +9,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
-public class Trip_Edit extends ListActivity {
+public class Trip_Select extends ListActivity {
 
     MyAdapter mListAdapter;
     Database_Manager myDb = new Database_Manager(this);
@@ -26,11 +25,11 @@ public class Trip_Edit extends ListActivity {
         Cursor myCur = null;
         
         myDb.addRow("name", "condition", "tripname", "tripdate", "expdate");
-        myDb.addRow("name2", "condition2", "tripname", "tripdate", "expdate2");
+        myDb.addRow("name2", "condition2", "tripname2", "tripdate", "expdate2");
         
         myCur = myDb.getCursor();
 
-        mListAdapter = new MyAdapter(Trip_Edit.this, myCur);
+        mListAdapter = new MyAdapter(Trip_Select.this, myCur);
         setListAdapter((ListAdapter) mListAdapter);
     }
 
@@ -51,10 +50,7 @@ public class Trip_Edit extends ListActivity {
         @Override
         public void bindView(View view, Context context, Cursor cur) {
             TextView tvListText = (TextView)view.findViewById(R.id.list_text);
-            CheckBox cbListCheck = (CheckBox)view.findViewById(R.id.list_checkbox);
-            
-            tvListText.setText(cur.getString(cur.getColumnIndex(myDb.getName())));
-            cbListCheck.setChecked(false);
+            tvListText.setText(cur.getString(cur.getColumnIndex(myDb.getTripName())));
         }
     }
     
