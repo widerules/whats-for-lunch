@@ -335,10 +335,10 @@ public class Enter_Foods extends Activity {
 		name.setText("");
 		
 		//Get Expiration Date
-		//EditText date = (EditText) findViewById(R.id.expirationDate);
-		//String itemDate = date.getText().toString();
+		EditText date = (EditText) findViewById(R.id.expirationDate);
+		String itemDate = date.getText().toString();
 		//Clear date field
-		//date.setText("");
+		date.setText("");
 		
 		//Get Condition
 		Spinner condition = (Spinner) findViewById(R.id.condition);
@@ -349,9 +349,9 @@ public class Enter_Foods extends Activity {
 		if(itemName != null){
 			item.setItemName(itemName);
 		}
-		//if(itemDate != null){
-		//	item.setExpiration(itemDate);
-		//}
+		if(itemDate != null){
+			item.setExpiration(itemDate);
+		}
 		if(itemCondition != null){
 			item.setCondition(itemCondition);
 		}
