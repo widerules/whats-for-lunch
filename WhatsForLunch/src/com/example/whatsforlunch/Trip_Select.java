@@ -31,10 +31,10 @@ public class Trip_Select extends ListActivity {
         myCur.moveToFirst();
         String name = "";
         while(true){
-        	name = myCur.getString(4);
-        	if(!trips.contains(name))
+        	name = myCur.getString(4);//name of trip
+        	if(!trips.contains(name))//check if we already have this trip
         		trips.add(name);
-        	if(myCur.isLast())
+        	if(!myCur.moveToNext())//false when out of bounds
         		break;
         }
         final String[] trip_names = (String[]) trips.toArray();
