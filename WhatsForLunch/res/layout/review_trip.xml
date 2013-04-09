@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:background="@drawable/greenoutfocus3">
+    android:background="@drawable/greentextured">
 
     <EditText
         android:id="@+id/ReviewTripNameField"
@@ -15,7 +15,7 @@
         android:singleLine="true"
         android:imeOptions="actionDone"
         android:hint="@string/review_trip_name"
-        android:textColorHint="#808080" >
+        android:textColorHint="#A9A9A9" >
 
         <requestFocus />
     </EditText>
@@ -30,7 +30,7 @@
         android:imeOptions="actionDone"
         android:hint="@string/review_trip_money"
         android:inputType="numberDecimal" 
-        android:textColorHint="#808080"/>
+        android:textColorHint="#A9A9A9"/>
 
     <Button
         android:id="@+id/ReviewTripConfirm"

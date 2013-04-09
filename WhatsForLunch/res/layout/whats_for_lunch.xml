@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/greenoutfocus3">
+    android:background="@drawable/greentextured">
 
     <!-- Heading for the recipes we give the user -->
     <TextView
