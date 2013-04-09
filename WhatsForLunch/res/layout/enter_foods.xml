@@ -8,7 +8,7 @@
     android:focusableInTouchMode="true"
     android:gravity="left|right"
     android:orientation="vertical" 
-    android:background="@drawable/greenoutfocus3">
+    android:background="@drawable/greentextured">
 
     <!-- Save button for ending trip editting -->
     <!-- Enter Foods Prompt -->
@@ -24,7 +24,7 @@
         tools:ignore="InefficientWeight" 
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:textColorHint="#808080"/>
+        android:textColorHint="#A9A9A9"/>
 
     <!-- Prompt for user to enter expiration date -->
 
@@ -60,7 +60,7 @@
         android:inputType="date"
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:textColorHint="#808080"/>
+        android:textColorHint="#A9A9A9"/>
 	
     <!--Allows user to select freshness conditons  -->
 	<!-- TODO: add prompt -->

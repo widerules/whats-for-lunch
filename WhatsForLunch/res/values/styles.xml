@@ -14,6 +14,7 @@
 
     <!-- Application theme. -->
     <color name="green">#487826</color>
+    <color name="black">#000000</color>
     <style name="WhatsForLunchTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <!--  
@@ -21,7 +22,11 @@
         
         <item name="android:background">@drawable/greenoutfocus</item>
         -->
-        <item name="android:typeface">sans</item>
+       <item name="android:buttonStyle">@style/ButtonTheme</item>
+    </style>
+    <style name="ButtonTheme" parent="android:style/Widget.Button">
+        <item name="android:textColor">@color/black</item>
+        
     </style>
 
 </resources>
