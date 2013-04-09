@@ -7,7 +7,8 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:gravity="left|right"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/greenoutfocus3">
 
     <!-- Save button for ending trip editting -->
     <!-- Enter Foods Prompt -->
@@ -22,7 +23,8 @@
         android:hint="@string/enter_foods_auto_complete"
         tools:ignore="InefficientWeight" 
         android:singleLine="true"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:textColorHint="#808080"/>
 
     <!-- Prompt for user to enter expiration date -->
 
@@ -55,12 +57,14 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/enter_foods_expiration_date_prompt"
-        android:inputType="date" 
+        android:inputType="date"
         android:singleLine="true"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:textColorHint="#808080"/>
 	
     <!--Allows user to select freshness conditons  -->
 	<!-- TODO: add prompt -->
+	<!-- 
     <Spinner
         android:id="@+id/condition"
         android:layout_width="match_parent"
@@ -68,7 +72,7 @@
         android:entries="@array/food_conditions"
         android:prompt="@string/hello_world"
         />
-
+	-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="94dp" >
@@ -101,6 +105,7 @@
  <!-- TODO: fix line so that it stays below trip so far, where are shopping trip items being displayed?  -->
 
 	<TextView
+	    android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enter_foods_shopping_trip_so_far"
@@ -115,7 +120,7 @@
  <ScrollView
         android:id="@+id/EnterFoodsTripScroller"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="wrap_content"
         android:text="@string/enter_foods_shopping_trip_so_far"
         android:textAppearance="?android:attr/textAppearanceLarge" >	
  	

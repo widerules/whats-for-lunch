@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity"
+    android:background="@drawable/greenoutfocus3" >
         
     <!-- New Shopping Trip -->
     <Button
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/enter_food_button1"
-        android:onClick="launchTripEdit"
+        android:onClick="launchTripSelect"
         android:text="@string/main_edit_trip" />
     
 	<!-- See What's for Lunch -->
@@ -32,7 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:text="@string/main_see_whats_for_lunch" />
+        android:text="@string/main_see_whats_for_lunch" 
+        android:onClick="launchSeeLunch"/>
 
     <!-- User Settings -->
     <Button

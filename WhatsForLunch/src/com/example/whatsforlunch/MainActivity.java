@@ -50,8 +50,16 @@ public class MainActivity extends Activity {
 	 * Launches edit trip screen
 	 * @param view
 	 */
-	public void launchTripEdit(View view){
-		Intent intent = new Intent(this, Trip_Edit.class);
+	public void launchTripSelect(View view){
+		//Intent intent = new Intent(this, Trip_Edit.class);
+		//startActivity(intent);
+	}
+	/**
+	 * Launches Whats for Lunch recipes screen
+	 * @param view
+	 */
+	public void launchSeeLunch(View view){
+		Intent intent = new Intent(this, WhatsForLunch.class);
 		startActivity(intent);
 	}
 	/**

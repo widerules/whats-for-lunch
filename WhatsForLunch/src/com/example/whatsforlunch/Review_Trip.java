@@ -3,9 +3,11 @@ package com.example.whatsforlunch;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -13,6 +15,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class Review_Trip extends Activity {
+	
+	//TODO Do NOT let user press back button
+	ArrayList<ArrayList<Object>> food = new ArrayList<ArrayList<Object>>();
+	ArrayList<Integer> tripRows = new ArrayList<Integer>();
+	
+	private final Integer ROWID = 0;
+	private final Integer ITEMNAME = 1;
+	private final Integer ITEMCONDITION = 2;
+	private final Integer TRIPNAME = 3;
+	private final Integer TRIPDATE = 4;
+	private final Integer EXPDATE = 5;
+	private final String  DEFAULTTRIPNAME = "default trip name";
 	
 	private Database_Manager db;
 	@Override
@@ -23,20 +37,19 @@ public class Review_Trip extends Activity {
 		
 		db = new Database_Manager(this);
 		
-		ArrayList<ArrayList<Object>> food = getShoppingTrip();
+		//Get all items in the fridge
+		food = getFridge();
 		
+		//Get items from current trip
 		for(ArrayList<Object> o : food){
-			if(o.get(4) != null && o.get(4).equals(getToday())){
+			//Current trip is not named yet, match to default name
+			if(o.get(TRIPDATE) != null && o.get(TRIPNAME).equals(DEFAULTTRIPNAME)){
+				//Display food on page if entered in current trip
 				addTextToTextView(R.id.ReviewTripItems, R.id.ReviewTripScroller, 
-						o.get(1).toString());
+						o.get(ITEMNAME).toString());
+				//Record all row ID's of current trip
+				tripRows.add( ((Long) o.get(ROWID)).intValue());
 			}
-		}
-		
-		try{
-			
-		}catch(Exception e){
-			Log.e("EMPTY TRIP ERROR", e.toString()); // prints the error message to the log
-			e.printStackTrace(); // prints the stack trace to the log
 		}
 	}
 
@@ -47,7 +60,37 @@ public class Review_Trip extends Activity {
 		return true;
 	}
 	
-	private ArrayList<ArrayList<Object>> getShoppingTrip(){
+	public void launchMainSaveTrip(View view){
+		Intent intent = new Intent(this, MainActivity.class);
+		
+		TextView tripNameField = (TextView) findViewById(R.id.ReviewTripNameField);
+		String tripName = tripNameField.getText().toString();
+		
+		//If user did not define a name for the trip, auto assign a name
+		if(tripName.length() < 1){
+			for(Integer i : tripRows){
+				db.updateRow(i, 
+						(String) food.get(i-1).get(ITEMNAME), 
+						(String) food.get(i-1).get(ITEMCONDITION), 
+						generateTripName(), 					//generate trip name
+						(String) food.get(i-1).get(TRIPDATE), 
+						(String) food.get(i-1).get(EXPDATE));
+			}
+		}else{
+			for(Integer i : tripRows){
+				db.updateRow(i, 
+						(String) food.get(i-1).get(ITEMNAME), 
+						(String) food.get(i-1).get(ITEMCONDITION), 
+						tripName,
+						(String) food.get(i-1).get(TRIPDATE), 
+						(String) food.get(i-1).get(EXPDATE));
+			}
+		}
+		
+		startActivity(intent);
+	}
+	
+	private ArrayList<ArrayList<Object>> getFridge(){
 		return db.getAllRowsAsArrays();
 	}
 	
@@ -75,10 +118,15 @@ public class Review_Trip extends Activity {
 	
 	private String getToday(){
 		Calendar c = Calendar.getInstance();
-
 		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
 		
 		return df.format(c.getTime());
 	}
-
+	
+	private String generateTripName(){
+		Calendar c = Calendar.getInstance();	
+		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+		
+		return df.format(c.getTime());
+	}
 }
