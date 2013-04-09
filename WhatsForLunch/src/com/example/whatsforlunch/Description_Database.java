@@ -12,7 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class Description_Database {
+public class Description_Database extends SQLiteOpenHelper{
+	
 	
 	// the activity or application that is creating an object from this class
     Context context;
@@ -22,23 +23,59 @@ public class Description_Database {
    
     //these constants are specific to the DB. change to
     // fit WHATS FOR LUNCH
-    private final String DB_NAME = "food_description";
-    private final int DB_VERSION = 1; // version
+    private static final String DB_NAME = "food_description";
+    private static final int DB_VERSION = 1; // version
    
    
     //column names, change to suit WHATS FOR LUNCH
-    private final String TABLE_NAME = "food_table";
+    private final String TABLE_NAME = "description_table";
     private final String TABLE_ROW_ID = "id";
     private final String TABLE_ROW_ONE = "food_name";
     private final String TABLE_ROW_TWO = "description";
-    
-    public Description_Database(Context context){
-        this.context = context;
+	
+	
+	
+	  @Override
+      public void onCreate (SQLiteDatabase db){
+             
+              //the SQLite query string that will create our 3 column database table
+              String newTableQueryString = "create table " +
+                              TABLE_NAME +
+                              " (" +
+                              TABLE_ROW_ID + " integer primary key autoincrement not null," +
+                              TABLE_ROW_ONE + " text," +
+                              TABLE_ROW_TWO + " text" +
+                              ");";
+             
+              //execute the query string to the database.
+              db.execSQL(newTableQueryString);
+              
+              //ADD IN DB.EXECSQL commands for each food and their descriptions
+              db.execSQL("INSERT INTO "+ TABLE_NAME +" VALUES(null, 'apple', 'Apples are good!');");
        
-        // create or open the database
-        CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(context);
-        this.db = helper.getWritableDatabase();
-}
+              
+      }
+      public Description_Database(Context context){
+              super(context, DB_NAME, null, DB_VERSION);
+      }
+     
+      @Override
+      public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+      {
+              // NOTHING TO DO HERE. THIS IS THE ORIGINAL DATABASE VERSION.
+              // OTHERWISE, YOU WOULD SPECIFIY HOW TO UPGRADE THE DATABASE
+              // FROM OLDER VERSIONS.
+      }
+	
+	
+    
+//    public Description_Database(Context context){
+//        this.context = context;
+//       
+//        // create or open the database
+//        DescriptionSQLiteOpenHelper helper = new DescriptionSQLiteOpenHelper(context);
+//        this.db = helper.getWritableDatabase();
+//}
 
 //edit method as needed, adds row to a database table
 //the key is automatically assigned by the database
@@ -259,7 +296,8 @@ public ArrayList<Object> getRowAsArray(long rowID)
  * handled by the SQLiteOpenHelper parent class.  The purpose of extending
  * this class is to tell the class how to create (or update) the database.
  */
-private class CustomSQLiteOpenHelper extends SQLiteOpenHelper{
+//Probably don't need this class, remember to delete
+/*private class DescriptionSQLiteOpenHelper extends SQLiteOpenHelper{
 
         @Override
         public void onCreate (SQLiteDatabase db){
@@ -269,14 +307,15 @@ private class CustomSQLiteOpenHelper extends SQLiteOpenHelper{
                                 TABLE_NAME +
                                 " (" +
                                 TABLE_ROW_ID + " integer primary key autoincrement not null," +
-                                TABLE_ROW_ONE + " name," +
-                                TABLE_ROW_TWO + " description" +
+                                TABLE_ROW_ONE + " text," +
+                                TABLE_ROW_TWO + " text" +
                                 ");";
                
                 //execute the query string to the database.
                 db.execSQL(newTableQueryString);
+                
         }
-        public CustomSQLiteOpenHelper (Context context){
+        public DescriptionSQLiteOpenHelper (Context context){
                 super(context, DB_NAME, null, DB_VERSION);
         }
        
@@ -288,6 +327,6 @@ private class CustomSQLiteOpenHelper extends SQLiteOpenHelper{
                 // FROM OLDER VERSIONS.
         }
        
-}
+}*/
 
 }
