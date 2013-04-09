@@ -30,6 +30,7 @@
     <string name="title_activity_user__settings">User_Settings</string>
     <string name="enter_foods_add">Add item to trip</string>
     <string name="title_activity_display__trip">Display_Trip</string>
+    <string name="title_activity_trip_select">Trip_Select</string>
     <string name="enter_foods_condition_radio">Select food condition</string>
     <string name="enter_foods_category_prompt">Or pick a category:</string>
 

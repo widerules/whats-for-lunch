@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@drawable/greenoutfocus3">
 
     <!-- Heading for the recipes we give the user -->
     <TextView
         android:id="@+id/textView1"
+        android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/whats_for_lunch_given_recipes"
@@ -25,6 +27,7 @@
     <!-- Heading for the recipes user wants to input-->
     <TextView
         android:id="@+id/textView2"
+        android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0.25"

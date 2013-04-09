@@ -21,11 +21,12 @@ import android.widget.TextView;
 
 public class Trip_Select extends ListActivity {
 
-    Database_Manager myDb = new Database_Manager(this);
+    Database_Manager myDb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myDb = new Database_Manager(this);
         Cursor myCur = myDb.getCursor();
         ArrayList<String> trips = new ArrayList<String>(0);
         myCur.moveToFirst();

@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class Trip_Edit extends ListActivity {
 
     //MyAdapter mListAdapter;
-    Database_Manager myDb = new Database_Manager(this);
+    Database_Manager myDb;
     ListView listView;
     String[] trip_list;
     Cursor myCur;
@@ -32,6 +32,7 @@ public class Trip_Edit extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
+        myDb = new Database_Manager(this);
         myCur = myDb.getCursor();
         ArrayList<String> items = new ArrayList<String>(0);
         myCur.moveToLast();

@@ -341,8 +341,8 @@ public class Enter_Foods extends Activity {
 		date.setText("");
 		
 		//Get Condition
-		Spinner condition = (Spinner) findViewById(R.id.condition);
-		String itemCondition = condition.getSelectedItem().toString();
+		//Spinner condition = (Spinner) findViewById(R.id.condition);
+		//String itemCondition = condition.getSelectedItem().toString();
 		
 		FoodItem item = new FoodItem();
 		//Values will default to empty string if not set
@@ -352,9 +352,9 @@ public class Enter_Foods extends Activity {
 		if(itemDate != null){
 			item.setExpiration(itemDate);
 		}
-		if(itemCondition != null){
-			item.setCondition(itemCondition);
-		}
+		//if(itemCondition != null){
+		//	item.setCondition(itemCondition);
+		//}
 		//TODO: Make sure this only accepts food (toothpaste is not food)
 		//"We do not recognize this item. Are you sure this is a food item."
 		//"We do not recognize this item. You may need to enter your own expiration date."
@@ -364,7 +364,7 @@ public class Enter_Foods extends Activity {
 		addTextToTextView(R.id.ShopTripContents, R.id.EnterFoodsTripScroller, itemName);
 		
 		//second window test
-		addTextToTextView(R.id.ShopTripContents2, R.id.EnterFoodsTripScroller, itemCondition);
+		addTextToTextView(R.id.ShopTripContents2, R.id.EnterFoodsTripScroller, itemDate);
 		
 	}
 
@@ -374,10 +374,10 @@ public class Enter_Foods extends Activity {
         final ScrollView scrollView = (ScrollView) findViewById(scrollViewId);
 	    //append the new text to the bottom of the TextView
         //move new text to new line if necessary
-        if(txtView.getText().toString().length() > 0){
-        	txtView.append("\n");
-        }
-	    txtView.append(itemName);
+        //if(txtView.getText().toString().length() > 0){
+        //	txtView.append("\n");
+        //}
+	    txtView.append(itemName + "\n");
 
 	    //scroll to the bottom of the text
 	    scrollView.post(new Runnable()
