@@ -98,6 +98,21 @@ public class Database_Manager {//test comment
                         e.printStackTrace();
                 }
         }
+        
+        public void deleteTrip(String tripName)
+        {
+                // ask the database manager to delete the trip 
+                try
+                {
+                	
+                    db.delete(TABLE_NAME, TABLE_ROW_THREE + "=?", new String[] {tripName});
+            }
+                catch (Exception e)
+                {
+                        Log.e("DB ERROR", e.toString());
+                        e.printStackTrace();
+                }
+        }
        
         /**********************************************************************
          * UPDATING A ROW IN THE DATABASE TABLE
