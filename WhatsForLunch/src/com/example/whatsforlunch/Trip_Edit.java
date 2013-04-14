@@ -4,21 +4,12 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ResourceCursorAdapter;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class Trip_Edit extends ListActivity {
 
@@ -32,23 +23,22 @@ public class Trip_Edit extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
+        setContentView(R.layout.trip_edit);
         myDb = new Database_Manager(this);
         myCur = myDb.getCursor();
         ArrayList<String> items = new ArrayList<String>(0);
-        myCur.moveToLast();
-        trip_name = myCur.getString(4);
-        long del = myCur.getLong(1);	//to avoid possible 
-        myDb.deleteRow(del);			//ConcurrentModification 
-        myCur = myDb.getCursor();		//Exception?
+        Bundle b = getIntent().getExtras();
+        trip_name = b.getString("trip name");
         myCur.moveToFirst();
         
         while(true){
-        	if(myCur.getString(4).equals(trip_name))
-        		items.add(myCur.getString(2));
-        	if(myCur.isLast())
+        	if(myCur.getString(2).equals(trip_name))
+        		items.add(myCur.getString(1));
+        	myCur.moveToNext();
+        	if(myCur.isAfterLast())
         		break;
         }
-        trip_list = (String[]) items.toArray();
+        trip_list = items.toArray(new String[items.size()]);
         /*
         mListAdapter = new MyAdapter(Trip_Edit.this, myCur, trip_name);
         setListAdapter(mListAdapter);
@@ -62,7 +52,7 @@ public class Trip_Edit extends ListActivity {
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     }
     
-    public void removeItems(){
+    public void removeItems(View view){
     	 ArrayList<String> ids = new ArrayList<String>();
     	 
     	 //get names of all food to be removed
@@ -76,10 +66,13 @@ public class Trip_Edit extends ListActivity {
     	 
     	 //get rowIDs of all rows to be removed
     	 while(true){
-         	if((myCur.getString(4).equals(trip_name))&&(ids.contains(myCur.getString(2)))){
-         		removes.add(myCur.getLong(1)); //avoiding ConcurrentModification Exception?
-         		ids.remove(myCur.getString(2)); //only needed if we allow duplicates in a single trip
-         	}if(!myCur.moveToNext())
+    		 // TODO: Fix trip name and item name indices
+         	if((myCur.getString(2).equals(trip_name))&&(ids.contains(myCur.getString(1)))){
+         		removes.add(myCur.getLong(0)); //avoiding ConcurrentModification Exception?
+         		ids.remove(myCur.getString(1)); //only needed if we allow duplicates in a single trip
+         	}
+         	myCur.moveToNext();
+         	if(myCur.isAfterLast())
          		break;
          }
     	 
