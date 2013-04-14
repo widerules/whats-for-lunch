@@ -51,10 +51,6 @@
             android:name="com.example.whatsforlunch.WhatsForLunch"
             android:label="@string/title_activity_whats_for_lunch" >
         </activity>
-        <activity
-            android:name="com.example.whatsforlunch.Trip_Select"
-            android:label="@string/title_activity_trip_select" >
-        </activity>
     </application>
 
 </manifest>

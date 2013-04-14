@@ -13,8 +13,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:persistent="true"
-        android:theme="@style/AppTheme"
-        android:name="MyApplication" >
+        android:theme="@style/WhatsForLunchTheme"
+        >
         <activity
             android:name="com.example.whatsforlunch.MainActivity"
             android:label="@string/app_name" >
@@ -50,10 +50,6 @@
         <activity
             android:name="com.example.whatsforlunch.WhatsForLunch"
             android:label="@string/title_activity_whats_for_lunch" >
-        </activity>
-        <activity
-            android:name="com.example.whatsforlunch.Trip_Select"
-            android:label="@string/title_activity_trip_select" >
         </activity>
     </application>
 
