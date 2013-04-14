@@ -32,7 +32,8 @@ public class Trip_Edit extends ListActivity {
         myCur.moveToFirst();
         
         while(true){
-        	if(myCur.getString(2).equals(trip_name))
+        	// TODO: fix index
+        	if(myCur.getString(3).equals(trip_name))
         		items.add(myCur.getString(1));
         	myCur.moveToNext();
         	if(myCur.isAfterLast())
@@ -67,7 +68,7 @@ public class Trip_Edit extends ListActivity {
     	 //get rowIDs of all rows to be removed
     	 while(true){
     		 // TODO: Fix trip name and item name indices
-         	if((myCur.getString(2).equals(trip_name))&&(ids.contains(myCur.getString(1)))){
+         	if((myCur.getString(3).equals(trip_name))&&(ids.contains(myCur.getString(1)))){
          		removes.add(myCur.getLong(0)); //avoiding ConcurrentModification Exception?
          		ids.remove(myCur.getString(1)); //only needed if we allow duplicates in a single trip
          	}

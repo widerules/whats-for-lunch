@@ -4,26 +4,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Recipe {
-	private String title;
+	private String name;
 	private String url;
 	private ArrayList<String> ingredients;
 	
 	public Recipe(){
-		title = null;
+		name = null;
 		url = null;
 		ingredients = null;
 	}
 	
 	public Recipe(String t, String u, String[] list){
-		title = t;
+		name = t;
 		url = u;
 		ingredients = new ArrayList<String>(list.length);
 		for(String i : list)
 			ingredients.add(i);
 	}
 	
-	public void setTitle(String t){
-		title = t;
+	public void setName(String t){
+		name = t;
 	}
 	
 	public void setLink(String u){
@@ -38,6 +38,10 @@ public class Recipe {
 	
 	public void setIngredients(String list){
 		ingredients = (ArrayList<String>) Arrays.asList(list.split("\\s*,\\s*"));
+	}
+	
+	public String getName(){
+		return name;
 	}
 
 }
