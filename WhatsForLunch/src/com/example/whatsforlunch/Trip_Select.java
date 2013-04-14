@@ -26,29 +26,31 @@ public class Trip_Select extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		setContentView(R.layout.trip_select);
+		
         myDb = new Database_Manager(this);
         Cursor myCur = myDb.getCursor();
         ArrayList<String> trips = new ArrayList<String>(0);
         myCur.moveToFirst();
         String name = "";
-        while(true){
-        	name = myCur.getString(4);//name of trip
+        while(!myCur.isAfterLast()){
+        	name = myCur.getString(2);//name of trip
         	if(!trips.contains(name))//check if we already have this trip
         		trips.add(name);
         	if(!myCur.moveToNext())//false when out of bounds
         		break;
         }
-        final String[] trip_names = (String[]) trips.toArray();
+        final String[] trip_names = trips.toArray(new String[trips.size()]);
         /*
         mListAdapter = new MyAdapter(Trip_Select.this, myCur);
         setListAdapter((ListAdapter) mListAdapter);
         */
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, trip_names));
+        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, trip_names));
         
         final ListView listView = getListView();
 
         listView.setItemsCanFocus(false);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         listView.setTextFilterEnabled(true);
         listView.setOnItemClickListener(new OnItemClickListener(){
@@ -56,7 +58,7 @@ public class Trip_Select extends ListActivity {
         	@Override
         	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         	        Intent i = new Intent(Trip_Select.this, Trip_Edit.class);
-        	        myDb.addRow("name", "condition", trip_names[position], "tripdate", "expdate");
+        	        i.putExtra("trip name",trip_names[position]);
         	        startActivity(i);
         	}
 

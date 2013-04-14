@@ -1,5 +1,7 @@
 package com.example.whatsforlunch;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -10,6 +12,9 @@ public class SeeWhatsForLunch extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.all_foods_table);
+		RecipeList rec = new RecipeList();
+		ArrayList<Recipe> rList = rec.getRecipes();
+		
 	}
 
 	@Override
