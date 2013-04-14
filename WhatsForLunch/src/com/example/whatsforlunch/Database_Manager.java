@@ -368,7 +368,7 @@ public class Database_Manager {//test comment
     		Cursor cursor = db.query
                     (
                             TABLE_NAME,
-                            new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_FIVE},     
+                            new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE, TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
                             null, null, null, null, null, null
             );
     		

@@ -33,19 +33,34 @@ public class Trip_Select extends ListActivity {
         ArrayList<String> trips = new ArrayList<String>(0);
         myCur.moveToFirst();
         String name = "";
+        
         while(!myCur.isAfterLast()){
-        	name = myCur.getString(2);//name of trip
+        	name = myCur.getString(3);//name of trip
         	if(!trips.contains(name))//check if we already have this trip
         		trips.add(name);
         	if(!myCur.moveToNext())//false when out of bounds
         		break;
         }
         final String[] trip_names = trips.toArray(new String[trips.size()]);
-        /*
-        mListAdapter = new MyAdapter(Trip_Select.this, myCur);
-        setListAdapter((ListAdapter) mListAdapter);
-        */
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, trip_names));
+        
+        /*  
+         * TEMPORARY
+         * 
+        *
+        RecipeList rec = new RecipeList("strawberry");
+		ArrayList<Recipe> rList = rec.getRecipes();
+		ArrayList<String> rec_strings = new ArrayList<String>(rList.size());
+		for(Recipe r : rList){
+			rec_strings.add(r.getName());
+		}
+		String[] recipes = rec_strings.toArray(new String[rec_strings.size()]);
+		/*  
+		 * TEMPORARY
+		 * 
+		*/
+        
+        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, 
+        		 trip_names /*/recipes*/));
         
         final ListView listView = getListView();
 

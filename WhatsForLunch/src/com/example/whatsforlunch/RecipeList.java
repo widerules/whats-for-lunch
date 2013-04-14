@@ -5,18 +5,26 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.sax.StartElementListener;
+import android.text.format.DateFormat;
 import android.util.Xml;
+import android.webkit.WebView;
 
 public class RecipeList implements Serializable {
 	
@@ -32,6 +40,27 @@ public class RecipeList implements Serializable {
 		ready = false;
 	}
 	
+	//initialize with a String[] of ingredients
+	public RecipeList(String...food){
+		ingredients = new ArrayList<String>(food.length);
+		rList = new ArrayList<Recipe>();
+		for(String i : food)
+			ingredients.add(i);
+		
+		try {
+			url.concat(food[0]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for(int i = 1; i < food.length; i++){
+			url.concat(",");
+			url.concat(food[i]);
+		}
+		getRecipes();
+		ready = true;
+	}
+	/*
 	//initialize with a String[] of ingredients
 	public RecipeList(String[] food){
 		ingredients = new ArrayList<String>(food.length);
@@ -57,7 +86,7 @@ public class RecipeList implements Serializable {
 		}
 		ready = true;
 	}
-	
+	*/
 	//initialize with an ArrayList<String> of ingredients
 	public RecipeList(ArrayList<String> food){
 		ingredients = food;
@@ -74,11 +103,7 @@ public class RecipeList implements Serializable {
 		}
 		
 		rList = new ArrayList<Recipe>();
-		try {
-			puppy();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		getRecipes();
 		ready = true;
 	}
 	
@@ -94,11 +119,7 @@ public class RecipeList implements Serializable {
 		}
 		
 		rList = new ArrayList<Recipe>();
-		try {
-			puppy();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		getRecipes();
 		ready = true;
 	}
 	
@@ -200,7 +221,7 @@ class PuppyHandler extends DefaultHandler {
 		// title
 		recTitle.setEndTextElementListener(new EndTextElementListener() {
 			public void end(String body) {
-				recipe.setTitle(body);
+				recipe.setName(body);
 			}
 		});
 		 
@@ -223,7 +244,7 @@ class PuppyHandler extends DefaultHandler {
 		// title
 		recTitle.setEndTextElementListener(new EndTextElementListener() {
 			public void end(String body) {
-				recipe.setTitle(body);
+				recipe.setName(body);
 			}
 		});
 		
@@ -249,3 +270,4 @@ class PuppyHandler extends DefaultHandler {
 	}
 
 }
+
