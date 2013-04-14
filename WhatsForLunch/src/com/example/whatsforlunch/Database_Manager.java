@@ -89,6 +89,7 @@ public class Database_Manager {//test comment
                 // ask the database manager to delete the row of given id
                 try
                 {
+                	
                     db.delete(TABLE_NAME, TABLE_ROW_ID + "=" + rowID, null);
             }
                 catch (Exception e)
@@ -202,14 +203,12 @@ public class Database_Manager {//test comment
          * @param rowID the id of the row to retrieve
          * @return an array containing the data from the row
          */
-        public ArrayList<Object> getRowAsArray(long rowID)
+        public ArrayList<Object> getRowAsArray_Food_Trip(String name, String trip)
         {
                 // create an array list to store data from the database row.
-                // I would recommend creating a JavaBean compliant object
-                // to store this data instead.  That way you can ensure
-                // data types are correct.
                
-                //CREATE ARRAYLIST OF FOOD OBJECTS?
+               
+                //CREATE ARRAYLIST 
                 ArrayList<Object> rowArray = new ArrayList<Object>();
                 Cursor cursor;
          
@@ -223,7 +222,7 @@ public class Database_Manager {//test comment
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
                                         		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
-                                        TABLE_ROW_ID + "=" + rowID,
+                                        TABLE_ROW_ONE + "=" + name + "AND" + TABLE_ROW_THREE + "=" + trip,
                                         null, null, null, null, null
                         );
          
@@ -246,7 +245,7 @@ public class Database_Manager {//test comment
                                 while (cursor.moveToNext());
                         }
          
-                        // let java know that you are through with the cursor.
+                        // let java know done with with the cursor.
                         cursor.close();
                 }
                 catch (SQLException e)
@@ -257,6 +256,66 @@ public class Database_Manager {//test comment
          
                 // return the ArrayList containing the given row from the database.
                 return rowArray;
+        }
+        
+        public ArrayList<ArrayList<Object>> getRowAsArray_Trip(String trip)
+        {
+                // create an array list to store data from the database row.
+                
+               
+                //CREATE ARRAYLIST
+        	ArrayList<ArrayList<Object>> tripArrays =
+                    new ArrayList<ArrayList<Object>>();
+                Cursor cursor;
+         
+                try
+                {
+                        // this is a database call that creates a "cursor" object.
+                        // the cursor object store the information collected from the
+                        // database and is used to iterate through the data.
+                        cursor = db.query
+                        (
+                                        TABLE_NAME,
+                                        new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
+                                         TABLE_ROW_THREE + "=" + trip,
+                                        null, null, null, null, null
+                        );
+         
+                        // move the pointer to position zero in the cursor.
+                        cursor.moveToFirst();
+         
+                        // if there is data available after the cursor's pointer, add
+                        // it to the ArrayList that will be returned by the method.
+                        if (!cursor.isAfterLast())
+                        {
+                                do
+                                {
+                                	 ArrayList<Object> rowArray = new ArrayList<Object>();
+                                	
+                                        rowArray.add(cursor.getLong(0));
+                                        rowArray.add(cursor.getString(1));
+                                        rowArray.add(cursor.getString(2));
+                                        rowArray.add(cursor.getString(3));
+                                        rowArray.add(cursor.getString(4));
+                                        rowArray.add(cursor.getString(5));
+                                        
+                                        tripArrays.add(rowArray);
+                                }
+                                while (cursor.moveToNext());
+                        }
+         
+                        // let java know that you are through with the cursor.
+                        cursor.close();
+                }
+                catch (SQLException e)
+                {
+                        Log.e("DB ERROR", e.toString());
+                        e.printStackTrace();
+                }
+         
+                // return the ArrayList containing the given row from the database.
+                return tripArrays;
         }
        
        

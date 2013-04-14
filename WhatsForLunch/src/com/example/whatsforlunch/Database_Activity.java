@@ -119,15 +119,15 @@ public class Database_Activity extends Activity {
                         }
                 );
          
-                retrieveButton.setOnClickListener
-                (
-                        new View.OnClickListener()
-                        {
-                                        @Override public void onClick(View v) {retrieveRow();}
-                                }
-                );
-         
-            }
+//                retrieveButton.setOnClickListener
+//                (
+//                        new View.OnClickListener()
+//                        {
+//                                        @Override public void onClick(View v) {retrieveRow();}
+//                                }
+//                );
+//         
+           }
          
          
          
@@ -196,25 +196,25 @@ public class Database_Activity extends Activity {
              * retrieves a row from the database with the id number in the corresponding
              * user entry field
              */
-            private void retrieveRow()
-            {
-                try
-                {
-                        // The ArrayList that holds the row data
-                        ArrayList<Object> row;
-                        // ask the database manager to retrieve the row with the given rowID
-                        row = db.getRowAsArray(Long.parseLong(updateIDField.getText().toString()));
-         
-                        // update the form fields to hold the retrieved data
-                        updateTextFieldOne.setText((String)row.get(1));
-                        updateTextFieldTwo.setText((String)row.get(2));
-                }
-                catch (Exception e)
-                {
-                        Log.e("Retrieve Error", e.toString());
-                        e.printStackTrace();
-                }
-            }
+//            private void retrieveRow()
+//            {
+//                try
+//                {
+//                        // The ArrayList that holds the row data
+//                        ArrayList<Object> row;
+//                        // ask the database manager to retrieve the row with the given rowID
+//                        row = db.getRowAsArray(Long.parseLong(updateIDField.getText().toString()));
+//         
+//                        // update the form fields to hold the retrieved data
+//                        updateTextFieldOne.setText((String)row.get(1));
+//                        updateTextFieldTwo.setText((String)row.get(2));
+//                }
+//                catch (Exception e)
+//                {
+//                        Log.e("Retrieve Error", e.toString());
+//                        e.printStackTrace();
+//                }
+//            }
          
          
          
