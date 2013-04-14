@@ -222,8 +222,8 @@ public class Database_Manager {//test comment
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
                                         		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
-                                        TABLE_ROW_ONE + "=" + name + "AND" + TABLE_ROW_THREE + "=" + trip,
-                                        null, null, null, null, null
+                                        TABLE_ROW_ONE + "=?" + " AND " + TABLE_ROW_THREE + "=?",
+                                        new String[] {name, trip}, null, null, null, null
                         );
          
                         // move the pointer to position zero in the cursor.
@@ -278,8 +278,8 @@ public class Database_Manager {//test comment
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
                                         		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
-                                         TABLE_ROW_THREE + "=" + trip,
-                                        null, null, null, null, null
+                                         TABLE_ROW_THREE + "=?",
+                                        new String[] {trip}, null, null, null, null
                         );
          
                         // move the pointer to position zero in the cursor.

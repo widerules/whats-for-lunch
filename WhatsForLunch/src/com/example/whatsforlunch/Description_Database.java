@@ -231,14 +231,12 @@ public ArrayList<ArrayList<Object>> getAllRowsAsArrays()
  * @param rowID the id of the row to retrieve
  * @return an array containing the data from the row
  */
-public ArrayList<Object> getRowAsArray(long rowID)
+public ArrayList<Object> getRowAsArray_FoodName(String name)
 {
         // create an array list to store data from the database row.
-        // I would recommend creating a JavaBean compliant object
-        // to store this data instead.  That way you can ensure
-        // data types are correct.
        
-        //CREATE ARRAYLIST OF FOOD OBJECTS?
+       
+        //CREATE ARRAYLIST 
         ArrayList<Object> rowArray = new ArrayList<Object>();
         Cursor cursor;
  
@@ -250,9 +248,9 @@ public ArrayList<Object> getRowAsArray(long rowID)
                 cursor = db.query
                 (
                                 TABLE_NAME,
-                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO},     
-                                TABLE_ROW_ID + "=" + rowID,
-                                null, null, null, null, null
+                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,},     
+                                TABLE_ROW_ONE + "=?",
+                                new String[] {name}, null, null, null, null
                 );
  
                 // move the pointer to position zero in the cursor.
@@ -274,7 +272,7 @@ public ArrayList<Object> getRowAsArray(long rowID)
                         while (cursor.moveToNext());
                 }
  
-                // let java know that you are through with the cursor.
+                // let java know done with with the cursor.
                 cursor.close();
         }
         catch (SQLException e)

@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends Activity {
+	
+	Description_Database db;
 	/**
 	 * TODO Create database to hold shopping trip history
 	 * Database can be set up to hold individual shopping trips and be able to
@@ -28,6 +30,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		db = new Description_Database(this);
 	}
 
 	@Override
