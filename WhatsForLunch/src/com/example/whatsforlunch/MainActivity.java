@@ -51,8 +51,8 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void launchTripSelect(View view){
-		//Intent intent = new Intent(this, Trip_Edit.class);
-		//startActivity(intent);
+		Intent intent = new Intent(this, Trip_Select.class);
+		startActivity(intent);
 	}
 	/**
 	 * Launches Whats for Lunch recipes screen
@@ -70,7 +70,5 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, User_Settings.class);
 		startActivity(intent);
 	}
-	
-	
 
 }
