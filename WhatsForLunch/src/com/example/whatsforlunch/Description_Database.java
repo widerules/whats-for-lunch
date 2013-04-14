@@ -32,6 +32,7 @@ public class Description_Database extends SQLiteOpenHelper{
     private final String TABLE_ROW_ID = "id";
     private final String TABLE_ROW_ONE = "food_name";
     private final String TABLE_ROW_TWO = "description";
+    private final String TABLE_ROW_THREE = "expiration";
 	
 	
 	
@@ -44,14 +45,15 @@ public class Description_Database extends SQLiteOpenHelper{
                               " (" +
                               TABLE_ROW_ID + " integer primary key autoincrement not null," +
                               TABLE_ROW_ONE + " text," +
-                              TABLE_ROW_TWO + " text" +
+                              TABLE_ROW_TWO + " text," +
+                              TABLE_ROW_THREE + " text" +
                               ");";
              
               //execute the query string to the database.
               db.execSQL(newTableQueryString);
               
               //ADD IN DB.EXECSQL commands for each food and their descriptions
-              db.execSQL("INSERT INTO "+ TABLE_NAME +" VALUES(null, 'apple', 'Apples are good!');");
+              db.execSQL("INSERT INTO "+ TABLE_NAME +" VALUES(null, 'apple', 'Apples are good!', '5 days');");
        
               
       }
