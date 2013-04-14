@@ -154,13 +154,12 @@ public class RecipeList implements Serializable {
     	String u = url;
     	u.concat("&p=");
     	u.concat(Integer.toString(page));
+    	PuppyHandler pup = new PuppyHandler();
     	try {
-			InputStream is = downloadUrl(u);
-		} catch (Exception e) {
+			rList.addAll(pup.parse(downloadUrl(u)));
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	PuppyHandler pup = new PuppyHandler();
-    	rList.addAll(pup.parse(downloadUrl(u)));
     }
     
     // Given a string representation of a URL, sets up a connection and gets
@@ -236,8 +235,7 @@ class PuppyHandler extends DefaultHandler {
 			}
 		});
 		
-		// here we actually parse the InputStream and return the resulting
-		// recipe list
+		// Parse InputStream and return the resulting recipe list
 		try {
 			Xml.parse(is, Xml.Encoding.UTF_8, root.getContentHandler());
 			return rList;
