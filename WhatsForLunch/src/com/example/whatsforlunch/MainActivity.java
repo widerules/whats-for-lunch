@@ -11,6 +11,9 @@ package com.example.whatsforlunch;
 import com.example.whatsforlunch.FoodItem;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -25,7 +28,7 @@ public class MainActivity extends Activity {
 	 */
 	//Create shell for user's history
 	public static final FoodItem History = new FoodItem();
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,6 +36,8 @@ public class MainActivity extends Activity {
 		db = new Description_Database(this);
 	}
 
+
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -45,6 +50,7 @@ public class MainActivity extends Activity {
 	 * Launches new shopping trip screen
 	 * @param view
 	 */
+	
 	public void launchEnterFoods(View view){
 		Intent intent = new Intent(this, Enter_Foods.class);
 		startActivity(intent);

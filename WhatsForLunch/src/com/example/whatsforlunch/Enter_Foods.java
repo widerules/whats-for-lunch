@@ -17,6 +17,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.database.DataSetObserver;
@@ -26,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -38,6 +42,7 @@ import android.widget.TextView;
 public class Enter_Foods extends Activity {
 	
 	Database_Manager db;
+
 	
 	private ExpandableListView expListView;
 	//Used to build trip currently being created
@@ -50,6 +55,7 @@ public class Enter_Foods extends Activity {
 	private ArrayList<String> group1 = new ArrayList<String>();
 	private ArrayList<String> group2 = new ArrayList<String>();
 	private ArrayList<String> group3 = new ArrayList<String>();
+	private ArrayList<String> group4 = new ArrayList<String>();
 	
 
 	@SuppressLint("NewApi")
@@ -59,6 +65,8 @@ public class Enter_Foods extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.enter_foods);
+		
+		
 		
 		db = new Database_Manager(this);
 		
@@ -72,7 +80,9 @@ public class Enter_Foods extends Activity {
 		groupTitle.add("Fruit");
 		groupTitle.add("Veggies");
 		groupTitle.add("Meat");
-		 
+		groupTitle.add("Snacks");
+		
+		
 		group1.add("Apple");
 		group1.add("Pear");
 		group1.add("Strawberry");
@@ -89,6 +99,12 @@ public class Enter_Foods extends Activity {
 		 
 		group3.add("Steak");
 		group3.add("Chicken");
+		
+		group4.add("Chex Mix");
+		group4.add("Chips");
+		group4.add("Candy Bar");
+		group4.add("Nuts");
+		group4.add("Fruit Snacks");
 		
 		ExpandableListView listView = (ExpandableListView) findViewById(R.id.enter_foods_expandable_list);
 		
@@ -119,6 +135,8 @@ public class Enter_Foods extends Activity {
 				return group2.get(childPosition);
 				case 2:
 				return group3.get(childPosition);
+				case 3:
+				return group4.get(childPosition);
 				default:
 				return null;
 				}
@@ -154,6 +172,8 @@ public class Enter_Foods extends Activity {
 					break;
 					case 2:
 					holder.tvChild.setText(group3.get(childPosition));
+					case 3:
+					holder.tvChild.setText(group4.get(childPosition));
 					break;
 					}
 					return convertView;
@@ -169,6 +189,8 @@ public class Enter_Foods extends Activity {
 				return group2.size();
 				case 2:
 				return group3.size();
+				case 3:
+				return group4.size();
 				default:
 				return 0;
 				}
@@ -266,14 +288,18 @@ public class Enter_Foods extends Activity {
 		expListView = (ExpandableListView) findViewById(R.id.enter_foods_expandable_list);
 		expListView.setAdapter(foodCategoryExpand);
 
-		
+
 		//This is for doing something upon clicking a child
 		expListView.setOnChildClickListener(new OnChildClickListener() {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				// TODO Auto-generated method stub
-				return false;
+				Log.d( "Enter_Foods", "onChildClick: "+childPosition );
+		        CheckBox cb = (CheckBox)v.findViewById( R.id.check1 );
+		        if( cb != null )
+		            cb.toggle();
+		        return false;
+
 			}
 		});
 
@@ -390,6 +416,9 @@ public class Enter_Foods extends Activity {
 	    });
 	}
 
+	
+
+	
 	// Child/Group Helper classes for expandable list view
 	public class ChildHolder {
 		TextView tvChild;

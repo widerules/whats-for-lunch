@@ -10,7 +10,7 @@
     android:orientation="vertical" 
     android:background="@drawable/greentextured">
 
-    <!-- Save button for ending trip editting -->
+    <!-- Save button for ending trip editing -->
     <!-- Enter Foods Prompt -->
 
     <!-- Enter food text field which supports auto complete -->
@@ -73,10 +73,10 @@
         android:prompt="@string/hello_world"
         />
 	-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="94dp" >
-	<!-- Button to save shopping trip, goes to next screen -->
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+        android:layout_height="94dp" >    
+		<!-- Button to save shopping trip, goes to next screen -->
         <Button
             android:id="@+id/button3"
             android:layout_width="200dp"
@@ -118,11 +118,11 @@
         android:background="@android:color/darker_gray"/>
 
  <ScrollView
-        android:id="@+id/EnterFoodsTripScroller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_foods_shopping_trip_so_far"
-        android:textAppearance="?android:attr/textAppearanceLarge" >	
+     android:id="@+id/EnterFoodsTripScroller"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:text="@string/enter_foods_shopping_trip_so_far"
+     android:textAppearance="?android:attr/textAppearanceLarge" >
  	
     	<LinearLayout
     	    android:layout_width="match_parent"
