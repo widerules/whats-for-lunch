@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class Description_Database extends SQLiteOpenHelper{
+public class Description_Database{
 	
 	
 	// the activity or application that is creating an object from this class
@@ -35,7 +35,7 @@ public class Description_Database extends SQLiteOpenHelper{
     private final String TABLE_ROW_THREE = "expiration";
 	
 	
-	
+	private class CustomHelper extends SQLiteOpenHelper{
 	  @Override
       public void onCreate (SQLiteDatabase db){
              
@@ -54,10 +54,12 @@ public class Description_Database extends SQLiteOpenHelper{
               
               //ADD IN DB.EXECSQL commands for each food and their descriptions
               db.execSQL("INSERT INTO "+ TABLE_NAME +" VALUES(null, 'apple', 'Apples are good!', '5 days');");
+              
+             
        
               
       }
-      public Description_Database(Context context){
+      public CustomHelper(Context context){
               super(context, DB_NAME, null, DB_VERSION);
       }
      
@@ -68,16 +70,17 @@ public class Description_Database extends SQLiteOpenHelper{
               // OTHERWISE, YOU WOULD SPECIFIY HOW TO UPGRADE THE DATABASE
               // FROM OLDER VERSIONS.
       }
+	}
 	
 	
     
-//    public Description_Database(Context context){
-//        this.context = context;
-//       
-//        // create or open the database
-//        DescriptionSQLiteOpenHelper helper = new DescriptionSQLiteOpenHelper(context);
-//        this.db = helper.getWritableDatabase();
-//}
+    public Description_Database(Context context){
+       this.context = context;
+       
+       // create or open the database
+        CustomHelper helper = new CustomHelper(context);
+        this.db = helper.getWritableDatabase();
+}
 
 //edit method as needed, adds row to a database table
 //the key is automatically assigned by the database
