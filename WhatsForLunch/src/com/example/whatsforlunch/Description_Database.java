@@ -87,7 +87,7 @@ public class Description_Database{
 //@param rowStringOne the value for the row's first column
 //@param rowStringTwo the value for the row's second column
 
-public void addRow(String name, String description)
+public void addRow(String name, String description, String expiration)
 {
         // this is a key value pair holder used by android's SQLite functions
         ContentValues values = new ContentValues();
@@ -96,6 +96,7 @@ public void addRow(String name, String description)
         // we are passing in a key string and a value string each time
         values.put(TABLE_ROW_ONE, name);
         values.put(TABLE_ROW_TWO, description);
+        values.put(TABLE_ROW_THREE, expiration);
         // ask the database object to insert the new data
         try
         {
@@ -144,12 +145,13 @@ public void deleteRow(long rowID)
  * @param rowStringTwo the new value for the row's second column
  */
 
-public void updateRow(long rowID, String name, String description)
+public void updateRow(long rowID, String name, String description, String expiration)
 {
         // this is a key value pair holder used by android's SQLite functions
         ContentValues values = new ContentValues();
         values.put(TABLE_ROW_ONE, name);
         values.put(TABLE_ROW_TWO, description);
+        values.put(TABLE_ROW_THREE, expiration);
 
  
         // ask the database object to update the database row of given rowID
@@ -187,7 +189,7 @@ public ArrayList<ArrayList<Object>> getAllRowsAsArrays()
                 // ask the database object to create the cursor.
                 cursor = db.query(
                                 TABLE_NAME,
-                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO,},
+                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE},
                                 null, null, null, null, null
                 );
               
@@ -206,8 +208,6 @@ public ArrayList<ArrayList<Object>> getAllRowsAsArrays()
                                 dataList.add(cursor.getString(1));
                                 dataList.add(cursor.getString(2));
                                 dataList.add(cursor.getString(3));
-                                dataList.add(cursor.getString(4));
-                                dataList.add(cursor.getString(5));
                                 dataArrays.add(dataList);
                         }
                         // move the cursor's pointer up one position.
@@ -269,8 +269,6 @@ public ArrayList<Object> getRowAsArray_FoodName(String name)
                                 rowArray.add(cursor.getString(1));
                                 rowArray.add(cursor.getString(2));
                                 rowArray.add(cursor.getString(3));
-                                rowArray.add(cursor.getString(4));
-                                rowArray.add(cursor.getString(5));
                         }
                         while (cursor.moveToNext());
                 }
@@ -288,48 +286,5 @@ public ArrayList<Object> getRowAsArray_FoodName(String name)
         return rowArray;
 }
 
-
-
-
-/**
- * This class is designed to check if there is a database that currently
- * exists for the given program.  If the database does not exist, it creates
- * one.  After the class ensures that the database exists, this class
- * will open the database for use.  Most of this functionality will be
- * handled by the SQLiteOpenHelper parent class.  The purpose of extending
- * this class is to tell the class how to create (or update) the database.
- */
-//Probably don't need this class, remember to delete
-/*private class DescriptionSQLiteOpenHelper extends SQLiteOpenHelper{
-
-        @Override
-        public void onCreate (SQLiteDatabase db){
-               
-                //the SQLite query string that will create our 3 column database table
-                String newTableQueryString = "create table " +
-                                TABLE_NAME +
-                                " (" +
-                                TABLE_ROW_ID + " integer primary key autoincrement not null," +
-                                TABLE_ROW_ONE + " text," +
-                                TABLE_ROW_TWO + " text" +
-                                ");";
-               
-                //execute the query string to the database.
-                db.execSQL(newTableQueryString);
-                
-        }
-        public DescriptionSQLiteOpenHelper (Context context){
-                super(context, DB_NAME, null, DB_VERSION);
-        }
-       
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-        {
-                // NOTHING TO DO HERE. THIS IS THE ORIGINAL DATABASE VERSION.
-                // OTHERWISE, YOU WOULD SPECIFIY HOW TO UPGRADE THE DATABASE
-                // FROM OLDER VERSIONS.
-        }
-       
-}*/
 
 }
