@@ -29,6 +29,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
@@ -42,6 +44,7 @@ import android.widget.TextView;
 public class Enter_Foods extends Activity {
 	
 	Database_Manager db;
+	Description_Database ddb;
 
 	
 	private ExpandableListView expListView;
@@ -61,14 +64,13 @@ public class Enter_Foods extends Activity {
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.enter_foods);
 		
-		
-		
 		db = new Database_Manager(this);
+		ddb = new Description_Database(this);
+		
+		dropdownSetup();
 		
 		// Make sure we're running on Honeycomb or higher to use ActionBar APIs
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -304,8 +306,28 @@ public class Enter_Foods extends Activity {
 		});
 
 	}
-
+	
+	/***********************************************************************
+	 *  dropdownSetup
+	 *  Sets up autocomplete dropdown list of food for text field
+	 */
+	private void dropdownSetup() {
+		ArrayList<String> item_names = new ArrayList<String>();
+		ArrayList<ArrayList<Object>> allInfo = ddb.getAllRowsAsArrays();
+		//Add all item names to list
+		//TODO make function that only retrieves names from database, much more efficient
+		for(ArrayList<Object> o : allInfo){
+			item_names.add((String) o.get(1));
+		}
+		final String[] items = item_names.toArray(new String[item_names.size()]);
 		
+		AutoCompleteTextView nameField = 
+				(AutoCompleteTextView) findViewById(R.id.itemName);
+		ArrayAdapter<String> adapter = 
+				new ArrayAdapter<String>(this, R.layout.enter_foods_dropdown, 
+												R.id.enter_foods_item, items);
+		nameField.setAdapter(adapter);
+	}		
 	
 
 	@Override
