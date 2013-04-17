@@ -15,7 +15,7 @@
 
     <!-- Enter food text field which supports auto complete -->
 
-    <MultiAutoCompleteTextView
+    <AutoCompleteTextView
         android:id="@+id/itemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
