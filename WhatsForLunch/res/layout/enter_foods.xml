@@ -64,7 +64,7 @@
 	
     <!--Allows user to select freshness conditons  -->
 	<!-- TODO: add prompt -->
-	<!-- 
+	
     <Spinner
         android:id="@+id/condition"
         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
         android:entries="@array/food_conditions"
         android:prompt="@string/hello_world"
         />
-	-->
+	
 	<RelativeLayout 
 	    android:layout_width="match_parent"
         android:layout_height="94dp" >    
@@ -131,6 +131,7 @@
     	    <!-- may want make text selectable so users can edit trip stuff immediately -->
             <TextView
                 android:id="@+id/ShopTripContents"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"

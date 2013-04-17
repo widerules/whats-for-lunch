@@ -32,27 +32,31 @@ public class Review_Trip extends Activity {
 	private final String  DEFAULTTRIPNAME = "default trip name";
 	
 	private Database_Manager db;
+	private Description_Database ddb;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		
 		setContentView(R.layout.review_trip);
 		
-		db = new Database_Manager(this);
+		db  = new Database_Manager(this);
+		ddb = new Description_Database(this);
 		
 		//Get all items in the fridge
-		food = getFridge();
+		food = db.getRowAsArray_Trip(DEFAULTTRIPNAME);
 		
 		//Get items from current trip
 		for(ArrayList<Object> o : food){
-			//Current trip is not named yet, match to default name
-			if(o.get(TRIPDATE) != null && o.get(TRIPNAME).equals(DEFAULTTRIPNAME)){
-				//Display food on page if entered in current trip
+				//Display current trip
 				addTextToTextView(R.id.ReviewTripItems, R.id.ReviewTripScroller, 
 						o.get(ITEMNAME).toString());
 				//Record all row ID's of current trip
 				tripRows.add( ((Long) o.get(ROWID)).intValue());
-			}
+		}
+		ArrayList<Object> f = 
+				ddb.getRowAsArray_FoodName("Avocados");
+		if(!f.isEmpty()){
+			addTextToTextView(R.id.ReviewTripItems, R.id.ReviewTripScroller, f.get(ITEMNAME).toString());
 		}
 	}
 
@@ -73,34 +77,34 @@ public class Review_Trip extends Activity {
 		
 		//If user did not define a name for the trip, auto assign a name
 		if(tripName.length() < 1){
-			for(Integer i : tripRows){
-				db.updateRow(i, 
-						(String) food.get(i-1).get(ITEMNAME), 
-						(String) food.get(i-1).get(ITEMCONDITION), 
+			for(ArrayList<Object> o : food){
+				db.updateRow((Long)o.get(ROWID), 
+						(String) o.get(ITEMNAME), 
+						(String) o.get(ITEMCONDITION), 
 						generateTripName(), 					//generate trip name
-						(String) food.get(i-1).get(TRIPDATE), 
-						(String) food.get(i-1).get(EXPDATE));
-				if(food.get(i-1).get(EXPDATE)!=""){
+						(String) o.get(TRIPDATE), 
+						(String) o.get(EXPDATE));
+				if((String) o.get(EXPDATE)!=""){
 					
 //					for testing only***
 					callAlarms(3,0,false);
 					callAlarms(0,0,false);
 //					need to write function that will compare dates and find difference					
 //					callAlarms(food.get(i-1).get(EXPDATE),0,false);
-					Log.d("alarmExpDays", food.get(i-1).get(EXPDATE).toString());
+					Log.d("alarmExpDays", (String) o.get(EXPDATE).toString());
 				}
 			}
 		}else{
-			for(Integer i : tripRows){
-				db.updateRow(i, 
-						(String) food.get(i-1).get(ITEMNAME), 
-						(String) food.get(i-1).get(ITEMCONDITION), 
+			for(ArrayList<Object> o : food){
+				db.updateRow((Long)o.get(ROWID), 
+						(String) o.get(ITEMNAME), 
+						(String) o.get(ITEMCONDITION), 
 						tripName,
-						(String) food.get(i-1).get(TRIPDATE), 
-						(String) food.get(i-1).get(EXPDATE));
-				if(food.get(i-1).get(EXPDATE)!=""){
+						(String) o.get(TRIPDATE), 
+						(String) o.get(EXPDATE));
+				if((String) o.get(EXPDATE)!=""){
 //					callAlarms(food.get(i-1).get(EXPDATE),0,false);
-					Log.d("alarmExpDays", "EXPDATE");
+					Log.d("alarmExpDays", (String) o.get(EXPDATE).toString());
 				}
 			}
 		}
