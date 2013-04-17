@@ -38,7 +38,7 @@ public class Database_Manager {//test comment
         public Database_Manager(Context context){
                 this.context = context;
                 
-                Log.d("DB Ref Creation", "Creating database from: " + context.getClass().toString());
+                Log.d("DB Ref Creation", "Creating database from: " + context);
                 // create or open the database
                 CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(context);
                 this.db = helper.getWritableDatabase();
