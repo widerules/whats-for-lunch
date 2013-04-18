@@ -376,8 +376,8 @@ public class Enter_Foods extends Activity {
 	public void addItemToTrip(View view){
 		
 		//Get Item Name
-		MultiAutoCompleteTextView name = 
-				(MultiAutoCompleteTextView) findViewById(R.id.itemName);
+		AutoCompleteTextView name = 
+				(AutoCompleteTextView) findViewById(R.id.itemName);
 		String itemName = name.getText().toString();
 		//Clear item field
 		name.setText("");
