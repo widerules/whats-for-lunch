@@ -44,7 +44,7 @@
 
     <string name="condition_excellent">Excellent</string>
     <string name="add_directions">Fill in both fields with text and click the "add" button.</string>
-    <string name="add">add</string>
+    <string name="add">Add</string>
     <string name="delete_directions">To delete a row, type the "id" of the row in the field provided and press the "delete" button.</string>
     <string name="delete">delete</string>
     <string name="update_directions">To update a row, type the "id" of the row in the first field and type the new information into the next two fields.</string>
@@ -71,5 +71,7 @@
     <string name="whats_for_lunch_get_user_recipes">Add my recipes</string>
     <string name="review_trip_remove">Remove Checked Items</string>
     <string name="trip_edit_trip_name">Trip Name</string>
+    <string name="enter_foods_redone_add">Add item by entry</string>
+    <string name="enter_foods_redone_date_prompt">Click to Enter Expiration Date</string>
 
 </resources>
