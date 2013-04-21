@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 public class FoodExpAlarm extends BroadcastReceiver {
 		 NotificationManager notificationMan;
+		 
 
     @SuppressWarnings("deprecation")
     @Override

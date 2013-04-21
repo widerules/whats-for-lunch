@@ -23,6 +23,7 @@ public class Review_Trip extends Activity {
 	ArrayList<ArrayList<Object>> food = new ArrayList<ArrayList<Object>>();
 	ArrayList<Integer> tripRows = new ArrayList<Integer>();
 	AlarmManager alarmMan;
+	
 	private final Integer ROWID = 0;
 	private final Integer ITEMNAME = 1;
 	private final Integer ITEMCONDITION = 2;
@@ -33,6 +34,7 @@ public class Review_Trip extends Activity {
 	
 	private Database_Manager db;
 	private Description_Database ddb;
+	private Alert_Database ad;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
@@ -41,7 +43,7 @@ public class Review_Trip extends Activity {
 		
 		db  = new Database_Manager(this);
 		ddb = new Description_Database(this);
-		
+		ad = new Alert_Database(this);
 		//Get all items in the fridge
 		food = db.getRowAsArray_Trip(DEFAULTTRIPNAME);
 		
