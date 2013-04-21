@@ -26,6 +26,7 @@ public class Description_Database extends SQLiteAssetHelper {
     private final String TABLE_ROW_THREE = "pantry";
     private final String TABLE_ROW_FOUR = "fridge";
     private final String TABLE_ROW_FIVE = "freezer";
+    private final String TABLE_ROW_SIX = "category";
     
     public Description_Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
@@ -64,7 +65,8 @@ public class Description_Database extends SQLiteAssetHelper {
                                     			 TABLE_ROW_TWO, 
                                     			 TABLE_ROW_THREE,
                                     			 TABLE_ROW_FOUR,
-                                    			 TABLE_ROW_FIVE},
+                                    			 TABLE_ROW_FIVE,
+                                    			 TABLE_ROW_SIX},
                                     null, null, null, null, null
                     );
                   
@@ -85,6 +87,71 @@ public class Description_Database extends SQLiteAssetHelper {
                                     dataList.add(cursor.getString(3));
                                     dataList.add(cursor.getString(4));
                                     dataList.add(cursor.getString(5));
+                                    dataList.add(cursor.getString(6));
+                                    dataArrays.add(dataList);
+                            }
+                            // move the cursor's pointer up one position.
+                            while (cursor.moveToNext());
+                    }
+            }
+            catch (SQLException e)
+            {
+                    Log.e("DB Error", e.toString());
+                    e.printStackTrace();
+            }
+     
+            // return the ArrayList that holds the data collected from
+            // the database.
+            return dataArrays;
+    }
+    
+    public ArrayList<ArrayList<Object>> getAllFoods_in_Category(String category)
+    {
+            // create an ArrayList that will hold all of the data collected from
+            // the database.
+            //CREATE ARRAYLIST of FOOD OBJECTS?
+            ArrayList<ArrayList<Object>> dataArrays =
+                    new ArrayList<ArrayList<Object>>();
+     
+            // this is a database call that creates a "cursor" object.
+            // the cursor object store the information collected from the
+            // database and is used to iterate through the data.
+            Cursor cursor;
+     
+            try
+            {
+                    // ask the database object to create the cursor.
+                    cursor = db.query(
+                                    TABLE_NAME,
+                                    new String[]{TABLE_ROW_ID, 
+                                    			 TABLE_ROW_ONE, 
+                                    			 TABLE_ROW_TWO, 
+                                    			 TABLE_ROW_THREE,
+                                    			 TABLE_ROW_FOUR,
+                                    			 TABLE_ROW_FIVE,
+                                    			 TABLE_ROW_SIX},
+                                    			 TABLE_ROW_SIX+ " =?", new String[] {category}, 
+                                    null, null, null, null
+                    );
+                  
+                    // move the cursor's pointer to position zero.
+                    cursor.moveToFirst();
+     
+                    // if there is data after the current cursor position, add it
+                    // to the ArrayList.
+                    if (!cursor.isAfterLast())
+                    {
+                            do
+                            {
+                                    ArrayList<Object> dataList = new ArrayList<Object>();
+     
+                                    dataList.add(cursor.getLong(0));
+                                    dataList.add(cursor.getString(1));
+                                    dataList.add(cursor.getString(2));
+                                    dataList.add(cursor.getString(3));
+                                    dataList.add(cursor.getString(4));
+                                    dataList.add(cursor.getString(5));
+                                    dataList.add(cursor.getString(6));
                                     dataArrays.add(dataList);
                             }
                             // move the cursor's pointer up one position.
@@ -133,7 +200,8 @@ public class Description_Database extends SQLiteAssetHelper {
                                     			 TABLE_ROW_TWO, 
                                     			 TABLE_ROW_THREE,
                                     			 TABLE_ROW_FOUR,
-                                    			 TABLE_ROW_FIVE,},     
+                                    			 TABLE_ROW_FIVE,
+                                    			 TABLE_ROW_SIX},     
                                     TABLE_ROW_ONE+ " =?", new String[] {name},
                                     null, null, null, null
                     );
@@ -153,6 +221,7 @@ public class Description_Database extends SQLiteAssetHelper {
                                     rowArray.add(cursor.getString(3));
                                     rowArray.add(cursor.getString(4));
                                     rowArray.add(cursor.getString(5));
+                                    rowArray.add(cursor.getString(6));
                             }
                             while (cursor.moveToNext());
                     }
