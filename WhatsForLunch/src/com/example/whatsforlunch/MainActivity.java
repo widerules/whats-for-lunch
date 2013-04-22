@@ -8,6 +8,10 @@
 package com.example.whatsforlunch;
 
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import com.example.whatsforlunch.FoodItem;
 import android.os.Bundle;
 import android.app.Activity;
@@ -37,6 +41,19 @@ public class MainActivity extends Activity {
 		db = new Description_Database(this);
 		ad = new Alert_Database(this);
 		
+		
+		Calendar alert = Calendar.getInstance();
+		Calendar current = Calendar.getInstance();
+		current.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+		ArrayList<ArrayList<Object>> check = new ArrayList<ArrayList<Object>>(ad.getAllRowsAsArrays());
+		for(ArrayList<Object> c : check){
+			//TODO: Test the date checker
+			//checks if any alarms are in the past before the current date
+			alert.set(Integer.parseInt(check.get(4).toString()), Integer.parseInt(check.get(2).toString()), Integer.parseInt(check.get(3).toString()));
+			if(alert.before(current)){
+				ad.deleteRow(Long.parseLong(c.get(0).toString()));
+			}
+		}
 	}
 
 
