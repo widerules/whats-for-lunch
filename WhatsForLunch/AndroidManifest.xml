@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
 	package="com.example.whatsforlunch"
     android:versionCode="1"
-    android:versionName="1.0" 
-    >
-	
+    android:versionName="1.0" >
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" 
@@ -56,8 +57,11 @@
             android:name="com.example.whatsforlunch.WhatsForLunch"
             android:label="@string/title_activity_whats_for_lunch" >
         </activity>
-        <activity android:name="com.example.whatsforlunch.FirstTab" android:label="First Tab"></activity>
-        <activity android:name="com.example.whatsforlunch.SecondTab"></activity>
+        <activity
+            android:name="com.example.whatsforlunch.Trip_Select"
+            android:label="@string/title_activity_trip_select" >
+        </activity>
+
     </application>
 
 </manifest>
