@@ -27,10 +27,9 @@ public class Alert_Database {
     //column names, change to suit WHATS FOR LUNCH
     private final String TABLE_NAME = "food_table";
     private final String TABLE_ROW_ID = "id";
-    private final String TABLE_ROW_ONE = "itemname";
-    private final String TABLE_ROW_TWO = "month";
-    private final String TABLE_ROW_THREE = "day";
-    private final String TABLE_ROW_FOUR = "year";
+    private final String TABLE_ROW_ONE = "month";
+    private final String TABLE_ROW_TWO = "day";
+    private final String TABLE_ROW_THREE = "year";
     
     public Alert_Database(Context context){
         this.context = context;
@@ -53,10 +52,9 @@ public void addRow(String name, String month, String day, String year)
  
         // this is how you add a value to a ContentValues object
         // we are passing in a key string and a value string each time
-        values.put(TABLE_ROW_ONE, name);
-        values.put(TABLE_ROW_TWO, day);
-        values.put(TABLE_ROW_THREE, month);
-        values.put(TABLE_ROW_FOUR, year);
+        values.put(TABLE_ROW_ONE, day);
+        values.put(TABLE_ROW_TWO, month);
+        values.put(TABLE_ROW_THREE, year);
         // ask the database object to insert the new data
         try
         {
@@ -111,10 +109,9 @@ public void updateRow(long rowID, String name, String month, String day, String 
 {
         // this is a key value pair holder used by android's SQLite functions
         ContentValues values = new ContentValues();
-        values.put(TABLE_ROW_ONE, name);
-        values.put(TABLE_ROW_TWO, month);
-        values.put(TABLE_ROW_THREE, day);
-        values.put(TABLE_ROW_FOUR, year);
+        values.put(TABLE_ROW_ONE, month);
+        values.put(TABLE_ROW_TWO, day);
+        values.put(TABLE_ROW_THREE, year);
  
         // ask the database object to update the database row of given rowID
         try {db.update(TABLE_NAME, values, TABLE_ROW_ID + "=" + rowID, null);}
@@ -151,8 +148,8 @@ public ArrayList<ArrayList<Object>> getAllRowsAsArrays()
                 // ask the database object to create the cursor.
                 cursor = db.query(
                                 TABLE_NAME,
-                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
-                                		TABLE_ROW_FOUR},
+                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO,
+                                		TABLE_ROW_THREE},
                                 null, null, null, null, null
                 );
               
@@ -171,7 +168,6 @@ public ArrayList<ArrayList<Object>> getAllRowsAsArrays()
                                 dataList.add(cursor.getString(1));
                                 dataList.add(cursor.getString(2));
                                 dataList.add(cursor.getString(3));
-                                dataList.add(cursor.getString(4));
                                 dataArrays.add(dataList);
                         }
                         // move the cursor's pointer up one position.
@@ -208,9 +204,9 @@ public ArrayList<ArrayList<Object>> getAllExpiringFoods(String month, String day
                 // ask the database object to create the cursor.
                 cursor = db.query(
                                 TABLE_NAME,
-                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
-                                		TABLE_ROW_FOUR},
-                                TABLE_ROW_TWO + "=?" + " AND " + TABLE_ROW_THREE + "=?" + " AND " + TABLE_ROW_FOUR + "=?", 
+                                new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO,
+                                		TABLE_ROW_THREE},
+                                TABLE_ROW_ONE + "=?" + " AND " + TABLE_ROW_TWO + "=?" + " AND " + TABLE_ROW_THREE + "=?", 
                                 new String[] {month, day, year}, null, null, null, null
                 );
               
@@ -229,7 +225,6 @@ public ArrayList<ArrayList<Object>> getAllExpiringFoods(String month, String day
                                 dataList.add(cursor.getString(1));
                                 dataList.add(cursor.getString(2));
                                 dataList.add(cursor.getString(3));
-                                dataList.add(cursor.getString(4));
                                 dataArrays.add(dataList);
                         }
                         // move the cursor's pointer up one position.
@@ -270,8 +265,7 @@ private class CustomSQLiteOpenHelper extends SQLiteOpenHelper{
                                 TABLE_ROW_ID + " integer primary key autoincrement not null, " +
                                 TABLE_ROW_ONE + " text, " +
                                 TABLE_ROW_TWO + " text, " +
-                                TABLE_ROW_THREE + " text, " +
-                                TABLE_ROW_FOUR + " text, " +
+                                TABLE_ROW_THREE + " text " +
                                 ");";
                
                 //execute the query string to the database.
