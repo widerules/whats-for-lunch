@@ -65,13 +65,16 @@
     <string name="all_foods_table_categories">Categories</string>
     <string name="all_foods_table_main_heading">All My Foods</string>
     <string name="title_activity_whats_for_lunch">WhatsForLunch</string>
-    <string name="whats_for_lunch_given_recipes">My Generated Recipes</string>
+    <string name="whats_for_lunch_given_recipes">Generated Recipes (All Foods)</string>
     <string name="whats_for_lunch_my_recipes">My Recipes</string>
-    <string name="whats_for_lunch_get_more_recpies">Get recipes favoring expiring foods</string>
+    <string name="whats_for_lunch_get_more_recipes">Expiring Foods</string>
     <string name="whats_for_lunch_get_user_recipes">Add my recipes</string>
+    <string name="whats_for_lunch_more">More</string>
     <string name="review_trip_remove">Remove Checked Items</string>
     <string name="trip_edit_trip_name">Trip Name</string>
+    <string name="trip_edit_delete_trip">Delete Trip</string>
     <string name="enter_foods_redone_add">Add item by entry</string>
     <string name="enter_foods_redone_date_prompt">Click to Enter Expiration Date</string>
+    <string name="whats_for_lunch_all_foods">All Foods</string>
 
 </resources>

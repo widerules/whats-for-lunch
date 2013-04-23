@@ -36,12 +36,12 @@ public class Recipe {
 			ingredients.add(i);
 	}
 	
-	public void setIngredients(String list){
-		ingredients = (ArrayList<String>) Arrays.asList(list.split("\\s*,\\s*"));
-	}
-	
 	public String getName(){
 		return name;
+	}
+	
+	public String getLink(){
+		return url;
 	}
 
 }

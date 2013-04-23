@@ -26,19 +26,27 @@ public class Trip_Edit extends ListActivity {
         setContentView(R.layout.trip_edit);
         myDb = new Database_Manager(this);
         myCur = myDb.getCursor();
-        ArrayList<String> items = new ArrayList<String>(0);
+        ArrayList<String> items = new ArrayList<String>();
         Bundle b = getIntent().getExtras();
         trip_name = b.getString("trip name");
         myCur.moveToFirst();
-        
-        while(true){
-        	// TODO: fix index
-        	if(myCur.getString(3).equals(trip_name))
-        		items.add(myCur.getString(1));
-        	myCur.moveToNext();
-        	if(myCur.isAfterLast())
-        		break;
+        if(trip_name.equals("")){
+        	while(true){
+            	items.add(myCur.getString(1));
+            	myCur.moveToNext();
+            	if(myCur.isAfterLast())
+            		break;
+            }
+        }else{
+        	while(true){
+            	if(myCur.getString(3).equals(trip_name))
+            		items.add(myCur.getString(1));
+            	myCur.moveToNext();
+            	if(myCur.isAfterLast())
+            		break;
+            }
         }
+        
         trip_list = items.toArray(new String[items.size()]);
         /*
         mListAdapter = new MyAdapter(Trip_Edit.this, myCur, trip_name);
@@ -62,6 +70,7 @@ public class Trip_Edit extends ListActivity {
     			 ids.add(trip_list[k]);
     		 }
     	 }
+    	 
     	 myCur.moveToFirst();
     	 ArrayList<Long> removes = new ArrayList<Long>();
     	 
@@ -87,6 +96,12 @@ public class Trip_Edit extends ListActivity {
 	      * myDb.addRow("name", "condition", trip_name, "tripdate", "expdate");
 	     */
 	     startActivity(i);
+    }
+    
+    public void deleteTrip(View view){
+    	myDb.deleteTrip(trip_name);
+    	Intent i = new Intent(Trip_Edit.this, Trip_Select.class);
+    	startActivity(i);
     }
 
 /*
