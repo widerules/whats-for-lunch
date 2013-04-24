@@ -20,7 +20,7 @@ public class Alert_Database {
    
     //these constants are specific to the DB. change to
     // fit WHATS FOR LUNCH
-    private final String DB_NAME = "foods";
+    private final String DB_NAME = "alerts";
     private final int DB_VERSION = 1; // version
    
    
