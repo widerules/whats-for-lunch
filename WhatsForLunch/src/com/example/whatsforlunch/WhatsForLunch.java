@@ -190,8 +190,10 @@ public class WhatsForLunch extends ListActivity {
 			rList.clear();
 			if(all_foods)
 				rList.add("\nNo food in the system.\n");
-			else
+			else if(!search_only)
 				rList.add("\nNo expiring foods.\n");
+			else
+				rList.add("\nEnter search terms seperated by spaces.\n");
 			rAd.notifyDataSetChanged();
 		}else{
 			EditText e = (EditText) findViewById(R.id.query);
@@ -231,13 +233,16 @@ public class WhatsForLunch extends ListActivity {
 		foodChange();
 	}
 	
-	public void moreRecipes(View view){
-		rec.getRecipes();
-	}
-	
 	public void search(View view){
 		wfl.clear();
-		rec.getRecipes();
+		EditText e = (EditText) findViewById(R.id.query);
+    	String s = e.getText().toString();
+    	if(!search_only || !s.equals(""))
+    		rec.getRecipes();
+    	else{
+    		wfl.clear();
+    		updateList();
+    	}
 	}
 
 	private void updateList() {
@@ -249,7 +254,15 @@ public class WhatsForLunch extends ListActivity {
 		rList.clear();
 		rList.addAll(rec_strings);
 		if(rList.isEmpty()){
-			rList.add("\nNo recipes found.\nYou may have spelled your ingredients or query in a way we don't recognize.\n");
+			if(rec.getIngredients().isEmpty()){
+				if(all_foods)
+					rList.add("\nNo food in the system.\n");
+				else if(!search_only)
+					rList.add("\nNo expiring foods.\n");
+				else
+					rList.add("\nEnter search terms seperated by spaces.\n");
+			}else
+				rList.add("\nNo recipes found.\nYou may have spelled your ingredients or query in a way we don't recognize.\n");
 		}else{
 			ready = true;
 		}
@@ -316,7 +329,7 @@ public class WhatsForLunch extends ListActivity {
 	    	if(!unused.isEmpty())
 	    		url = url.concat(unused.get(0));
 			
-			for(int i = 1; i < unused.size(); i++){
+			for(int i = 1; i < unused.size() && !unused.isEmpty(); i++){
 				url = url.concat(",");
 				url = url.concat(unused.get(i));
 			}
@@ -334,6 +347,10 @@ public class WhatsForLunch extends ListActivity {
 	    //returns 10 recipes by default
 	    public void getRecipes(){
 	    	//getRecipes(10);
+	    	if(ingredients.isEmpty() && !search_only){
+	    		updateList();
+	    		return;
+	    	}
 	    	try {
 				puppy();
 			} catch (IOException e) {
