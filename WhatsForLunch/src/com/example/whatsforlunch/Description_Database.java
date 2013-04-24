@@ -20,7 +20,7 @@ public class Description_Database extends SQLiteAssetHelper {
 
   //column names, change to suit WHATS FOR LUNCH
     private final String TABLE_NAME = "description_table";
-    private final String TABLE_ROW_ID = "_id";
+    private final String TABLE_ROW_ID = "id";
     private final String TABLE_ROW_ONE = "food_name";
     private final String TABLE_ROW_TWO = "description";
     private final String TABLE_ROW_THREE = "pantry";

@@ -1,312 +1,159 @@
-/**
- * This activity allows the user to enter foods into a new shopping list.
- * The user inputs the item name manually or selects the item from drop down menus.
- * The user is also prompted for the expiration date of the item.
- * Each item is added to a new shopping list which is saved upon pressing the 
- * 		finalize trip button.
- * The current items will be previewed at the bottom of the page.
- */
 package com.example.whatsforlunch;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
-import com.example.whatsforlunch.FoodItem;
+import com.example.whatsforlunch.PromptTripNameDialog.NoticeDialogListener;
 
-import android.os.Build;
-import android.os.Bundle;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
-import android.database.DataSetObserver;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.MultiAutoCompleteTextView;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.Toast;
 
-public class Enter_Foods extends Activity {
-	
+public class Enter_Foods extends FragmentActivity implements OnTabChangeListener, NoticeDialogListener{
+
 	Database_Manager db;
 	Description_Database ddb;
 
-	
-	private ExpandableListView expListView;
 	//Used to build trip currently being created
 	private List<FoodItem> currentTrip = new ArrayList<FoodItem>();
-	
-	//These are for the expandable list
-	//groupTitle is main heading group1-3 are children in list
-	private ArrayList<String> groupTitle = new ArrayList<String>();
 
-	private ArrayList<String> group1 = new ArrayList<String>();
-	private ArrayList<String> group2 = new ArrayList<String>();
-	private ArrayList<String> group3 = new ArrayList<String>();
-	private ArrayList<String> group4 = new ArrayList<String>();
+	private TabHost mTabHost;
+	private HashMap<String, TabInfo> mapTabInfo = new HashMap<String, TabInfo>();
+	private TabInfo mLastTab = null;
 	
+	private class TabInfo {
+		private String tag;
+		private Class clss;
+		private Bundle args;
+		private Fragment fragment;
+		TabInfo(String tag, Class clazz, Bundle args) {
+			this.tag = tag;
+			this.clss = clazz;
+			this.args = args;
+		}
+	}
 
-	@SuppressLint("NewApi")
+	class TabFactory implements TabContentFactory {
+		private final Context mContext;
+		/**
+		 * @param context
+		 */
+		 public TabFactory(Context context) {
+			mContext = context;
+		 }
+		 /** (non-Javadoc)
+		  * @see android.widget.TabHost.TabContentFactory#createTabContent(java.lang.String)
+		  */
+		 public View createTabContent(String tag) {
+			 View v = new View(mContext);
+			 v.setMinimumWidth(0);
+			 v.setMinimumHeight(0);
+			 return v;
+		 }
+	}
+
+	/*************************************************
+	 * onCreate
+	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.enter_foods);
 		
+		//Setup databases
 		db = new Database_Manager(this);
 		ddb = new Description_Database(this);
-		
+
+		//Setup autocomplete dropdown
 		dropdownSetup();
-		
-		// Make sure we're running on Honeycomb or higher to use ActionBar APIs
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-		
-		//TODO: Make this onClick and not onCreate
-		groupTitle.add("Fruit");
-		groupTitle.add("Veggies");
-		groupTitle.add("Meat");
-		groupTitle.add("Snacks");
-		
-		
-		group1.add("Apple");
-		group1.add("Pear");
-		group1.add("Strawberry");
-		group1.add("Grape");
-		group1.add("Orange");
-		group1.add("Pinapple");
-		group1.add("Bananna");
-		 
-		group2.add("Cucumber");
-		group2.add("Carrot");
-		group2.add("Peas");
-		group2.add("Squash");
-		group2.add("Spinach");
-		 
-		group3.add("Steak");
-		group3.add("Chicken");
-		
-		group4.add("Chex Mix");
-		group4.add("Chips");
-		group4.add("Candy Bar");
-		group4.add("Nuts");
-		group4.add("Fruit Snacks");
-		
-		ExpandableListView listView = (ExpandableListView) findViewById(R.id.enter_foods_expandable_list);
-		
-		//This is interface between list and data, use these to get data
-		ExpandableListAdapter foodCategoryExpand = new ExpandableListAdapter() {
 
-//			These are all auto implemented methods
-//			From tutorial...			
-//			onGroupExpanded() – Will be called when One of the group will expand
-//			onGroupCollapsed() – Will be called when One of the group collapse
-//			getGroup() – gives you the current group used
-//			getGroupCount() – You have to define here how many groups you will have
-//			getChildrenCount() – For each Group this method will be called, so you have to define here that how many children current group will have.
-//			getChild() – this method will give you the child in the current group. it will be called for each group.	
-//			
-			@Override
-			public boolean areAllItemsEnabled() {
-				return false;
-			}
+		//Setup datepicker
+		datepickerSetup();
 
-			@Override
-			//return child in the current group
-			public Object getChild(int groupPosition, int childPosition) {
-				switch (groupPosition) {
-				case 0:
-				return group1.get(childPosition);
-				case 1:
-				return group2.get(childPosition);
-				case 2:
-				return group3.get(childPosition);
-				case 3:
-				return group4.get(childPosition);
-				default:
-				return null;
-				}
-			}
-
-			@Override
-			public long getChildId(int arg0, int arg1) {
-				return 0;
-			}
-
-			
-			@Override
-			//Similar to getGroupView except need to account for which group child is in
-			public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-					ChildHolder holder;
-					if (convertView == null) {
-					holder = new ChildHolder();
-					LayoutInflater inflator = LayoutInflater.from(Enter_Foods.this);
-					convertView = inflator.inflate(R.layout.enter_foods_child_helper,null);
-					holder.tvChild = (TextView) convertView.findViewById(R.id.enter_foods_exp_lay_child);
-					convertView.setTag(holder);
-					} else {
-					holder = (ChildHolder) convertView.getTag();
-					}
-					
-					//switch based on which group (main heading) child is in
-					switch (groupPosition) {
-					case 0:
-					holder.tvChild.setText(group1.get(childPosition));
-					break;
-					case 1:
-					holder.tvChild.setText(group2.get(childPosition));
-					break;
-					case 2:
-					holder.tvChild.setText(group3.get(childPosition));
-					case 3:
-					holder.tvChild.setText(group4.get(childPosition));
-					break;
-					}
-					return convertView;
-			}
-
-			@Override
-			//get number of children in current? group
-			public int getChildrenCount(int groupPosition) {
-				switch (groupPosition) {
-				case 0:
-				return group1.size();
-				case 1:
-				return group2.size();
-				case 2:
-				return group3.size();
-				case 3:
-				return group4.size();
-				default:
-				return 0;
-				}
-
-			}
-
-			@Override
-			public long getCombinedChildId(long arg0, long arg1) {
-				return 0;
-			}
-
-			@Override
-			public long getCombinedGroupId(long arg0) {
-				return 0;
-			}
-
-			@Override
-			public Object getGroup(int arg0) {
-				return null;
-			}
-
-			@Override
-			public int getGroupCount() {
-				return groupTitle.size();
-			}
-
-			@Override
-			public long getGroupId(int arg0) {
-				return 0;
-			}
-
-			@Override
-			//create Group (main heading) view
-				public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-					GroupHolder holder;
-					 
-					if (convertView == null) {
-					holder = new GroupHolder();
-					LayoutInflater inflator = LayoutInflater.from(Enter_Foods.this);
-					//inflate xml file and then get view from that file
-					convertView = inflator.inflate(R.layout.enter_foods_group_helper,null);
-					holder.tvGroup = (TextView) convertView.findViewById(R.id.enter_foods_exp_lay_group);
-					convertView.setTag(holder);
-					 
-					} else {
-					holder = (GroupHolder) convertView.getTag();
-					}
-					//this actually gets the text we set in onCreate and sets it to the textView (holder)
-					holder.tvGroup.setText(groupTitle.get(groupPosition));
-					return convertView;
-					
-				
-				
-			}
-
-			@Override
-			public boolean hasStableIds() {
-				return false;
-			}
-
-			@Override
-			public boolean isChildSelectable(int arg0, int arg1) {
-				return false;
-			}
-
-			@Override
-			public boolean isEmpty() {
-				return false;
-			}
-
-			@Override
-			public void onGroupCollapsed(int groupPosition) {
-				
-			}
-
-			@Override
-			public void onGroupExpanded(int groupPosition) {
-				
-			}
-
-			@Override
-			public void registerDataSetObserver(DataSetObserver observer) {
-				
-			}
-
-			@Override
-			public void unregisterDataSetObserver(DataSetObserver observer) {
-				
-			}
-			
-		};
-		
-
-		//Set list adapter, makes it actually display
-		expListView = (ExpandableListView) findViewById(R.id.enter_foods_expandable_list);
-		expListView.setAdapter(foodCategoryExpand);
-
-
-		//This is for doing something upon clicking a child
-		expListView.setOnChildClickListener(new OnChildClickListener() {
-			@Override
-			public boolean onChildClick(ExpandableListView parent, View v,
-					int groupPosition, int childPosition, long id) {
-				Log.d( "Enter_Foods", "onChildClick: "+childPosition );
-		        CheckBox cb = (CheckBox)v.findViewById( R.id.check1 );
-		        if( cb != null )
-		            cb.toggle();
-		        return false;
-
-			}
-		});
-
+		//Setup TabHost
+		initialiseTabHost(savedInstanceState);
+		if (savedInstanceState != null) {
+			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab")); //set the tab as per the saved state
+		}
 	}
-	
+	/**********************************************
+	 * Menu functions
+	 * 
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_enter_foods, menu);
+		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.menu_cancel:
+	        //TODO prompt if they are sure they want to cancel
+	    	cancelTrip();
+	        return true;
+	    case R.id.menu_save:
+	    	showTripNameDialog();
+	        return true;
+	    default:
+	        //return false;
+	    	return super.onOptionsItemSelected(item);
+	    }
+	}
+	private void showTripNameDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        DialogFragment promptTripNameDialog = new PromptTripNameDialog();
+        promptTripNameDialog.show(fm, "enter_tripname_prompt");
+    }
+	// The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogListener interface
+	@Override
+	public void onDialogPositiveClick(String tripname) {
+		// Assign the given trip name to each item
+		setTripName(tripname);
+		saveTrip();
+	}
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		// Generate a default trip name for each item
+		setTripName(generateTripName());
+		saveTrip();
+	}
+	private void setTripName(String name){
+		for(FoodItem i : currentTrip){
+			i.setTripName(name);
+		}
+	}
+
 	/***********************************************************************
 	 *  dropdownSetup
 	 *  Sets up autocomplete dropdown list of food for text field
@@ -320,34 +167,66 @@ public class Enter_Foods extends Activity {
 			item_names.add((String) o.get(1));
 		}
 		final String[] items = item_names.toArray(new String[item_names.size()]);
-		
+
 		AutoCompleteTextView nameField = 
 				(AutoCompleteTextView) findViewById(R.id.itemName);
 		ArrayAdapter<String> adapter = 
 				new ArrayAdapter<String>(this, R.layout.enter_foods_dropdown, 
-												R.id.enter_foods_item, items);
+						R.id.enter_foods_item, items);
 		nameField.setAdapter(adapter);
-	}		
-	
+	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_enter_foods, menu);
-		return true;
+	/********************************************************
+	 * Trip functions
+	 * 
+	 */
+	protected FoodItem[] getTripItems(){
+		return currentTrip.toArray(new FoodItem[currentTrip.size()]);
 	}
 	
-	public void launchReview_Trip(View view){
-		Intent intent = new Intent(this, Review_Trip.class);
+	public void addItemToTrip(View view){
+		//Get Item data
+		//Get Item Name
+		AutoCompleteTextView name = 
+				(AutoCompleteTextView) findViewById(R.id.itemName);
+		String itemName = name.getText().toString();
+		//Clear item field
+		name.setText("");
+		//Get Expiration Date
+		EditText date = (EditText) findViewById(R.id.dateText);
+		String itemDate = date.getText().toString();
+		//Clear date field
+		date.setText("");
 		
-		enterTripToDatabase();
+		//Build item
+		FoodItem item = new FoodItem();
+		//Values will default to empty string if not set
+		if(itemName != null){
+			item.setItemName(itemName);
+		}
+		if(itemDate != null){
+			item.setExpiration(itemDate);
+		}
+		//TODO: Make sure this only accepts food (toothpaste is not food)
+		//"We do not recognize this item. Are you sure this is a food item."
+		//"We do not recognize this item. You may need to enter your own expiration date."
+		currentTrip.add(item);
 		
-		startActivity(intent);
+		//Update the fragment listview if the current trip tab is open
+		//Otherwise, catch the casting error and do nothing.
+		//The list will be updated on the next tab switch
+		try{
+		EF_CurTrip_Frag fragList = 
+				(EF_CurTrip_Frag) getSupportFragmentManager()
+					.findFragmentById(R.id.realtabcontent);
+		fragList.updateList();
+		}catch(Exception e){
+			//current_trip fragment is not open
+		}	
 	}
-	
 	private void enterTripToDatabase(){
 		Log.d("DB Entry", "Entering trip items from Enter Foods");
-		
+
 		for(FoodItem i : currentTrip){
 			try{
 				db.addRow(
@@ -361,110 +240,151 @@ public class Enter_Foods extends Activity {
 			}
 		}
 	}
-	
-	public void toggleFoodCategoriesVisibility(View view){
-		ExpandableListView expandList = (ExpandableListView) findViewById(R.id.enter_foods_expandable_list);
-		if(expandList.getVisibility() == View.VISIBLE){
-			expandList.setVisibility(View.GONE);
-		}else{
-			expandList.setVisibility(View.VISIBLE);
-		}
-		
-		
+	public void cancelTrip(){
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
-	
-	public void addItemToTrip(View view){
+	public void saveTrip(){
+		Intent intent = new Intent(this, MainActivity.class);
+		enterTripToDatabase();
+		startActivity(intent);
+	}
+	private String generateTripName(){
+		Calendar c = Calendar.getInstance();	
+		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
 		
-		//Get Item Name
-		AutoCompleteTextView name = 
-				(AutoCompleteTextView) findViewById(R.id.itemName);
-		String itemName = name.getText().toString();
-		//Clear item field
-		name.setText("");
-		
-		//Get Expiration Date
-		EditText date = (EditText) findViewById(R.id.expirationDate);
-		String itemDate = date.getText().toString();
-		//Clear date field
-		date.setText("");
-		
-		//Get Condition
-		//Spinner condition = (Spinner) findViewById(R.id.condition);
-		//String itemCondition = condition.getSelectedItem().toString();
-		
-		FoodItem item = new FoodItem();
-		//Values will default to empty string if not set
-		if(itemName != null){
-			item.setItemName(itemName);
-		}
-		if(itemDate != null){
-			item.setExpiration(itemDate);
-		}
-		//if(itemCondition != null){
-		//	item.setCondition(itemCondition);
-		//}
-		//TODO: Make sure this only accepts food (toothpaste is not food)
-		//"We do not recognize this item. Are you sure this is a food item."
-		//"We do not recognize this item. You may need to enter your own expiration date."
-		currentTrip.add(item); 
-		
-		//Update current trip item list preview
-		addTextToTextView(R.id.ShopTripContents, R.id.EnterFoodsTripScroller, itemName);
-		
-		//second window test
-		addTextToTextView(R.id.ShopTripContents2, R.id.EnterFoodsTripScroller, itemDate);
-		
+		return df.format(c.getTime());
 	}
 
-	private void addTextToTextView(int textViewId, int scrollViewId, String itemName)
-	{
-	    final TextView txtView = (TextView) findViewById(textViewId);
-        final ScrollView scrollView = (ScrollView) findViewById(scrollViewId);
-	    //append the new text to the bottom of the TextView
-        //move new text to new line if necessary
-        //if(txtView.getText().toString().length() > 0){
-        //	txtView.append("\n");
-        //}
-	    txtView.append(itemName + "\n");
-
-	    //scroll to the bottom of the text
-	    scrollView.post(new Runnable()
-	    {
-	        @Override
-			public void run()
-	        {
-	        	scrollView.fullScroll(View.FOCUS_DOWN);
-	        }
-	    });
+	/** (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onSaveInstanceState(android.os.Bundle)
+	 */
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putString("tab", mTabHost.getCurrentTabTag()); //save the tab selected
+		super.onSaveInstanceState(outState);
 	}
 
-	
+	/***************************************************************
+	 * Setup TabHost Tabs
+	 */
+	private void initialiseTabHost(Bundle args) {
+		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
+		mTabHost.setup();
+		TabInfo tabInfo = null;
+		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab1").setIndicator("Add Items\n by Category"), ( tabInfo = new TabInfo("Tab1", EF_Categories_Frag.class, args)));
+		this.mapTabInfo.put(tabInfo.tag, tabInfo);
+		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator("Items in\n Current Trip"), ( tabInfo = new TabInfo("Tab2", EF_CurTrip_Frag.class, args)));
+		this.mapTabInfo.put(tabInfo.tag, tabInfo);
+		// Default to first tab
+		this.onTabChanged("Tab1");
+		//
+		mTabHost.setOnTabChangedListener(this);
+	}
 
+	private static void addTab(Enter_Foods activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
+		// Attach a Tab view factory to the spec
+		tabSpec.setContent(activity.new TabFactory(activity));
+		String tag = tabSpec.getTag();
+
+		// Check to see if we already have a fragment for this tab, probably
+		// from a previously saved state.  If so, deactivate it, because our
+		// initial state is that a tab isn't shown.
+		tabInfo.fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
+		if (tabInfo.fragment != null && !tabInfo.fragment.isDetached()) {
+			FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+			ft.detach(tabInfo.fragment);
+			ft.commit();
+			activity.getSupportFragmentManager().executePendingTransactions();
+		}
+
+		tabHost.addTab(tabSpec);
+	}
+
+	/** (non-Javadoc)
+	 * @see android.widget.TabHost.OnTabChangeListener#onTabChanged(java.lang.String)
+	 */
+	public void onTabChanged(String tag) {
+		TabInfo newTab = this.mapTabInfo.get(tag);
+		if (mLastTab != newTab) {
+			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+			if (mLastTab != null) {
+				if (mLastTab.fragment != null) {
+					ft.detach(mLastTab.fragment);
+				}
+			}
+			if (newTab != null) {
+				if (newTab.fragment == null) {
+					newTab.fragment = Fragment.instantiate(this,
+							newTab.clss.getName(), newTab.args);
+					ft.add(R.id.realtabcontent, newTab.fragment, newTab.tag);
+				} else {
+					ft.attach(newTab.fragment);
+				}
+			}
+
+			mLastTab = newTab;
+			ft.commit();
+			this.getSupportFragmentManager().executePendingTransactions();
+		}
+	}
 	
-	// Child/Group Helper classes for expandable list view
-	public class ChildHolder {
-		TextView tvChild;
+	/*****************************************************************
+	 * Setup Datepicker
+	 */
+	private void datepickerSetup() {
+		//Tell the date field to launch the datepicker fragment on touch
+		EditText dateEdit = (EditText) findViewById(R.id.dateText);
+		dateEdit.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					//anything you want to do if user touches/ taps on the edittext box
+					openDatePicker((EditText) findViewById(R.id.dateText));
+				}
+				return false;
+			}
+		});
+	}
+
+	public void openDatePicker(EditText editText){
+		DialogFragment newFragment = new DatePickerFragment(editText);
+		newFragment.show(getSupportFragmentManager(), "datePicker");
+	}
+	/******************************************************************
+	 * DatePickerFragment handles the fragment dialog containing
+	 * 	a datepicker. Pressing 'cancel' closes the dialog and does
+	 * 	nothing. Pressing 'set' sets the selected date text as the
+	 * 	text of the given edit_text field.
+	 *
+	 */
+	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
+
+		public EditText activity_edittext;
+
+		public DatePickerFragment(EditText edit_text) {
+			activity_edittext = edit_text;
 		}
-		 
-		public class GroupHolder {
-		TextView tvGroup;
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, year, month, day);
 		}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
+
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			// Do something with the date chosen by the user
+			activity_edittext.setText(String.valueOf(month + 1 ) 
+					+ "/" 
+					+   String.valueOf(day) 
+					+ "/" 
+					+ String.valueOf(year));
 		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 }
-
