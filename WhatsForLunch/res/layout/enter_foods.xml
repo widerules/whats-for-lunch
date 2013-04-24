@@ -1,155 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/enterFoodsLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/greentextured"
+    android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:gravity="left|right"
-    android:orientation="vertical" 
-    android:background="@drawable/greentextured">
-
-    <!-- Save button for ending trip editing -->
-    <!-- Enter Foods Prompt -->
-
-    <!-- Enter food text field which supports auto complete -->
+	android:focusableInTouchMode="true">
 
     <AutoCompleteTextView
         android:id="@+id/itemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/enter_foods_auto_complete"
-        tools:ignore="InefficientWeight" 
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:textColorHint="#A9A9A9"/>
-
-    <!-- Prompt for user to enter expiration date -->
+        android:hint="@string/enter_foods_add"
+        android:textColorHint="#A9A9A9" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        
-        <Button
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp"
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">
+            
+	    <EditText
+        	android:id="@+id/dateText"
+        	android:hint="Expire date"
+        	android:textColorHint="#A9A9A9"
+        	android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="3"
+        	android:focusableInTouchMode="false"
+        	android:ems="10" >
+    	</EditText>
+    	<Button
+            android:id="@+id/enter_add"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.50"
-            android:text="@string/enter_foods_category_prompt"
-            tools:ignore="InefficientWeight" />
+            android:layout_weight="2"
+            android:text="Add"
+            android:onClick="addItemToTrip" />
 
     </LinearLayout>
 
-    <ExpandableListView
-        android:id="@+id/enter_foods_expandable_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" >
-    </ExpandableListView>
-
-    <EditText
-        android:id="@+id/expirationDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/enter_foods_expiration_date_prompt"
-        android:inputType="date"
-        android:singleLine="true"
-        android:imeOptions="actionDone"
-        android:textColorHint="#A9A9A9"/>
-	
-    <!--Allows user to select freshness conditons  -->
-	<!-- TODO: add prompt -->
-	
-    <Spinner
-        android:id="@+id/condition"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/food_conditions"
-        android:prompt="@string/hello_world"
-        />
-	
-	<RelativeLayout 
-	    android:layout_width="match_parent"
-        android:layout_height="94dp" >    
-		<!-- Button to save shopping trip, goes to next screen -->
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:onClick="launchReview_Trip"
-            android:text="@string/enter_foods_save_trip" />
-
-    <!-- Button to add item to trip  -->    
-        <Button
-            android:id="@+id/Button01"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/button3"
-            android:layout_alignParentTop="true"
-            android:onClick="addItemToTrip"
-            android:text="@string/enter_foods_add" />
-
-    </RelativeLayout>
-
-    <!-- Display for current shopping trip items -->
-    <!-- Makes the current trip contents view scrollable -->
-    
- <!-- Use to draw a line to seperate prompt and trip contents -->  
- <!-- TODO: fix line so that it stays below trip so far, where are shopping trip items being displayed?  -->
-
-	<TextView
-	    android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_foods_shopping_trip_so_far"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-	<!-- Use to draw a line to seperate prompt and trip contents -->  
- 	<View
-   		android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
- <ScrollView
-     android:id="@+id/EnterFoodsTripScroller"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="@string/enter_foods_shopping_trip_so_far"
-     android:textAppearance="?android:attr/textAppearanceLarge" >
- 	
-    	<LinearLayout
-    	    android:layout_width="match_parent"
-    	    android:layout_height="wrap_content" >
-
-    	    <!-- may want make text selectable so users can edit trip stuff immediately -->
-            <TextView
-                android:id="@+id/ShopTripContents"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+ 
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="false"
-                android:textIsSelectable="true"
-                android:layout_weight=".5"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    	    <!-- may want make text selectable sso users can edit trip stuff immediately -->
-             <TextView
-                android:id="@+id/ShopTripContents2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="false"
-                android:textIsSelectable="true"
-                android:layout_weight=".5"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0"
+                android:layout_gravity="center"
+                />
+ 
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0"/>
+ 
+            <FrameLayout
+                android:id="@+android:id/realtabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
         </LinearLayout>
+    </TabHost>
 
-    </ScrollView>
-
-</LinearLayout>
+    </LinearLayout>

@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ef_additems_fragment" >
+
+    <fragment
+        android:id="@+id/curtrip_fragment"
+        android:name="com.example.whatsforlunch.ef_current_trip_fragment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+   />
+
+</LinearLayout>

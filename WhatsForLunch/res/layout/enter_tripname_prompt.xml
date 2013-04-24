@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/prompt_tripname"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_gravity="center" android:orientation="vertical"  >
+
+    <TextView
+        android:id="@+id/prompt_title" 
+        android:text="Would you like \nto name your trip?"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#0B61A4" 
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:gravity="center" 
+        android:layout_gravity="center"/>
+    
+    <View android:id="@+id/separator" 
+ 		android:background="#0B61A4" 
+ 		android:layout_width = "fill_parent"
+ 		android:layout_height="1dip"/>
+      
+    <EditText
+        android:id="@+id/tripName"
+        android:layout_width="match_parent"  android:layout_height="wrap_content" 
+        android:inputType="text"
+        android:imeOptions="actionDone" 
+        android:hint="Name of Trip"/>
+</LinearLayout>

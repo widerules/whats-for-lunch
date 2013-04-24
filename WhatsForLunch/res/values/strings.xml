@@ -75,6 +75,12 @@
     <string name="trip_edit_delete_trip">Delete Trip</string>
     <string name="enter_foods_redone_add">Add item by entry</string>
     <string name="enter_foods_redone_date_prompt">Click to Enter Expiration Date</string>
+    <string name="title_activity_ef__add_items__fragment">EF_AddItems_Fragment</string>
+    <string name="title_activity_ef__current_trip__fragment">EF_CurrentTrip_Fragment</string>
+    <string name="title_activity_enter_foods_revamp">Enter Foods</string>
+    <string name="yes">Yes</string>
+    <string name="no_nameforme">No, name it for me</string>
+    <string name="title_activity_prompt_trip_name">Prompt Trip Name</string>
     <string name="whats_for_lunch_all_foods">All Foods</string>
     <string name="user_recipes_enter_name">Name</string>
     <string name="user_recipes_enter_ingredients">Ingredients</string>
