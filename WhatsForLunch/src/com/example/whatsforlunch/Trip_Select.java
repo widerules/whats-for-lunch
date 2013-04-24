@@ -23,30 +23,18 @@ import android.widget.TextView;
 public class Trip_Select extends ListActivity {
 
     Database_Manager myDb;
+    Cursor myCur;
+    ArrayList<String> trips = new ArrayList<String>();
+    ArrayAdapter<String> list;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.trip_select);
-		
         myDb = new Database_Manager(this);
-        Cursor myCur = myDb.getCursor();
-        ArrayList<String> trips = new ArrayList<String>(0);
-        myCur.moveToFirst();
-        String name;
-        trips.add("All Trips");
-        
-        while(!myCur.isAfterLast()){
-        	name = myCur.getString(3);//name of trip
-        	if(!trips.contains(name))//check if we already have this trip
-        		trips.add(name);
-        	if(!myCur.moveToNext())//false when out of bounds
-        		break;
-        }
-        final String[] trip_names = trips.toArray(new String[trips.size()]);
-        
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, 
-        		  trip_names));
+        myCur = myDb.getCursor();
+        list = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, trips);
+        setListAdapter(list);
         
         final ListView listView = getListView();
 
@@ -60,18 +48,46 @@ public class Trip_Select extends ListActivity {
         	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 	    	        
         	        Intent i = new Intent(Trip_Select.this, Trip_Edit.class);
+        	        String t = (String) ((TextView)arg1).getText();
         	        if(position == 0)
         	        	i.putExtra("trip name","");
         	        else
-        	        	i.putExtra("trip name",trip_names[position]);
+        	        	i.putExtra("trip name",t);
         	        startActivity(i);
         	        
         	}
 
         });
+        updateTrips();
     }
 
-/*
+	private void updateTrips() {
+		myCur = myDb.getCursor();
+		myCur.moveToFirst();
+        String name;
+        trips.clear();
+        trips.add("All Trips");
+        
+        while(!myCur.isAfterLast()){
+        	name = myCur.getString(3);//name of trip
+        	if(!trips.contains(name))//check if we already have this trip
+        		trips.add(name);
+        	myCur.moveToNext();
+        }
+		if(trips.size() == 1){
+			trips.clear();
+			trips.add("\nNo food\n");
+		}
+		list.notifyDataSetChanged();
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		updateTrips();
+	}
+
+	/*
     private class MyAdapter extends ResourceCursorAdapter {
     	
     	ArrayList<String> trips;
