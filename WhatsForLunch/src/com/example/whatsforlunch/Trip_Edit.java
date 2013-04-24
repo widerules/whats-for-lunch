@@ -73,7 +73,7 @@ public class Trip_Edit extends ListActivity {
             	if(myCur.getString(3).equals(trip_name)){
             		items.add(myCur.getString(1));
             		// TODO: change back to Aged
-            		if(myCur.getString(2).equals("Normal"))
+            		if(myCur.getString(2).equals("Aged"))
                 		red.add(count);
             		count++;
             	}
