@@ -3,7 +3,13 @@ package com.example.whatsforlunch;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.LocalDate;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -23,7 +29,12 @@ public class Review_Trip extends Activity {
 	ArrayList<ArrayList<Object>> food = new ArrayList<ArrayList<Object>>();
 	ArrayList<Integer> tripRows = new ArrayList<Integer>();
 	AlarmManager alarmMan;
-	
+	public static DateTime expDate;
+	//need foodAndDate and alarmsSet so we can add foods to exp dates when we have already added the exp
+	//date, it comes down to a problem of adding no matter what but checking (if statement) without add
+	public static Map<DateTime,ArrayList<String>> foodAndDate = new HashMap<DateTime,ArrayList<String>>();
+	//use to see if an alarm has been set on a certain day
+	public static ArrayList<DateTime> alarmsSet = new ArrayList<DateTime>();
 	private final Integer ROWID = 0;
 	private final Integer ITEMNAME = 1;
 	private final Integer ITEMCONDITION = 2;
@@ -74,7 +85,9 @@ public class Review_Trip extends Activity {
 		
 		TextView tripNameField = (TextView) findViewById(R.id.ReviewTripNameField);
 		String tripName = tripNameField.getText().toString();
-		
+		//this keeps track of if we have set an alarm for this trip or not
+		boolean foodAlreadyExp =false;
+
 		
 		
 		//If user did not define a name for the trip, auto assign a name
@@ -87,13 +100,7 @@ public class Review_Trip extends Activity {
 						(String) o.get(TRIPDATE), 
 						(String) o.get(EXPDATE));
 				if((String) o.get(EXPDATE)!=""){
-					
-//					for testing only***
-					callAlarms(3,0,false);
-					callAlarms(0,0,false);
-//					need to write function that will compare dates and find difference					
-//					callAlarms(food.get(i-1).get(EXPDATE),0,false);
-					Log.d("alarmExpDays", (String) o.get(EXPDATE).toString());
+					foodAlreadyExp= prepareAlarm(foodAlreadyExp, o);
 				}
 			}
 		}else{
@@ -105,14 +112,68 @@ public class Review_Trip extends Activity {
 						(String) o.get(TRIPDATE), 
 						(String) o.get(EXPDATE));
 				if((String) o.get(EXPDATE)!=""){
-//					callAlarms(food.get(i-1).get(EXPDATE),0,false);
-					Log.d("alarmExpDays", (String) o.get(EXPDATE).toString());
+					foodAlreadyExp= prepareAlarm(foodAlreadyExp, o);
 				}
 			}
 		}
-		
+		//TODO: save foodAndDate in database here
+
 		startActivity(intent);
 	}
+
+	private boolean prepareAlarm(boolean foodAlreadyExp, ArrayList<Object> o) {
+		String[] date=((String) o.get(EXPDATE)).split("/");
+		int month = Integer.parseInt(date[0]);
+		int day = Integer.parseInt(date[1]);
+		int year = Integer.parseInt(date[2]);
+
+		//just going to set to noon for now, can change it later
+		int hour = 12;
+		int minute = 0;
+		expDate= new DateTime(year,month,day,hour,minute);
+		DateTime current= new DateTime();
+		
+		//TODO: this is where the desired user settings is taken into account
+		//needs to come from user settings, default of 3 currently
+		
+		int daysBeforeDesiredNotif=3;
+		DateTime currentPlus=current.plusDays(daysBeforeDesiredNotif);
+		//add food to day
+		//MAKE SURE NULL DOESN"T GIVE ERROR HERE
+		ArrayList<String> temp= new ArrayList<String>();
+		if(foodAndDate.get(expDate)!=null)
+			temp= foodAndDate.get(expDate);
+		temp.add((String) o.get(ITEMNAME));
+		foodAndDate.put(expDate, temp);
+		
+		//if currentPlus is after or on expDate 
+		if(!foodAlreadyExp && (currentPlus.compareTo(expDate)>=0)){
+			foodAlreadyExp = true;
+			callAlarms(0,0,false);
+		}
+		//if currentPlus is before expDate
+		else if(currentPlus.compareTo(expDate)<0){
+			//TODO: if individual times are ever set, this will need to change
+			//checks to see if an alarm for the day exists
+			//currently it compares exact dates and times, 
+			//but hour and minute are same for all so effectively only compares days
+			if((!alarmsSet.contains(expDate))){
+				DateTime notifDate = expDate.minusDays(daysBeforeDesiredNotif);
+				alarmsSet.add(expDate);
+				Duration dur = new Duration(current,notifDate);
+				callAlarms((int)dur.getStandardDays(),0,false);
+			}
+		}
+		
+		//TODO: make this work
+		//save in database			
+//		ad.addRow(Integer.toString(expDate.getMonthOfYear()), 
+//				Integer.toString(expDate.getDayOfMonth()), 
+//				Integer.toString(expDate.getYear()));
+		Log.d("alarmExpDays", (String) o.get(EXPDATE).toString());
+		return foodAlreadyExp;
+	}
+	
 	
 	private ArrayList<ArrayList<Object>> getFridge(){
 		return db.getAllRowsAsArrays();
@@ -155,19 +216,20 @@ public class Review_Trip extends Activity {
 	}
 
 
-	public void callAlarms(int daysBefore,int daysBetween,boolean recurring){
+	public void callAlarms(int daysAfterSet,int daysBetween,boolean recurring){
 		//for now I am going to make this as general as possible
-		//takes days and false for one alarm true for recurring alarm	
+		//takes as param number of days after setting it will first go off
+		//and false for one alarm, true for recurring alarm	
 		//TODO save pendingIntents so we can restore on phone reboot
 		alarmMan = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		if(recurring)
-			setRepeatingAlarm(daysBefore,daysBetween);
+			setRepeatingAlarm(daysAfterSet,daysBetween);
 		else
-			setOneTimeAlarm(daysBefore);
+			setOneTimeAlarm(daysAfterSet);
 		
 	}
 	
-	public void setOneTimeAlarm(int days) {
+	public void setOneTimeAlarm(int daysAfterSet) {
 	    //declare intent using class that will handle alarm
 		Intent intent = new Intent(this, FoodExpAlarm.class);
 	    //retrieve pending intent for broadcast, flag one shot means will only set once
@@ -176,19 +238,19 @@ public class Review_Trip extends Activity {
 	    //params: specify to use system clock use RTC_WAKEUP to wakeup phone for notification,
 	    //time to wait, intent
 	    alarmMan.set(AlarmManager.RTC_WAKEUP,
-	      System.currentTimeMillis() + (days * AlarmManager.INTERVAL_DAY), pendingIntent);
+	      System.currentTimeMillis() + (daysAfterSet * AlarmManager.INTERVAL_DAY), pendingIntent);
 	    System.out.println("Alarm in 5");
 	 }
-	
+
 	 
-	public void setRepeatingAlarm(int daysBefore,int daysBetween) {
-		    //Pretty sure we will end up using this one	 
+	public void setRepeatingAlarm(int daysAfterSet,int daysBetween) {
+		//Pretty sure we will end up using this one	 
 	    //same as single except FLAG_CANCEL_CURRENT repeats, and days specifies how many days apart
 	    Intent intent = new Intent(this, FoodExpAlarm.class);
 	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
 	      intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	    alarmMan.setRepeating(AlarmManager.RTC_WAKEUP, 
-	       System.currentTimeMillis() +(daysBefore * AlarmManager.INTERVAL_DAY),
+	       System.currentTimeMillis() +(daysAfterSet * AlarmManager.INTERVAL_DAY),
 	      daysBetween * AlarmManager.INTERVAL_DAY, pendingIntent);
 	    System.out.println("Alarm repeating every 5");
 	 }

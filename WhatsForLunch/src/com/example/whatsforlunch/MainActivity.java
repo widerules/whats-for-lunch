@@ -19,8 +19,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
@@ -38,6 +40,10 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		TextView txt = (TextView) findViewById(R.id.enter_food_button1);  
+		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/custFont.ttf");  
+		txt.setTypeface(font);
+	
 		db = new Description_Database(this);
 		ad = new Alert_Database(this);
 		

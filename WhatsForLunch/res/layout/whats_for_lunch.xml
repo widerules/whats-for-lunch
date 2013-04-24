@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/whats_for_lunch_get_user_recipes" />
+        android:text="@string/whats_for_lunch_get_user_recipes" 
+        android:onClick="launchUserRecipes"/>
 
     <ListView
         android:id="@android:id/list"
@@ -71,5 +72,16 @@
         android:layout_below="@+id/foodChange"
         android:text="@string/whats_for_lunch_my_recipes"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/displayUserRecipes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView2"
+        android:ems="10" >
+    </TextView>
 
     </RelativeLayout>

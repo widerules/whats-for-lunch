@@ -1,7 +1,11 @@
 package com.example.whatsforlunch;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,6 +50,10 @@ public class WhatsForLunch extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whats_for_lunch);
+		printUserRecipes();
+		
+		
+		
 		all_foods = true;
 		recipe_type = (TextView)this.findViewById(R.id.recipeType);
 		final ListView listView = getListView();
@@ -65,8 +73,63 @@ public class WhatsForLunch extends ListActivity {
 		});
 		rAd = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, rList);
 		setListAdapter(rAd);
-		foodChange();
+	//	foodChange();
 	}
+	
+	private void printUserRecipes() {
+		String file = "userRecipes";
+		//hard to tell how to divide sections, users can add new lines, commas, and several
+		//other things you would normally check for, so need a unique identifier for sections 
+		//these are purposely made long so that there isn't an accidental match to user entered text
+		//probably not the best way to do it but it works, also makes it easier to split as desired when reading
+		String newField = "uniqueStartofFieldMarkerabcxyz ";
+		String endRecipe = "uniqueIdentifierMarksEndOfOneRecipeabcxyz ";
+		String [] out;
+		
+		TextView viewOut =(TextView) this.findViewById(R.id.displayUserRecipes);
+		  String eol = System.getProperty("line.separator");
+		  BufferedReader input = null;
+		  String line;
+		  StringBuffer buffer = new StringBuffer();
+		  
+		  try {
+		    input = new BufferedReader(new InputStreamReader(openFileInput(file)));
+		    
+		    while ((line = input.readLine()) != null) {
+		    	buffer.append(line);
+		    }
+		  } catch (Exception e) {
+		     e.printStackTrace();
+		  } finally {
+		  if (input != null) {
+		    try {
+		    input.close();
+		    } catch (IOException e) {
+		      e.printStackTrace();
+		    }
+		    }
+		  }
+		 line= buffer.toString();
+		 out=line.split(newField);
+		 for(int i=0; i<out.length;i++){
+			 //replace endRecipe string with a newline
+			 if(out[i].contains(endRecipe))
+			 	 viewOut.append(out[i].replace(endRecipe, eol));
+			 else
+				 viewOut.append(out[i]);
+			 
+		 }
+		 
+		 
+		 
+		 
+	}
+
+	public void launchUserRecipes(View view){
+		Intent intent = new Intent(this, UserRecipes.class);
+		startActivity(intent);
+	}
+	
 	
 	private void foodChange(){
 		Database_Manager myDb = new Database_Manager(this);
@@ -365,5 +428,7 @@ public class WhatsForLunch extends ListActivity {
 	    		 
 	    	}
 	    }
+	    
+	    
 	}
 }
