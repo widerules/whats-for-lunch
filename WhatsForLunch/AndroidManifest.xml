@@ -6,6 +6,7 @@
     android:versionName="1.0" >
     
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -64,6 +65,12 @@
             android:name="com.example.whatsforlunch.EF_CurTrip_Frag"
             android:label="@string/title_activity_ef__current_trip__fragment" >
         </activity>
+
+        <activity android:name="com.example.whatsforlunch.UserRecipes" 
+            android:label="@string/user_recipe_title">
+        </activity>
+
+
         <activity
             android:name="com.example.whatsforlunch.EF_Categories_Frag"
             android:label="@string/title_activity_ef__add_items__fragment" >
@@ -76,6 +83,20 @@
             android:name="com.example.whatsforlunch.PromptTripNameDialog"
             android:label="@string/title_activity_prompt_trip_name" >
         </activity>
-    </application>
+
+	    <service android:name=".bootService" android:label="serviceForBootUp" android:exported="false">
+		    <intent-filter>
+		        <action android:name="com.example.whatsforlunch.BootService" />
+		    </intent-filter>
+		</service>
+		<receiver android:name=".receiver.StartMyServiceAtBootReceiver" 
+		    android:enabled="true" android:exported="false" 
+		    android:label="StartMyServiceAtBootReceiver">
+		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED" />
+		    </intent-filter>
+		</receiver>
+	
+	</application>
 
 </manifest>

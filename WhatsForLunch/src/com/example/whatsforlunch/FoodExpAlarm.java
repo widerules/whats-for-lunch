@@ -26,26 +26,26 @@ public class FoodExpAlarm extends BroadcastReceiver {
     @SuppressWarnings("deprecation")
     @Override
 	public void onReceive(Context context, Intent intent) {
-    	  int id = (int) (Review_Trip.expDate).getMillis();
+    	  int id = (int) (Enter_Foods.expDate).getMillis();
     	  CharSequence from = "Food Expiring Soon:";
     	  CharSequence message="";
     	  
     	  
     	  //if there are more than 3 foods for the alarm, just get three
-    	  if(Review_Trip.foodAndDate.get(Review_Trip.expDate).size()>=3){
-    		  message=  Review_Trip.foodAndDate.get(Review_Trip.expDate).get(0) + ", " +
-    				  Review_Trip.foodAndDate.get(Review_Trip.expDate).get(1) + ", " +
-    		          Review_Trip.foodAndDate.get(Review_Trip.expDate).get(2); 
-    		  if(Review_Trip.foodAndDate.get(Review_Trip.expDate).size()!=3)
+    	  if(Enter_Foods.foodAndDate.get(Enter_Foods.expDate).size()>=3){
+    		  message=  Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(0) + ", " +
+    				  Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(1) + ", " +
+    		          Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(2); 
+    		  if(Enter_Foods.foodAndDate.get(Enter_Foods.expDate).size()!=3)
     			  message = message + ", and more";
     	  }
     	  //less than 3 just get them all
-    	  else if(Review_Trip.foodAndDate.get(Review_Trip.expDate).size()==2){
-    		  message=  Review_Trip.foodAndDate.get(Review_Trip.expDate).get(0) + ", " +
-    				  Review_Trip.foodAndDate.get(Review_Trip.expDate).get(1);
+    	  else if(Enter_Foods.foodAndDate.get(Enter_Foods.expDate).size()==2){
+    		  message=  Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(0) + ", " +
+    				  Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(1);
     	  }
     	  else
-    		  message=  Review_Trip.foodAndDate.get(Review_Trip.expDate).get(0);
+    		  message=  Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(0);
   
  
 		  notificationMan = (NotificationManager) context

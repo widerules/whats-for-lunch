@@ -21,6 +21,7 @@ public class FoodItem{
 	//Date is relative to GMT
 	//Date is adjusted to midnight of the current day
 	//TODO: Might want to look into Java Calendar and Date classes
+	//use joda --Ford
 	private String tripDate = Today();
 	private String expDate = "unknown exp date";
 

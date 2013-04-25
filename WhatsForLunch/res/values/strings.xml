@@ -86,6 +86,6 @@
     <string name="user_recipes_enter_ingredients">Ingredients</string>
     <string name="user_recipes_enter_recipe">Recipe</string>
     <string name="save_user_recipes">Save</string>
-    <string name="user_recipe_title">Add User Recipe</string>
+    <string name="user_recipe_title">Add My Recipe</string>
 
 </resources>
