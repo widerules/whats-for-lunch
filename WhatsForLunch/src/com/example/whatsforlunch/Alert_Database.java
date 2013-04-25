@@ -45,7 +45,7 @@ public class Alert_Database {
 //@param rowStringOne the value for the row's first column
 //@param rowStringTwo the value for the row's second column
 
-public void addRow(String name, String month, String day, String year)
+public void addRow(String month, String day, String year)
 {
         // this is a key value pair holder used by android's SQLite functions
         ContentValues values = new ContentValues();

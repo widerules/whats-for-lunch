@@ -4,15 +4,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.IllegalFieldValueException;
 
 import com.example.whatsforlunch.PromptTripNameDialog.NoticeDialogListener;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -39,6 +50,14 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 
 	Database_Manager db;
 	Description_Database ddb;
+	
+	AlarmManager alarmMan;
+	public static DateTime expDate;
+	//need foodAndDate and alarmsSet so we can add foods to exp dates when we have already added the exp
+	//date, it comes down to a problem of adding no matter what but checking (if statement) without add
+	public static Map<DateTime,ArrayList<String>> foodAndDate = new HashMap<DateTime,ArrayList<String>>();
+	//use to see if an alarm has been set on a certain day
+	public static ArrayList<DateTime> alarmsSet = new ArrayList<DateTime>();
 
 	//Used to build trip currently being created
 	private List<FoodItem> currentTrip = new ArrayList<FoodItem>();
@@ -225,6 +244,9 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		}	
 	}
 	private void enterTripToDatabase(){
+		//this keeps track of if we have set an alarm for this trip or not
+		boolean foodAlreadyExp =false;	
+	
 		Log.d("DB Entry", "Entering trip items from Enter Foods");
 
 		for(FoodItem i : currentTrip){
@@ -235,11 +257,30 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 						i.getTripName(), 
 						i.getDatePurchased(), 
 						i.getExpiration());
+				if((String) i.getExpiration()!="")
+					foodAlreadyExp= prepareAlarm(foodAlreadyExp, i);
 			}catch(NullPointerException e){
 				e.printStackTrace();
 			}
 		}
+		
+		//save to sharedPref so we can recall later
+		String exp = "SavedExpDates";
+		SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
+		//copy foodAndDates to SharedPref
+		for(Map.Entry<DateTime, ArrayList<String>> entry: foodAndDate.entrySet()){
+			HashSet<String> datesSet = new HashSet<String>();
+			datesSet.addAll(entry.getValue());
+			Iterator<String> iter = datesSet.iterator();
+			String concat = "";
+			while(iter.hasNext()){
+				concat += iter.next() + "/";
+			}
+				savedExpDates.putString(entry.getKey().toString(),concat );	
+		}
+		savedExpDates.commit();
 	}
+	
 	public void cancelTrip(){
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
@@ -357,6 +398,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	 * 	text of the given edit_text field.
 	 *
 	 */
+	@SuppressLint("ValidFragment")
 	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 
 		public EditText activity_edittext;
@@ -386,5 +428,98 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 					+ String.valueOf(year));
 		}
 	}
+
+	
+	public void callAlarms(int daysAfterSet,int daysBetween,boolean recurring){
+		//for now I am going to make this as general as possible
+		//takes as param number of days after setting it will first go off
+		//and false for one alarm, true for recurring alarm	
+		//TODO save pendingIntents so we can restore on phone reboot
+		alarmMan = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		if(recurring)
+			setRepeatingAlarm(daysAfterSet,daysBetween);
+		else
+			setOneTimeAlarm(daysAfterSet);
+		
+	}
+	
+	private boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
+		String[] date= i.getExpiration().split("/");
+		int month = Integer.parseInt(date[0]);
+		int day = Integer.parseInt(date[1]);
+		int year = Integer.parseInt(date[2]);
+
+		//just going to set to noon for now, can change it later
+		int hour = 12;
+		int minute = 0;
+
+
+			expDate= new DateTime(year,month,day,hour,minute);
+		
+		DateTime current= new DateTime();
+		
+		//TODO: this is where the desired user settings is taken into account
+		//needs to come from user settings, default of 3 currently
+		
+		int daysBeforeDesiredNotif=3;
+		DateTime currentPlus=current.plusDays(daysBeforeDesiredNotif);
+		//add food to day
+		ArrayList<String> temp= new ArrayList<String>();
+		if(foodAndDate.get(expDate)!=null)
+			temp= foodAndDate.get(expDate);
+		temp.add(i.getItemName());
+		foodAndDate.put(expDate, temp);
+		
+		//if currentPlus is after or on expDate 
+		if(!foodAlreadyExp && (currentPlus.compareTo(expDate)>=0)){
+			foodAlreadyExp = true;
+			callAlarms(0,0,false);
+		}
+		//if currentPlus is before expDate
+		else if(currentPlus.compareTo(expDate)<0){
+			//TODO: if individual times are ever set, this will need to change
+			//checks to see if an alarm for the day exists
+			//currently it compares exact dates and times, 
+			//but hour and minute are same for all so effectively only compares days
+			if((!alarmsSet.contains(expDate))){
+				DateTime notifDate = expDate.minusDays(daysBeforeDesiredNotif);
+				alarmsSet.add(expDate);
+				Duration dur = new Duration(current,notifDate);
+				callAlarms((int)dur.getStandardDays(),0,false);
+			}
+		}
+		
+		
+		//ad.addRow(Integer.toString(expDate.getMonthOfYear()), 
+		//		Integer.toString(expDate.getDayOfMonth()), 
+		//		Integer.toString(expDate.getYear()));
+
+		return foodAlreadyExp;
+	}
+	
+	public void setOneTimeAlarm(int daysAfterSet) {
+	    //declare intent using class that will handle alarm
+		Intent intent = new Intent(this, FoodExpAlarm.class);
+	    //retrieve pending intent for broadcast, flag one shot means will only set once
+	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+	      intent, PendingIntent.FLAG_ONE_SHOT);
+	    //params: specify to use system clock use RTC_WAKEUP to wakeup phone for notification,
+	    //time to wait, intent
+	    alarmMan.set(AlarmManager.RTC_WAKEUP,
+	      System.currentTimeMillis() + (daysAfterSet * AlarmManager.INTERVAL_DAY), pendingIntent);
+	 }
+
+	 
+	public void setRepeatingAlarm(int daysAfterSet,int daysBetween) {
+		//Pretty sure we will end up using this one	 
+	    //same as single except FLAG_CANCEL_CURRENT repeats, and days specifies how many days apart
+	    Intent intent = new Intent(this, FoodExpAlarm.class);
+	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+	      intent, PendingIntent.FLAG_CANCEL_CURRENT);
+	    alarmMan.setRepeating(AlarmManager.RTC_WAKEUP, 
+	       System.currentTimeMillis() +(daysAfterSet * AlarmManager.INTERVAL_DAY),
+	      daysBetween * AlarmManager.INTERVAL_DAY, pendingIntent);
+	    System.out.println("Alarm repeating every 5");
+	 }
 	
 }
