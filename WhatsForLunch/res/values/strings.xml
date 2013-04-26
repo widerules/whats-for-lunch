@@ -30,7 +30,7 @@
     <string name="title_activity_user__settings">User_Settings</string>
     <string name="enter_foods_add">Add item to trip</string>
     <string name="title_activity_display__trip">Display_Trip</string>
-    <string name="title_activity_trip_select">Trip_Select</string>
+    <string name="title_activity_trip_select">Trip Selection</string>
     <string name="enter_foods_condition_radio">Select food condition</string>
     <string name="enter_foods_category_prompt">Or pick a category:</string>
 
@@ -53,8 +53,8 @@
     <string name="th_id">ID</string>
     <string name="th_text_one">Text Field One</string>
     <string name="th_text_two">Text Field Two</string>
-    <string name="title_activity_trip__edit">Trip_Edit</string>
-    <string name="title_activity_see_whats_for_lunch">SeeWhatsForLunch</string>
+    <string name="title_activity_trip__edit">Edit Trip</string>
+    <string name="title_activity_see_whats_for_lunch">See What\'s For Lunch</string>
     <string name="action_settings">Settings</string>
     <string name="settings_settings">Settings</string>
     <string name="settings_freshness_percentage_subtraction">Freshness Percentage Subtraction</string>
@@ -64,7 +64,7 @@
     <string name="all_foods_table_date_expired">Date Expired</string>
     <string name="all_foods_table_categories">Categories</string>
     <string name="all_foods_table_main_heading">All My Foods</string>
-    <string name="title_activity_whats_for_lunch">WhatsForLunch</string>
+    <string name="title_activity_whats_for_lunch">What\'s For Lunch?</string>
     <string name="whats_for_lunch_given_recipes">Generated Recipes (All Foods)</string>
     <string name="whats_for_lunch_my_recipes">My Recipes</string>
     <string name="whats_for_lunch_get_more_recipes">Expiring Foods</string>
@@ -78,6 +78,7 @@
     <string name="title_activity_ef__add_items__fragment">EF_AddItems_Fragment</string>
     <string name="title_activity_ef__current_trip__fragment">EF_CurrentTrip_Fragment</string>
     <string name="title_activity_enter_foods_revamp">Enter Foods</string>
+    <string name="title_activity_item_edit">Item Edit</string>
     <string name="yes">Yes</string>
     <string name="no_nameforme">No, name it for me</string>
     <string name="title_activity_prompt_trip_name">Prompt Trip Name</string>
@@ -88,5 +89,6 @@
     <string name="save_user_recipes">Save</string>
     <string name="user_recipe_title">Add My Recipe</string>
     <string name="whats_for_lunch_search_terms">Search Terms</string>
+    <string name="item_edit_save">Save</string>
 
 </resources>

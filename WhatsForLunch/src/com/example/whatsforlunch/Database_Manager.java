@@ -332,6 +332,75 @@ public class Database_Manager {//test comment
                 // return the ArrayList containing the given row from the database.
                 return tripArrays;
         }
+        
+        
+        
+        
+        /**********************************************************************
+         * RETRIEVING A ROW FROM THE DATABASE TABLE
+         *
+         * This is an example of how to retrieve a row from a database table
+         * using this class. edit this method to suit WHATS FOR LUNCH.
+         *
+         * @param rowID the id of the row to retrieve
+         * @return an array containing the data from the row
+         */
+        public ArrayList<Object> getRowAsArray(long rowID)
+        {
+                // create an array list to store data from the database row.
+                // I would recommend creating a JavaBean compliant object
+                // to store this data instead.  That way you can ensure
+                // data types are correct.
+               
+                //CREATE ARRAYLIST OF FOOD OBJECTS?
+                ArrayList<Object> rowArray = new ArrayList<Object>();
+                Cursor cursor;
+         
+                try
+                {
+                        // this is a database call that creates a "cursor" object.
+                        // the cursor object store the information collected from the
+                        // database and is used to iterate through the data.
+                        cursor = db.query
+                        (
+                                        TABLE_NAME,
+                                        new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
+                                        TABLE_ROW_ID + "=" + rowID,
+                                        null, null, null, null, null
+                        );
+         
+                        // move the pointer to position zero in the cursor.
+                        cursor.moveToFirst();
+         
+                        // if there is data available after the cursor's pointer, add
+                        // it to the ArrayList that will be returned by the method.
+                        if (!cursor.isAfterLast())
+                        {
+                                do
+                                {
+                                        rowArray.add(cursor.getLong(0));
+                                        rowArray.add(cursor.getString(1));
+                                        rowArray.add(cursor.getString(2));
+                                        rowArray.add(cursor.getString(3));
+                                        rowArray.add(cursor.getString(4));
+                                        rowArray.add(cursor.getString(5));
+                                }
+                                while (cursor.moveToNext());
+                        }
+         
+                        // let java know that you are through with the cursor.
+                        cursor.close();
+                }
+                catch (SQLException e)
+                {
+                        Log.e("DB ERROR", e.toString());
+                        e.printStackTrace();
+                }
+         
+                // return the ArrayList containing the given row from the database.
+                return rowArray;
+        }
        
        
        
