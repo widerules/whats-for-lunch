@@ -31,6 +31,7 @@ public class Database_Manager {//test comment
         private final String TABLE_ROW_THREE = "tripname";
         private final String TABLE_ROW_FOUR = "tripdate";
         private final String TABLE_ROW_FIVE = "expdate";
+        private final String TABLE_ROW_SIX = "json";
        
        
        
@@ -49,7 +50,7 @@ public class Database_Manager {//test comment
         //@param rowStringOne the value for the row's first column
         //@param rowStringTwo the value for the row's second column
        
-        public void addRow(String name, String condition, String tripname, String tripdate, String expdate)
+        public void addRow(String name, String condition, String tripname, String tripdate, String expdate, String json)
         {
                 // this is a key value pair holder used by android's SQLite functions
                 ContentValues values = new ContentValues();
@@ -61,6 +62,7 @@ public class Database_Manager {//test comment
                 values.put(TABLE_ROW_THREE, tripname);
                 values.put(TABLE_ROW_FOUR, tripdate);
                 values.put(TABLE_ROW_FIVE, expdate);
+                values.put(TABLE_ROW_SIX, json);
                 // ask the database object to insert the new data
                 try
                 {
@@ -125,7 +127,7 @@ public class Database_Manager {//test comment
          * @param rowStringTwo the new value for the row's second column
          */
        
-        public void updateRow(long rowID, String name, String condition, String tripname, String tripdate, String expdate)
+        public void updateRow(long rowID, String name, String condition, String tripname, String tripdate, String expdate, String json)
         {
                 // this is a key value pair holder used by android's SQLite functions
                 ContentValues values = new ContentValues();
@@ -134,6 +136,7 @@ public class Database_Manager {//test comment
                 values.put(TABLE_ROW_THREE, tripname);
                 values.put(TABLE_ROW_FOUR, tripdate);
                 values.put(TABLE_ROW_FIVE, expdate);
+                values.put(TABLE_ROW_SIX, json);
          
                 // ask the database object to update the database row of given rowID
                 try {db.update(TABLE_NAME, values, TABLE_ROW_ID + "=" + rowID, null);}
@@ -171,7 +174,7 @@ public class Database_Manager {//test comment
                         cursor = db.query(
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
-                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE},
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE, TABLE_ROW_SIX},
                                         null, null, null, null, null
                         );
                       
@@ -192,6 +195,7 @@ public class Database_Manager {//test comment
                                         dataList.add(cursor.getString(3));
                                         dataList.add(cursor.getString(4));
                                         dataList.add(cursor.getString(5));
+                                        dataList.add(cursor.getString(6));
                                         dataArrays.add(dataList);
                                 }
                                 // move the cursor's pointer up one position.
@@ -236,7 +240,7 @@ public class Database_Manager {//test comment
                         (
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
-                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE, TABLE_ROW_SIX},     
                                         TABLE_ROW_ONE + "=?" + " AND " + TABLE_ROW_THREE + "=?",
                                         new String[] {name, trip}, null, null, null, null
                         );
@@ -256,6 +260,7 @@ public class Database_Manager {//test comment
                                         rowArray.add(cursor.getString(3));
                                         rowArray.add(cursor.getString(4));
                                         rowArray.add(cursor.getString(5));
+                                        rowArray.add(cursor.getString(6));
                                 }
                                 while (cursor.moveToNext());
                         }
@@ -292,7 +297,7 @@ public class Database_Manager {//test comment
                         (
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
-                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE, TABLE_ROW_SIX},     
                                          TABLE_ROW_THREE + "=?",
                                         new String[] {trip}, null, null, null, null
                         );
@@ -314,7 +319,7 @@ public class Database_Manager {//test comment
                                         rowArray.add(cursor.getString(3));
                                         rowArray.add(cursor.getString(4));
                                         rowArray.add(cursor.getString(5));
-                                        
+                                        rowArray.add(cursor.getString(6));
                                         tripArrays.add(rowArray);
                                 }
                                 while (cursor.moveToNext());
@@ -365,7 +370,7 @@ public class Database_Manager {//test comment
                         (
                                         TABLE_NAME,
                                         new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
-                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE, TABLE_ROW_SIX},     
                                         TABLE_ROW_ID + "=" + rowID,
                                         null, null, null, null, null
                         );
@@ -385,11 +390,69 @@ public class Database_Manager {//test comment
                                         rowArray.add(cursor.getString(3));
                                         rowArray.add(cursor.getString(4));
                                         rowArray.add(cursor.getString(5));
+                                        rowArray.add(cursor.getString(5));
                                 }
                                 while (cursor.moveToNext());
                         }
          
                         // let java know that you are through with the cursor.
+                        cursor.close();
+                }
+                catch (SQLException e)
+                {
+                        Log.e("DB ERROR", e.toString());
+                        e.printStackTrace();
+                }
+         
+                // return the ArrayList containing the given row from the database.
+                return rowArray;
+        }
+        
+        
+        public ArrayList<Object> getRowAsArray_Json(String json)
+        {
+                // create an array list to store data from the database row.
+               
+               
+                //CREATE ARRAYLIST 
+                ArrayList<Object> rowArray = new ArrayList<Object>();
+                Cursor cursor;
+         
+                try
+                {
+                        // this is a database call that creates a "cursor" object.
+                        // the cursor object store the information collected from the
+                        // database and is used to iterate through the data.
+                        cursor = db.query
+                        (
+                                        TABLE_NAME,
+                                        new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE,
+                                        		TABLE_ROW_FOUR, TABLE_ROW_FIVE, TABLE_ROW_SIX},     
+                                        TABLE_ROW_SIX + "=?",
+                                        new String[] {json}, null, null, null, null
+                        );
+         
+                        // move the pointer to position zero in the cursor.
+                        cursor.moveToFirst();
+         
+                        // if there is data available after the cursor's pointer, add
+                        // it to the ArrayList that will be returned by the method.
+                        if (!cursor.isAfterLast())
+                        {
+                                do
+                                {
+                                        rowArray.add(cursor.getLong(0));
+                                        rowArray.add(cursor.getString(1));
+                                        rowArray.add(cursor.getString(2));
+                                        rowArray.add(cursor.getString(3));
+                                        rowArray.add(cursor.getString(4));
+                                        rowArray.add(cursor.getString(5));
+                                        rowArray.add(cursor.getString(6));
+                                }
+                                while (cursor.moveToNext());
+                        }
+         
+                        // let java know done with with the cursor.
                         cursor.close();
                 }
                 catch (SQLException e)
@@ -427,7 +490,8 @@ public class Database_Manager {//test comment
                                         TABLE_ROW_TWO + " text, " +
                                         TABLE_ROW_THREE + " text, " +
                                         TABLE_ROW_FOUR + " text, " +
-                                        TABLE_ROW_FIVE + " text " +
+                                        TABLE_ROW_FIVE + " text, " +
+                                        TABLE_ROW_SIX + " text " +
                                         ");";
                        
                         //execute the query string to the database.
@@ -452,7 +516,7 @@ public class Database_Manager {//test comment
     		Cursor cursor = db.query
                     (
                             TABLE_NAME,
-                            new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE, TABLE_ROW_FOUR, TABLE_ROW_FIVE},     
+                            new String[]{TABLE_ROW_ID, TABLE_ROW_ONE, TABLE_ROW_TWO, TABLE_ROW_THREE, TABLE_ROW_FOUR, TABLE_ROW_FIVE, TABLE_ROW_SIX},     
                             null, null, null, null, null, null
             );
     		
