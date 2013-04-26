@@ -69,7 +69,7 @@
     <string name="whats_for_lunch_my_recipes">My Recipes</string>
     <string name="whats_for_lunch_get_more_recipes">Expiring Foods</string>
     <string name="whats_for_lunch_get_user_recipes">Add my recipes</string>
-    <string name="whats_for_lunch_more">More</string>
+    <string name="whats_for_lunch_more">Search</string>
     <string name="review_trip_remove">Remove Checked Items</string>
     <string name="trip_edit_trip_name">Trip Name</string>
     <string name="trip_edit_delete_trip">Delete Trip</string>
@@ -87,5 +87,6 @@
     <string name="user_recipes_enter_recipe">Recipe</string>
     <string name="save_user_recipes">Save</string>
     <string name="user_recipe_title">Add My Recipe</string>
+    <string name="whats_for_lunch_search_terms">Search Terms</string>
 
 </resources>

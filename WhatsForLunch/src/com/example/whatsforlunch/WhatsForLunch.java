@@ -31,9 +31,12 @@ import android.util.Xml;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView; 		
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -44,16 +47,20 @@ public class WhatsForLunch extends ListActivity {
 	ArrayAdapter<String> rAd;
 	RecipeList rec;
 	boolean all_foods;
+	boolean search_only; 		
+	boolean ready;
 	TextView recipe_type;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whats_for_lunch);
-		
+		rec = new RecipeList();
 		
 		
 		all_foods = true;
+		ready = false; 		
+		search_only = false;
 		recipe_type = (TextView)this.findViewById(R.id.recipeType);
 		final ListView listView = getListView();
 		listView.setItemsCanFocus(false);
@@ -61,15 +68,39 @@ public class WhatsForLunch extends ListActivity {
 		
 		listView.setTextFilterEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener(){
-		
-		 @Override
-		 public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-			 Recipe r = wfl.get(position);
-			 Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(r.getLink()));
-			 startActivity(browse);
-		 }
-		
+
+		// go to recipe's url 
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+			Recipe r = wfl.get(position);
+			Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(r.getLink()));
+			startActivity(browse);
+		}
 		});
+		
+		// get more recipes when scrolling down 		
+		listView.setOnScrollListener(new OnScrollListener(){ 		
+
+			@Override 		
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { 		
+				if(ready){ 		
+					int lastItem = firstVisibleItem + visibleItemCount; 		
+					if(lastItem == totalItemCount) { 		
+						EditText e = (EditText) findViewById(R.id.query); 		
+						String s = e.getText().toString(); 		
+						if(!search_only || !s.equals("")) 		
+							rec.getRecipes(); 		
+					} 		
+				} 		
+			} 		
+
+			@Override 		
+			public void onScrollStateChanged(AbsListView view, int scrollState) { 		
+				//nothing 		
+			} 		
+
+		});
+		
 		rAd = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, rList);
 		setListAdapter(rAd);
 		printUserRecipes();
@@ -132,67 +163,109 @@ public class WhatsForLunch extends ListActivity {
 	
 	
 	private void foodChange(){
+		ready = false;
 		Database_Manager myDb = new Database_Manager(this);
 	    Cursor myCur = myDb.getCursor();
 	    ArrayList<String> i = new ArrayList<String>();
 	    myCur.moveToFirst();
-	    if(!myCur.isAfterLast()){
-			if(all_foods){
-				while(true){
-		        	i.add(myCur.getString(1));
-		        	myCur.moveToNext();
-		        	if(myCur.isAfterLast())
-		        		break;
-		        }
-			}else{
-				while(true){
-					if(myCur.getString(2).equals("Aged"))
-		        		i.add(myCur.getString(1));
-		        	myCur.moveToNext();
-		        	if(myCur.isAfterLast())
-		        		break;
-		        }
-			}
+	    if(!search_only){
+		    if(!myCur.isAfterLast()){
+				if(all_foods){
+					while(!myCur.isAfterLast()){
+			        	i.add(myCur.getString(1));
+			        	myCur.moveToNext();
+			        }
+				}else{
+					while(!myCur.isAfterLast()){
+						if(myCur.getString(2).equals("Aged"))
+			        		i.add(myCur.getString(1));
+			        	myCur.moveToNext();
+			        }
+				}
+		    }
 	    }
 		rec = new RecipeList();
-		rec.addIngredients(i);
 		wfl.clear();
-		rec.getRecipes();
+		if(i.isEmpty() && !search_only){
+			rList.clear();
+			if(all_foods)
+				rList.add("\nNo food in the system.\n");
+			else if(!search_only)
+				rList.add("\nNo expiring foods.\n");
+			else
+				rList.add("\nEnter search terms seperated by spaces.\n");
+			rAd.notifyDataSetChanged();
+		}else{
+			EditText e = (EditText) findViewById(R.id.query);
+    		String s = e.getText().toString();
+    		if(!search_only || !s.equals("")){
+				rec.addIngredients(i);
+				rec.getRecipes();
+				ready = true;
+    		} else{
+    			rList.clear();
+    			rList.add("\nEnter search terms seperated by spaces and press \"Search\".\n");
+    			rAd.notifyDataSetChanged();
+    		}
+		}
 	}
 	
 	public void foodButton(View view){
-		if(all_foods)
-			all_foods = false;
-		else
+		if(search_only){
+			search_only = false;
 			all_foods = true;
+		}else if(all_foods){
+			all_foods = false;
+		}else{
+			search_only = true;
+		}
 		Button b = (Button)view.findViewById(R.id.foodChange);
-		if(all_foods){
+		if(search_only){
+			b.setText("All Foods");
+			recipe_type.setText("Generated Recipes(Search Only)");
+		}else if(all_foods){
 			b.setText("Expiring Foods");
 			recipe_type.setText("Generated Recipes(All Foods)");
 		}else{
-			b.setText("All Foods");
+			b.setText("Search Only");
 			recipe_type.setText("Generated Recipes(Expiring)");
 		}
 		foodChange();
 	}
 	
-	public void moreRecipes(View view){
-		rec.getRecipes();
+	public void search(View view){
+		wfl.clear();
+		EditText e = (EditText) findViewById(R.id.query);
+    	String s = e.getText().toString();
+    	if(!search_only || !s.equals(""))
+    		rec.getRecipes();
+    	else{
+    		wfl.clear();
+    		updateList();
+    	}
 	}
 
 	private void updateList() {
+		ready = false;
 		ArrayList<String> rec_strings = new ArrayList<String>(wfl.size());
-		String s;
 		for(Recipe r : wfl){
-			s = r.getName();
-			s = s.replaceAll("\\n","");
-			s = s.replaceAll("&amp;","&");
-			rec_strings.add(s);
+			rec_strings.add(r.getName());
 		}
 		rList.clear();
 		rList.addAll(rec_strings);
-		if(rList.isEmpty())
-			rList.add("\nNo recipes found.\nYou may have spelled your ingredients in a way we don't recognize or you are out of food at the moment.\n");
+		if(rList.isEmpty()){
+			if(rec.getIngredients().isEmpty()){
+				if(all_foods)
+					rList.add("\nNo food in the system.\n");
+				else if(!search_only)
+					rList.add("\nNo expiring foods.\n");
+				else
+					rList.add("\nEnter search terms seperated by spaces and press \"Search\".\n");
+			}else
+				rList.add("\nNo recipes found.\nYou may have spelled your ingredients or query in a way we don't recognize.\n");
+		}else{
+			ready = true;
+		}
 		rAd.notifyDataSetChanged();
 	}
 
@@ -274,6 +347,10 @@ public class WhatsForLunch extends ListActivity {
 	    //returns 10 recipes by default
 	    public void getRecipes(){
 	    	//getRecipes(10);
+	    	if(ingredients.isEmpty() && !search_only){ 		
+	    		updateList(); 		
+	    		return; 		
+	    	}
 	    	try {
 				puppy();
 			} catch (IOException e) {
@@ -296,8 +373,13 @@ public class WhatsForLunch extends ListActivity {
 	    
 	    // gets 10 more recipes
 	    private void puppy() throws IOException{
-	    	int page = (wfl.size() / 10) + 1;
+	    	// TODO: page numbers, multiple urls
 	    	String u = url;
+	    	EditText q = (EditText) findViewById(R.id.query);
+	    	String query = q.getText().toString();
+	    	u = u.concat("&q=");
+	    	u = u.concat(query);
+	    	int page = (wfl.size() / 10) + 1;
 	    	u = u.concat("&p=");
 	    	u = u.concat(Integer.toString(page));
 	    	test = u;
@@ -322,7 +404,8 @@ public class WhatsForLunch extends ListActivity {
 	    		PuppyHandler pup = new PuppyHandler();
 	    		//ArrayList<Recipe> result = new ArrayList<Recipe>();
 	        	try {
-	    			pup.parse(downloadUrl(urls[0]));
+	        		for(String u : urls)
+	        			pup.parse(downloadUrl(u));
 	    		} catch (IOException e) {
 	    			e.printStackTrace();
 	    		}
@@ -395,8 +478,12 @@ public class WhatsForLunch extends ListActivity {
 	    		// title
 	    		recTitle.setEndTextElementListener(new EndTextElementListener() {
 	    			public void end(String body) {
+	    				body = body.replaceAll("\\n","");
+	    				body = body.replaceAll("&amp;","&");
+	    				body = body.replaceAll("\\t","");
+	    				body = body.replaceAll("\\f","");
+	    				body = body.replaceAll("\\r","");
 	    				recipe.setName(body);
-	    				// TODO: work = body;
 	    			}
 	    		});
 	    		

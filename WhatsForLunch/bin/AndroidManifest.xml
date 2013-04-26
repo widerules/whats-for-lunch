@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-	package="com.example.whatsforlunch"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.whatsforlunch"
     android:versionCode="1"
+
     android:versionName="1.0" >
     
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" 
-        />
+        android:targetSdkVersion="17" />
 
     <application
         android:allowBackup="true"
@@ -17,9 +18,8 @@
         android:label="@string/app_name"
         android:persistent="true"
         android:theme="@style/WhatsForLunchTheme" >
-        
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.whatsforlunch.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,8 +28,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="FoodExpAlarm" />
-        
+        <receiver android:name="com.example.whatsforlunch.FoodExpAlarm" />
+
         <activity
             android:name="com.example.whatsforlunch.Enter_Foods"
             android:label="@string/title_activity_enter__foods"
@@ -50,6 +50,10 @@
             android:label="@string/title_activity_trip__edit" >
         </activity>
         <activity
+            android:name="com.example.whatsforlunch.Trip_Select"
+            android:label="@string/title_activity_trip_select" >
+        </activity>
+        <activity
             android:name="com.example.whatsforlunch.SeeWhatsForLunch"
             android:label="@string/title_activity_see_whats_for_lunch" >
         </activity>
@@ -58,10 +62,41 @@
             android:label="@string/title_activity_whats_for_lunch" >
         </activity>
         <activity
-            android:name="com.example.whatsforlunch.Trip_Select"
-            android:label="@string/title_activity_trip_select" >
+            android:name="com.example.whatsforlunch.EF_CurTrip_Frag"
+            android:label="@string/title_activity_ef__current_trip__fragment" >
         </activity>
 
-    </application>
+        <activity android:name="com.example.whatsforlunch.UserRecipes" 
+            android:label="@string/user_recipe_title">
+        </activity>
 
-</manifest>
+
+        <activity
+            android:name="com.example.whatsforlunch.EF_Categories_Frag"
+            android:label="@string/title_activity_ef__add_items__fragment" >
+        </activity>
+        <activity
+            android:name="com.example.whatsforlunch.Enter_Foods_revamp"
+            android:label="@string/title_activity_enter_foods_revamp" >
+        </activity>
+        <activity
+            android:name="com.example.whatsforlunch.PromptTripNameDialog"
+            android:label="@string/title_activity_prompt_trip_name" >
+        </activity>
+
+	    <service android:name=".bootService" android:label="serviceForBootUp" android:exported="false">
+		    <intent-filter>
+		        <action android:name="com.example.whatsforlunch.BootService" />
+		    </intent-filter>
+		</service>
+		<receiver android:name=".receiver.StartMyServiceAtBootReceiver" 
+		    android:enabled="true" android:exported="false" 
+		    android:label="StartMyServiceAtBootReceiver">
+		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED" />
+		    </intent-filter>
+		</receiver>
+	
+	</application>
+
+</manifest>
