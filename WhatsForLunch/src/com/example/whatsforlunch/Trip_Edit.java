@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -30,6 +32,7 @@ public class Trip_Edit extends ListActivity {
     ArrayAdapter<String> list;
     ArrayList<Integer> red = new ArrayList<Integer>();
     ArrayList<Integer> yellow = new ArrayList<Integer>();
+    ArrayList<Long> ids = new ArrayList<Long>();
     int type;
 
     @Override
@@ -40,7 +43,16 @@ public class Trip_Edit extends ListActivity {
         myCur = myDb.getCursor();
         Bundle b = getIntent().getExtras();
         type = b.getInt("type");
-        trip_name = b.getString("trip name");     
+        trip_name = b.getString("trip name");
+        
+        TextView name_text = (TextView) this.findViewById(R.id.trip_edit_name);
+        if(type == 1){
+        	name_text.setText("All Foods");
+        }else if(type == 2){
+        	name_text.setText("Expiring Foods");
+        }else{
+        	name_text.setText(trip_name);
+        }
         
         /*
         mListAdapter = new MyAdapter(Trip_Edit.this, myCur, trip_name);
@@ -50,6 +62,18 @@ public class Trip_Edit extends ListActivity {
         setListAdapter(list);
         
         listView = getListView();
+        listView.setOnItemLongClickListener(new OnItemLongClickListener(){
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View view,
+					int position, long arg3) {
+				Intent i = new Intent(Trip_Edit.this, Item_Edit.class);
+				i.putExtra("id", ids.get(position));
+				startActivity(i);
+				return true;
+			}
+        	
+        });
 
         listView.setItemsCanFocus(false);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -62,6 +86,7 @@ public class Trip_Edit extends ListActivity {
     	items.clear();
     	red.clear();
     	yellow.clear();
+    	ids.clear();
     	DateTime now = new DateTime();
     	DateTime exp;
     	DateTime expY;
@@ -69,22 +94,31 @@ public class Trip_Edit extends ListActivity {
         if(type != 0){
         	int count = 0;
         	while(!myCur.isAfterLast()){
-        		if(type == 1)
+        		if(type == 1){
         			items.add(myCur.getString(1));
+        			ids.add(myCur.getLong(0));
+        		}
             	date = myCur.getString(5).split("/");
 			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
 			    expY = exp.plusDays(-3);
 			    if(now.isAfter(exp)){
 			    	red.add(count);
-			    	if(type == 2)
+			    	if(type == 2){
 			    		items.add(myCur.getString(1));
+			    		count++;
+			    		ids.add(myCur.getLong(0));
+			    	}
 			    }else if(now.isAfter(expY)){
 			    	yellow.add(count);
-			    	if(type == 2)
+			    	if(type == 2){
 			    		items.add(myCur.getString(1));
+			    		count++;
+			    		ids.add(myCur.getLong(0));
+			    	}
 			    }
+			    if(type == 1)
+			    	count++;
             	myCur.moveToNext();
-            	count++;
             }
         	Button deleteTrip = (Button)this.findViewById(R.id.delete_trip);
         	deleteTrip.setText("Delete All");
@@ -93,17 +127,22 @@ public class Trip_Edit extends ListActivity {
         	while(!myCur.isAfterLast()){
             	if(myCur.getString(3).equals(trip_name)){
             		items.add(myCur.getString(1));
+            		ids.add(myCur.getLong(0));
                 	date = myCur.getString(5).split("/");
     			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
     			    expY = exp.plusDays(-3);
     			    if(now.isAfter(exp)){
     			    	red.add(count);
-    			    	if(type == 2)
+    			    	if(type == 2){
     			    		items.add(myCur.getString(1));
+    			    		ids.add(myCur.getLong(0));
+    			    	}
     			    }else if(now.isAfter(expY)){
     			    	yellow.add(count);
-    			    	if(type == 2)
+    			    	if(type == 2){
     			    		items.add(myCur.getString(1));
+    			    		ids.add(myCur.getLong(0));
+    			    	}
     			    }
             		count++;
             	}
@@ -249,6 +288,7 @@ public class Trip_Edit extends ListActivity {
 	
 	// adapter for colors
 	class ColoredAdapter extends ArrayAdapter<String> {
+
 		Activity context;
 		ArrayList<String> items;
 

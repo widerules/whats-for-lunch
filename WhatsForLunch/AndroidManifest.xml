@@ -83,6 +83,10 @@
             android:name="com.example.whatsforlunch.PromptTripNameDialog"
             android:label="@string/title_activity_prompt_trip_name" >
         </activity>
+        <activity
+            android:name="com.example.whatsforlunch.Item_Edit"
+            android:label="@string/title_activity_item_edit" >
+        </activity>
 
 	    <service android:name=".bootService" android:label="serviceForBootUp" android:exported="false">
 		    <intent-filter>

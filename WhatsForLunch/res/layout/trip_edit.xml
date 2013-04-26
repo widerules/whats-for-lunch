@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/remove"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@+id/trip_name" />
 
     <Button
         android:id="@+id/remove"
@@ -37,5 +37,13 @@
         android:layout_toLeftOf="@+id/trip_name"
         android:onClick="deleteTrip"
         android:text="@string/trip_edit_delete_trip" />
+
+    <TextView
+        android:id="@+id/trip_edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
