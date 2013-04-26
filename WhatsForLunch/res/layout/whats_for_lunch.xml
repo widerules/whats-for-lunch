@@ -45,25 +45,6 @@
 
     </ListView>
 
-    <Button
-        android:id="@+id/foodChange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:onClick="foodButton"
-        android:text="@string/whats_for_lunch_get_more_recipes"
-        android:textColor="@color/black" />
-
-    <Button
-        android:id="@+id/moreRecipes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@android:id/list"
-        android:layout_toRightOf="@+id/foodChange"
-        android:onClick="moreRecipes"
-        android:text="@string/whats_for_lunch_more" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -73,6 +54,37 @@
         android:text="@string/whats_for_lunch_my_recipes"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <Button
+        android:id="@+id/moreRecipes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@android:id/list"
+        android:onClick="search"
+        android:text="@string/whats_for_lunch_more" />
+
+    <Button
+        android:id="@+id/foodChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/moreRecipes"
+        android:onClick="foodButton"
+        android:text="@string/whats_for_lunch_get_more_recipes"
+        android:textColor="@color/black" />
+
+    <EditText
+        android:id="@+id/query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/foodChange"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@android:id/list"
+        android:layout_toLeftOf="@+id/foodChange"
+        android:ems="10"
+        android:hint="@string/whats_for_lunch_search_terms" >
+        <requestFocus />
+    </EditText>
     <TextView
         android:id="@+id/displayUserRecipes"
         android:layout_width="wrap_content"
@@ -83,5 +95,4 @@
         android:layout_below="@+id/textView2"
         android:ems="10" >
     </TextView>
-
     </RelativeLayout>
