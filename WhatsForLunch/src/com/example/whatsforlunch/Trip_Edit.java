@@ -2,6 +2,8 @@ package com.example.whatsforlunch;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -27,6 +29,8 @@ public class Trip_Edit extends ListActivity {
     ArrayList<String> items = new ArrayList<String>();
     ArrayAdapter<String> list;
     ArrayList<Integer> red = new ArrayList<Integer>();
+    ArrayList<Integer> yellow = new ArrayList<Integer>();
+    int type;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,8 @@ public class Trip_Edit extends ListActivity {
         myDb = new Database_Manager(this);
         myCur = myDb.getCursor();
         Bundle b = getIntent().getExtras();
-        trip_name = b.getString("trip name");      
+        type = b.getInt("type");
+        trip_name = b.getString("trip name");     
         
         /*
         mListAdapter = new MyAdapter(Trip_Edit.this, myCur, trip_name);
@@ -56,12 +61,28 @@ public class Trip_Edit extends ListActivity {
     	myCur.moveToFirst();
     	items.clear();
     	red.clear();
-        if(trip_name.equals("")){
+    	yellow.clear();
+    	DateTime now = new DateTime();
+    	DateTime exp;
+    	DateTime expY;
+    	String[] date = new String[3];
+        if(type != 0){
         	int count = 0;
         	while(!myCur.isAfterLast()){
-            	items.add(myCur.getString(1));
-            	if(myCur.getString(2).equals("Aged"))
-            		red.add(count);
+        		if(type == 1)
+        			items.add(myCur.getString(1));
+            	date = myCur.getString(5).split("/");
+			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+			    expY = exp.plusDays(-3);
+			    if(now.isAfter(exp)){
+			    	red.add(count);
+			    	if(type == 2)
+			    		items.add(myCur.getString(1));
+			    }else if(now.isAfter(expY)){
+			    	yellow.add(count);
+			    	if(type == 2)
+			    		items.add(myCur.getString(1));
+			    }
             	myCur.moveToNext();
             	count++;
             }
@@ -72,9 +93,18 @@ public class Trip_Edit extends ListActivity {
         	while(!myCur.isAfterLast()){
             	if(myCur.getString(3).equals(trip_name)){
             		items.add(myCur.getString(1));
-            		// TODO: change back to Aged
-            		if(myCur.getString(2).equals("Aged"))
-                		red.add(count);
+                	date = myCur.getString(5).split("/");
+    			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+    			    expY = exp.plusDays(-3);
+    			    if(now.isAfter(exp)){
+    			    	red.add(count);
+    			    	if(type == 2)
+    			    		items.add(myCur.getString(1));
+    			    }else if(now.isAfter(expY)){
+    			    	yellow.add(count);
+    			    	if(type == 2)
+    			    		items.add(myCur.getString(1));
+    			    }
             		count++;
             	}
             	myCur.moveToNext();
@@ -83,6 +113,7 @@ public class Trip_Edit extends ListActivity {
         if(items.isEmpty()){
         	this.finish();
         }
+        listView.clearChoices();
         list.notifyDataSetChanged();
         //colorCode();
 	}
@@ -102,11 +133,23 @@ public class Trip_Edit extends ListActivity {
     	 
     	 //get rowIDs of all rows to be removed
     	 while(!myCur.isAfterLast()){
-    		if(trip_name.equals("")){
+    		if(type == 1){
     			if(ids.contains(myCur.getString(1))){
 	         		removes.add(myCur.getLong(0)); //avoiding ConcurrentModification Exception?
 	         		ids.remove(myCur.getString(1)); //only needed if we allow duplicates in a single trip
 	         	}
+    		}else if(type == 2){
+    			int DAYS_BEFORE_EXPIRATION = -3;
+				String[] date = new String[3];
+				DateTime now = new DateTime();
+				DateTime exp;
+				date = myCur.getString(5).split("/");
+			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+			    exp = exp.plusDays(DAYS_BEFORE_EXPIRATION);
+			    if(now.isAfter(exp) && ids.contains(myCur.getString(1))){
+			    	removes.add(myCur.getLong(0));
+			    	ids.remove(myCur.getString(1));
+			    }
     		}else{
     			if((myCur.getString(3).equals(trip_name))&&(ids.contains(myCur.getString(1)))){
 	         		removes.add(myCur.getLong(0)); //avoiding ConcurrentModification Exception?
@@ -124,15 +167,39 @@ public class Trip_Edit extends ListActivity {
     }
     
     public void deleteTrip(View view){
-    	if(trip_name.equals("")){
+    	if(type == 1){
     		deleteAll();
+    	}else if(type == 2){
+    		deleteExp();
     	}else{
 	    	myDb.deleteTrip(trip_name);
     	}
     	this.finish();
     }
 
-    private void deleteAll() {
+    private void deleteExp() {
+    	myCur.moveToFirst();
+		ArrayList<Long> removes = new ArrayList<Long>();
+		int DAYS_BEFORE_EXPIRATION = -3;
+		String[] date = new String[3];
+		DateTime now = new DateTime();
+		DateTime exp;
+		
+		while(!myCur.isAfterLast()){
+			date = myCur.getString(5).split("/");
+		    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+		    exp = exp.plusDays(DAYS_BEFORE_EXPIRATION);
+		    if(now.isAfter(exp)){
+		    	removes.add(myCur.getLong(0));
+		    }
+		    myCur.moveToNext();
+		}
+		for(Long id : removes)
+			myDb.deleteRow(id);
+		
+	}
+
+	private void deleteAll() {
 		myCur.moveToFirst();
 		ArrayList<Long> removes = new ArrayList<Long>();
 		while(!myCur.isAfterLast()){
@@ -195,6 +262,9 @@ public class Trip_Edit extends ListActivity {
 			TextView text = (TextView) super.getView(position, convertView, parent);
 			if(red.contains(position))
 				text.setTextColor(Color.RED);
+			else if(yellow.contains(position)){
+				text.setTextColor(Color.YELLOW);
+			}
 			text.setText(items.get(position));
 			return text;
 		}
