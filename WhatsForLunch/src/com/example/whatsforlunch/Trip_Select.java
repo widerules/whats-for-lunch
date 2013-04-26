@@ -50,9 +50,12 @@ public class Trip_Select extends ListActivity {
         	        Intent i = new Intent(Trip_Select.this, Trip_Edit.class);
         	        String t = (String) ((TextView)arg1).getText();
         	        if(position == 0)
-        	        	i.putExtra("trip name","");
+        	        	i.putExtra("type", 1);
+        	        else if(position == 1)
+        	        	i.putExtra("type", 2);
         	        else
-        	        	i.putExtra("trip name",t);
+        	        	i.putExtra("type", 0);
+        	        i.putExtra("trip name",t);
         	        startActivity(i);
         	        
         	}
@@ -67,6 +70,7 @@ public class Trip_Select extends ListActivity {
         String name;
         trips.clear();
         trips.add("All Trips");
+        trips.add("Expiring Foods");
         
         while(!myCur.isAfterLast()){
         	name = myCur.getString(3);//name of trip
@@ -74,7 +78,7 @@ public class Trip_Select extends ListActivity {
         		trips.add(name);
         	myCur.moveToNext();
         }
-		if(trips.size() == 1){
+		if(trips.size() == 2){
 			trips.clear();
 			trips.add("\nNo food\n");
 		}

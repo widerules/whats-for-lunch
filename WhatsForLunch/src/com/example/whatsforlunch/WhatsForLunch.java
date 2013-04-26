@@ -9,8 +9,16 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import org.joda.time.DateTime;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -176,9 +184,17 @@ public class WhatsForLunch extends ListActivity {
 			        	myCur.moveToNext();
 			        }
 				}else{
+					int DAYS_BEFORE_EXPIRATION = -3;
+					String[] date = new String[3];
+					DateTime now = new DateTime();
+					DateTime exp;
 					while(!myCur.isAfterLast()){
-						if(myCur.getString(2).equals("Aged"))
-			        		i.add(myCur.getString(1));
+					    date = myCur.getString(5).split("/");
+					    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+					    exp = exp.plusDays(DAYS_BEFORE_EXPIRATION);
+					    if(now.isAfter(exp)){
+					    	i.add(myCur.getString(1));
+					    }
 			        	myCur.moveToNext();
 			        }
 				}
@@ -282,7 +298,7 @@ public class WhatsForLunch extends ListActivity {
 		//private ArrayList<Recipe> rList;
 		private ArrayList<String> ingredients;
 		private ArrayList<String> unused;
-		public String test;
+		//public String test;
 		private String url = "http://www.recipepuppy.com/api/?format=xml&i=";
 		//public AsyncTask<String,Void,Void> task;
 		
@@ -336,13 +352,16 @@ public class WhatsForLunch extends ListActivity {
 			ingredients.addAll(unused);
 			unused.clear();
 	    }
-	    
+	    /*
+	     * Not used for now
+	     * 
 	    //returns specified number of recipes
 	    private void getRecipes(int min){
 	    	if(wfl.size() >= min)
 	    		return;
 	    	moreRecipes(min);
 	    }
+	    */
 	    
 	    //returns 10 recipes by default
 	    public void getRecipes(){
@@ -358,8 +377,11 @@ public class WhatsForLunch extends ListActivity {
 			}
 	    }
 	    
+	    /*
+	     * not used for now
+	     * 
 	    private void moreRecipes(int min){
-	    	//int oSize = wfl.size();
+	    	// int oSize = wfl.size();
 	    	if(wfl.size() < min){
 				try {
 					puppy();
@@ -370,10 +392,10 @@ public class WhatsForLunch extends ListActivity {
 				//	break;
 	    	}
 	    }
+	    */
 	    
 	    // gets 10 more recipes
 	    private void puppy() throws IOException{
-	    	// TODO: page numbers, multiple urls
 	    	String u = url;
 	    	EditText q = (EditText) findViewById(R.id.query);
 	    	String query = q.getText().toString();
@@ -382,7 +404,7 @@ public class WhatsForLunch extends ListActivity {
 	    	int page = (wfl.size() / 10) + 1;
 	    	u = u.concat("&p=");
 	    	u = u.concat(Integer.toString(page));
-	    	test = u;
+	    	//test = u;
 	    	new AsyncPuppy().execute(u);
 	    }
 	    
@@ -515,7 +537,15 @@ public class WhatsForLunch extends ListActivity {
 	    		 
 	    	}
 	    }
-	    
+	    /*
+	    class OneAsyncThreadPoolExecutor extends ThreadPoolExecutor{
+			
+			public OneAsyncThreadPoolExecutor() { 
+				super(1, 1, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+			}
+	    	
+	    }
+	    */
 	    
 	}
 }
