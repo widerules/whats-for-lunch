@@ -11,11 +11,8 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.IllegalFieldValueException;
-
 import com.example.whatsforlunch.PromptTripNameDialog.NoticeDialogListener;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -30,7 +27,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +40,7 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
-import android.widget.Toast;
+import android.widget.TabWidget;
 
 public class Enter_Foods extends FragmentActivity implements OnTabChangeListener, NoticeDialogListener{
 
@@ -202,6 +198,23 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	protected FoodItem[] getTripItems(){
 		return currentTrip.toArray(new FoodItem[currentTrip.size()]);
 	}
+	protected String[] getCategories(){
+		//return currentTrip.toArray(new String[currentTrip.size()]);
+		ArrayList<String> cats = ddb.getCategories();
+		return cats.toArray(new String[cats.size()]);
+	}
+	protected String[] getFoodsInCategory(String category){
+		ArrayList<String> food = ddb.getFoodsInCategory(category);
+		return food.toArray(new String[food.size()]);
+	}
+	protected void removeItemFromTrip(int pos){
+		currentTrip.remove(pos);
+	}
+	protected void setFoodPicked(String food){
+		AutoCompleteTextView nameField = 
+				(AutoCompleteTextView) findViewById(R.id.itemName);
+		nameField.setText(food);
+	}
 	
 	public void addItemToTrip(View view){
 		//Get Item data
@@ -291,7 +304,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		startActivity(intent);
 	}
 	private String generateTripName(){
-		Calendar c = Calendar.getInstance();	
+		Calendar c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
 		
 		return df.format(c.getTime());
@@ -398,7 +411,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	 * 	text of the given edit_text field.
 	 *
 	 */
-	@SuppressLint("ValidFragment")
 	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 
 		public EditText activity_edittext;

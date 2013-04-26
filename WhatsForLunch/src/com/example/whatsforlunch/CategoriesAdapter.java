@@ -1,48 +1,39 @@
 package com.example.whatsforlunch;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class FoodlistAdapter extends BaseAdapter {
+public class CategoriesAdapter extends BaseAdapter {
 
 	//the system service that read the resource and instantiate the View from it.
 	private LayoutInflater _inflater;
 	//Save the calling fragment to call back to it
-	private EF_CurTrip_Frag _frag;
+	private EF_Categories_Frag _frag;
 	//My collection to display, can be any type of custom object
-	FoodItem[] _items;
+	String[] _cats;
 	
-	public FoodlistAdapter(Context context, FoodItem[] items, EF_CurTrip_Frag fragment) {
+	public CategoriesAdapter(Context context, String[] cats, EF_Categories_Frag fragment) {
         _inflater = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        _items = items;
+        _cats = cats;
         _frag = fragment;
     }
 	
 	//The number of items in the collection
 	@Override
 	public int getCount() {
-		return _items.length;
+		return _cats.length;
 	}
 
 	//Allow getting the item at the current location
 	@Override
-	public Object getItem(int position) {
-		return _items[position];
-	}
-	public String getItemName(int position){
-		return ((FoodItem)_items[position]).getItemName();
-	}
-	public String getItemDate(int position){
-		return ((FoodItem) _items[position]).getExpiration();
+	public String getItem(int position) {
+		return _cats[position];
 	}
 
 	//allow to get the custom identifier of the item. 
@@ -54,9 +45,7 @@ public class FoodlistAdapter extends BaseAdapter {
 	}
 
 	static class ViewHolder {
-        TextView nameText;
-        TextView dateText;
-        ImageButton delete;
+        TextView categoryItem;
     }
 
     @Override
@@ -66,14 +55,11 @@ public class FoodlistAdapter extends BaseAdapter {
 
         if (convertView == null) {
             // 1. Create the item view based on resource layout.
-            convertView = _inflater.inflate(R.layout.ef_itemdetail, null);
+            convertView = _inflater.inflate(R.layout.ef_catdetail, null);
 
             // 2. Find all customized elements.
             holder = new ViewHolder();
-            holder.delete = (ImageButton) convertView.findViewById(R.id.deleteItem);
-            holder.nameText = (TextView) convertView
-                    .findViewById(R.id.enter_name);
-            holder.dateText = (TextView) convertView.findViewById(R.id.enter_xdate);
+            holder.categoryItem = (TextView) convertView.findViewById(R.id.category);
             
             
             convertView.setTag(holder);
@@ -83,19 +69,16 @@ public class FoodlistAdapter extends BaseAdapter {
         }
 
         // 3. Customize the item view based on position.
-        holder.nameText.setText(getItemName(position));
-        holder.dateText.setText(getItemDate(position));
-        //holder.delete.setFocusable(false);
-        holder.delete.setId(position);
-        holder.delete.setOnClickListener(new View.OnClickListener() {
+        holder.categoryItem.setText(getItem(position));
+        holder.categoryItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg) {
-                //TODO delete row 
-            	Log.d("Current Trip", "row "+pos+" deleted");
-            	_frag.removeItem(pos);
+            public void onClick(View arg) { 
+            	//Log.d("Categories", "category: "+getItem(pos)+" selected");
+            	_frag.updateCategories(getItem(pos));
             }
         });
-
+        
+        
         return convertView;
     }  
 

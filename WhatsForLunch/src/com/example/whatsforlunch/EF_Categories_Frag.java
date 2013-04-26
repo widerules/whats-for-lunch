@@ -1,39 +1,24 @@
 package com.example.whatsforlunch;
 
 import android.os.Bundle;
-import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
-public class EF_Categories_Frag extends ListFragment {
+public class EF_Categories_Frag extends ListFragment{
 	
 	LayoutInflater inflater;
-	String[] countries = new String[] {
-	        "Fruit",
-	        "Vegetables",
-	        "Dairy",
-	        "Sri Lanka",
-	        "Bangladesh",
-	        "Nepal",
-	        "Afghanistan",
-	        "North Korea",
-	        "South Korea",
-	        "Japan"
-	    };
-		
-	 
+
 	    @Override
 	    public View onCreateView(LayoutInflater inflate, ViewGroup container,Bundle savedInstanceState) {
 	    	inflater = inflate;
-	 
-	    	updateList();
 	    	
+	    	updateList();
+
 	        return super.onCreateView(inflater, container, savedInstanceState);
 	    }
 	    
@@ -43,14 +28,18 @@ public class EF_Categories_Frag extends ListFragment {
 	     */
 	    public void updateList(){
 	    	/** Creating an array adapter to store the list **/
-	    	//final String[] itemNames = ((Enter_Foods) getActivity()).getTripItemNames();
-	    	
-	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-	        		inflater.getContext(), 							//Context
-	        		android.R.layout.simple_list_item_1,			//List detail
-	        		countries);										//List contents
-	 
+	    	String[] cats = ((Enter_Foods) getActivity()).getCategories(); 
 	        /** Setting the list adapter for the ListFragment */
-	        setListAdapter(adapter);
+	        setListAdapter(new CategoriesAdapter(getActivity(), cats, EF_Categories_Frag.this));
+	    }
+	    public void updateCategories(String category){
+	    	String[] food = ((Enter_Foods) getActivity()).getFoodsInCategory(category);
+	    	if(food!=null && food.length > 0){
+	    		//A category was selected
+	    		setListAdapter(new CategoriesAdapter(getActivity(), food, EF_Categories_Frag.this));
+	    	}else{
+	    		//A food item was selected within a category
+	    		((Enter_Foods) getActivity()).setFoodPicked(category); 
+	    	}
 	    }
 }

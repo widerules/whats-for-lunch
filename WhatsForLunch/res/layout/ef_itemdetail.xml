@@ -4,6 +4,16 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
     
+    <ImageButton 
+        android:contentDescription="remove item from list"
+        android:id="@+id/deleteItem"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/delete_red"
+        android:background="@null"/>
+    
     <TextView
     	android:id="@+id/enter_name"
     	android:layout_width="0dp"
