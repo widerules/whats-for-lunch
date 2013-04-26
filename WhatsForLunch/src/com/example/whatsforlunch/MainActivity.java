@@ -40,9 +40,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		TextView txt = (TextView) findViewById(R.id.enter_food_button1);  
-		Typeface font = Typeface.createFromAsset(getAssets(), "fonts/custFont.ttf");  
-		txt.setTypeface(font);
+		//TextView txt = (TextView) findViewById(R.id.enter_food_button1);  
+		//Typeface font = Typeface.createFromAsset(getAssets(), "fonts/custFont.ttf");  
+		//txt.setTypeface(font);
 	
 		db = new Description_Database(this);
 		ad = new Alert_Database(this);

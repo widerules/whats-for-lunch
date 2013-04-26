@@ -9,20 +9,7 @@ import android.widget.ArrayAdapter;
 
 public class EF_CurTrip_Frag extends ListFragment {
 	
-	LayoutInflater inflater;
-	String[] countries = new String[] {
-	        "India",
-	        "Pakistan",
-	        "Sri Lanka",
-	        "China",
-	        "Bangladesh",
-	        "Nepal",
-	        "Afghanistan",
-	        "North Korea",
-	        "South Korea",
-	        "Japan"
-	    };
-		
+	LayoutInflater inflater;		
 	 
 	    @Override
 	    public View onCreateView(LayoutInflater inflate, ViewGroup container,Bundle savedInstanceState) {
@@ -41,6 +28,10 @@ public class EF_CurTrip_Frag extends ListFragment {
 	    	/** Creating an array adapter to store the list **/
 	    	final FoodItem[] foods = ((Enter_Foods) getActivity()).getTripItems(); 
 	        /** Setting the list adapter for the ListFragment */
-	        setListAdapter(new FoodlistAdapter(getActivity(), foods));
+	        setListAdapter(new FoodlistAdapter(getActivity(), foods, EF_CurTrip_Frag.this));
+	    }
+	    public void removeItem(int pos){
+	    	((Enter_Foods) getActivity()).removeItemFromTrip(pos);
+	    	updateList();
 	    }
 }

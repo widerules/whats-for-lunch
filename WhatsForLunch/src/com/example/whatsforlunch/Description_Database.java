@@ -239,4 +239,118 @@ public class Description_Database extends SQLiteAssetHelper {
             return rowArray;
     }
     
+    /************************************************************************
+     * GET ALL UNIQUE CATEGORIES IN THE DATABASE
+     * 
+     * Retrieves all categories in the database by checking each item's
+     * category value and adding it to a list if not already added. 
+     * 
+     * @return A list of categories found in the database
+     * 
+     */
+    public ArrayList<String> getCategories()
+    {
+            //CREATE ARRAYLIST of categories
+    		ArrayList<String> cats = new ArrayList<String>();
+            Cursor cursor;
+     
+            try
+            {
+                    // this is a database call that creates a "cursor" object.
+                    // the cursor object store the information collected from the
+                    // database and is used to iterate through the data.
+                    cursor = db.query
+                    (
+                    		TABLE_NAME,
+                            new String[]{TABLE_ROW_SIX},
+                            null, null, null, null, null
+                    );
+     
+                    // move the pointer to position zero in the cursor.
+                    cursor.moveToFirst();
+     
+                    // if there is data available after the cursor's pointer, add
+                    // it to the ArrayList that will be returned by the method.
+                    if (!cursor.isAfterLast())
+                    {
+                            do
+                            {
+                            		if( !cats.contains(cursor.getString(0)) ){
+                            			cats.add(cursor.getString(0));
+                            		}
+                            }
+                            while (cursor.moveToNext());
+                    }
+     
+                    // let java know that you are through with the cursor.
+                    cursor.close();
+            }
+            catch (SQLException e)
+            {
+                    Log.e("DB ERROR", e.toString());
+                    e.printStackTrace();
+            }
+     
+            // return the ArrayList containing the given row from the database.
+            return cats;
+    }
+    /******************************************************************************
+     * GET ALL FOOD IN A CATEGORY
+     * 
+     * Retrieves all the food under a given category and returns them as
+     * an array list.
+     * 
+     * @param String of the wanted category
+     * @return ArrayList of food from the given category
+     * 
+     */
+    public ArrayList<String> getFoodsInCategory(String category)
+    {
+            // create an array list to store data from the database row.
+            
+           
+            //CREATE ARRAYLIST 
+    		ArrayList<String> cats = new ArrayList<String>();
+            Cursor cursor;
+     
+            try
+            {
+                    // this is a database call that creates a "cursor" object.
+                    // the cursor object store the information collected from the
+                    // database and is used to iterate through the data.
+                    cursor = db.query
+                    (
+                                    TABLE_NAME,
+                                    new String[]{TABLE_ROW_ONE},     
+                                     TABLE_ROW_SIX + "=?",
+                                    new String[] {category}, null, null, null, null
+                    );
+     
+                    // move the pointer to position zero in the cursor.
+                    cursor.moveToFirst();
+     
+                    // if there is data available after the cursor's pointer, add
+                    // it to the ArrayList that will be returned by the method.
+                    if (!cursor.isAfterLast())
+                    {
+                            do
+                            {
+                            	cats.add(cursor.getString(0));
+                            }
+                            while (cursor.moveToNext());
+                    }
+     
+                    // let java know that you are through with the cursor.
+                    cursor.close();
+            }
+            catch (SQLException e)
+            {
+                    Log.e("DB ERROR", e.toString());
+                    e.printStackTrace();
+            }
+     
+            // return the ArrayList containing the given row from the database.
+            return cats;
+    }
+    
  }
