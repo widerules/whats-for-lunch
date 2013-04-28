@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -215,10 +216,19 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	protected void removeItemFromTrip(int pos){
 		currentTrip.remove(pos);
 	}
-	protected void setFoodPicked(String food){
+	protected void setFoodPicked(String item){
+		//TODO If item already picked, add to list automatically
 		AutoCompleteTextView nameField = 
 				(AutoCompleteTextView) findViewById(R.id.itemName);
-		nameField.setText(food);
+		//Remove focus so the dropdown does not pop up and cover the date field
+		nameField.clearFocus();
+		//If item already picked, add to list automatically
+		if(nameField.getText().toString().equals(item)){
+			addItemToTrip(null);
+		}else{
+			//Else, place item name in field
+			nameField.setText(item);
+		}
 	}
 	protected void resetCategories(){
 		Log.d("Enter_Foods", "Categories reset");
@@ -233,10 +243,11 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		//Get Item Name
 		AutoCompleteTextView name = 
 				(AutoCompleteTextView) findViewById(R.id.itemName);
-		String itemName = name.getText().toString();
+		String itemName = name.getText().toString().trim();
 		if(itemName.length() == 0){
 			//No item set, require setting an item name
 			Log.d("Entry Error", "No item name set! Sad day.");
+			hideKeyboard();
 			Toast.makeText(getApplicationContext(), "Please enter an item name", Toast.LENGTH_SHORT).show();
 			return;
 		}//Else the name is set and the user is clear to continue
@@ -244,10 +255,17 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		EditText date = (EditText) findViewById(R.id.dateText);
 		String itemDate = date.getText().toString();
 		if(itemDate.length() == 0){
-			//No date set, require setting a date
-			Log.d("Entry Error", "No expiration date set! Sad day.");
-			Toast.makeText(getApplicationContext(), "Please enter an expiration date", Toast.LENGTH_SHORT).show();
-			return;
+			//No date set, attempt to find a date
+			itemDate = ddb.findSoonestExpiration(itemName);
+			//Item not found. Prompt for date
+			if(itemDate == ddb.NOT_IN_SYSTEM){
+				Log.d("Database Error", "No expiration date found for: "+itemName);
+				hideKeyboard();
+				Toast.makeText(getApplicationContext(), " Item not found. Please\nenter an expiration date.", Toast.LENGTH_SHORT).show();
+				return;
+			}else{
+				//Item found, accept add item request
+			}
 		}//Else the date is set and the user is clear to continue
 		//Clear item and date fields
 		date.setText("");
@@ -288,11 +306,12 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		for(FoodItem i : currentTrip){
 			try{
 				db.addRow(
-						i.getItemName(), 
+						i.getItemName(),
 						i.getCondition(), 
 						i.getTripName(), 
 						i.getDatePurchased(), 
-						i.getExpiration());
+						i.getExpiration(),
+						null);
 				if((String) i.getExpiration()!="")
 					foodAlreadyExp= prepareAlarm(foodAlreadyExp, i);
 			}catch(NullPointerException e){
@@ -386,6 +405,9 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	 */
 	public void onTabChanged(String tag) {
 		TabInfo newTab = this.mapTabInfo.get(tag);
+		
+		hideKeyboard();
+		
 		if (mLastTab != newTab) {
 			Log.d("Enter Foods", "Tab changed");
 			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
@@ -408,6 +430,13 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 			ft.commit();
 			this.getSupportFragmentManager().executePendingTransactions();
 		}
+	}
+	private void hideKeyboard() {
+		//Hide the keyboard so the user can see the items
+    	InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE); 
+    	inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), 
+    			InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 	
 	/*****************************************************************

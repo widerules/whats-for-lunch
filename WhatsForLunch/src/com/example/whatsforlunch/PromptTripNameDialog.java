@@ -3,6 +3,7 @@ package com.example.whatsforlunch;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -104,6 +106,7 @@ public class PromptTripNameDialog extends DialogFragment{
                             }else{
                             	//User pressed Yes without entering trip name
                             	Log.d("Entry Error", "No trip name set! Sad day.");
+                            	hideKeyboard();
                             	Toast.makeText(getActivity().getApplicationContext(), 
                             			"Please enter a trip name", Toast.LENGTH_SHORT).show();
                             }
@@ -111,4 +114,11 @@ public class PromptTripNameDialog extends DialogFragment{
                     });
         }
     }
+    private void hideKeyboard() {
+		//Hide the keyboard so the user can see the items
+    	InputMethodManager inputManager = (InputMethodManager)
+                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE); 
+    	inputManager.hideSoftInputFromWindow((null == getActivity().getCurrentFocus()) ? null : getActivity().getCurrentFocus().getWindowToken(), 
+    			InputMethodManager.HIDE_NOT_ALWAYS);
+	}
 }
