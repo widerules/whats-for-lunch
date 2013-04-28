@@ -440,7 +440,7 @@ public class Description_Database extends SQLiteAssetHelper {
     private String calculateDate(Integer days){
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, days);
-		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+		SimpleDateFormat df = new SimpleDateFormat("M/dd/yyyy");
 		
 		return df.format(c.getTime());
 	}

@@ -225,6 +225,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		//If item already picked, add to list automatically
 		if(nameField.getText().toString().equals(item)){
 			addItemToTrip(null);
+			Toast.makeText(getApplicationContext(), item+" added to shopping trip", Toast.LENGTH_SHORT).show();
 		}else{
 			//Else, place item name in field
 			nameField.setText(item);
