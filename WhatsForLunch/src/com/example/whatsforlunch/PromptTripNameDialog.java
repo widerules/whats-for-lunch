@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 //...
 public class PromptTripNameDialog extends DialogFragment{
 	
@@ -66,8 +68,7 @@ public class PromptTripNameDialog extends DialogFragment{
                    @Override
                    public void onClick(DialogInterface dialog, int id) {
                 	// Send the positive button event back to the host activity
-                	   mEditText = (EditText) view.findViewById(R.id.tripName);
-                       mListener.onDialogPositiveClick(mEditText.getText().toString());
+                	   //Override positive onClick in onStart() to control dismissal
                    }
                })
                .setNegativeButton(R.string.no_nameforme, new DialogInterface.OnClickListener() {
@@ -78,5 +79,36 @@ public class PromptTripNameDialog extends DialogFragment{
                    }
                });
         return builder.create();
+    }
+    @Override
+    public void onStart()
+    {
+    	//super.onStart() is where dialog.show() is actually called on the underlying dialog,
+    	//so we have to do it after this point
+        super.onStart();
+        AlertDialog d = (AlertDialog)getDialog();
+
+        if(d != null)
+        {
+            Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                        	mEditText = (EditText) getDialog().getCurrentFocus().findViewById(R.id.tripName);
+                            if(mEditText.getText().toString().length() > 0){
+                            	//Trip name was entered before pressing yes
+                            	mListener.onDialogPositiveClick(mEditText.getText().toString());
+                            	dismiss();
+                            }else{
+                            	//User pressed Yes without entering trip name
+                            	Log.d("Entry Error", "No trip name set! Sad day.");
+                            	Toast.makeText(getActivity().getApplicationContext(), 
+                            			"Please enter a trip name", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 }

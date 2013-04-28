@@ -28,7 +28,7 @@
     <string name="settings_on_off">On/Off</string>
     <string name="title_activity_enter__foods">Enter_Foods</string>
     <string name="title_activity_user__settings">User_Settings</string>
-    <string name="enter_foods_add">Add item to trip</string>
+    <string name="enter_foods_add">Enter item to add</string>
     <string name="title_activity_display__trip">Display_Trip</string>
     <string name="title_activity_trip_select">Trip Selection</string>
     <string name="enter_foods_condition_radio">Select food condition</string>

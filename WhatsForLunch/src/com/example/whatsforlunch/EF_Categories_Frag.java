@@ -17,28 +17,37 @@ public class EF_Categories_Frag extends ListFragment{
 	    public View onCreateView(LayoutInflater inflate, ViewGroup container,Bundle savedInstanceState) {
 	    	inflater = inflate;
 	    	
-	    	updateList();
+	    	setCategories();
 
 	        return super.onCreateView(inflater, container, savedInstanceState);
 	    }
 	    
 	    /**
-	     * Refreshes items in the listview. The item set is repopulated and the
+	     * Refreshes categories in the listview. The category set is repopulated and the
 	     * 	list adapter is reset. Reseting the list adapter refreshes the list.
 	     */
-	    public void updateList(){
-	    	/** Creating an array adapter to store the list **/
+	    public void setCategories(){
+	    	/** Setting the list adapter for the ListFragment */
 	    	String[] cats = ((Enter_Foods) getActivity()).getCategories(); 
-	        /** Setting the list adapter for the ListFragment */
 	        setListAdapter(new CategoriesAdapter(getActivity(), cats, EF_Categories_Frag.this));
 	    }
-	    public void updateCategories(String category){
+	    /**
+	     * Enters the selected category. The listview is repopulated with items
+	     * from the selected category and the adapter is reset.
+	     * 
+	     * If the selection is not a known category, it is assumed to be a food
+	     * selection. The selection is then entered into the appropriate
+	     * edit text field.
+	     * @param category
+	     */
+	    public void enterCategory(String category){
 	    	String[] food = ((Enter_Foods) getActivity()).getFoodsInCategory(category);
+	    	//A category was selected
 	    	if(food!=null && food.length > 0){
-	    		//A category was selected
 	    		setListAdapter(new CategoriesAdapter(getActivity(), food, EF_Categories_Frag.this));
-	    	}else{
-	    		//A food item was selected within a category
+	    	}
+	    	//A food item was selected within a category
+	    	else{
 	    		((Enter_Foods) getActivity()).setFoodPicked(category); 
 	    	}
 	    }

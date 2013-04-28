@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import com.example.whatsforlunch.PromptTripNameDialog.NoticeDialogListener;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -21,6 +22,7 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -41,9 +43,12 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabWidget;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class Enter_Foods extends FragmentActivity implements OnTabChangeListener, NoticeDialogListener{
 
+	final static String UNKNOWN_EXPIRATION = "unknown exp date";
 	Database_Manager db;
 	Description_Database ddb;
 	
@@ -215,6 +220,13 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 				(AutoCompleteTextView) findViewById(R.id.itemName);
 		nameField.setText(food);
 	}
+	protected void resetCategories(){
+		Log.d("Enter_Foods", "Categories reset");
+		EF_Categories_Frag frag = 
+				(EF_Categories_Frag) getSupportFragmentManager()
+					.findFragmentById(R.id.realtabcontent);
+		frag.setCategories();
+	}
 	
 	public void addItemToTrip(View view){
 		//Get Item data
@@ -222,13 +234,24 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		AutoCompleteTextView name = 
 				(AutoCompleteTextView) findViewById(R.id.itemName);
 		String itemName = name.getText().toString();
-		//Clear item field
-		name.setText("");
+		if(itemName.length() == 0){
+			//No item set, require setting an item name
+			Log.d("Entry Error", "No item name set! Sad day.");
+			Toast.makeText(getApplicationContext(), "Please enter an item name", Toast.LENGTH_SHORT).show();
+			return;
+		}//Else the name is set and the user is clear to continue
 		//Get Expiration Date
 		EditText date = (EditText) findViewById(R.id.dateText);
 		String itemDate = date.getText().toString();
-		//Clear date field
+		if(itemDate.length() == 0){
+			//No date set, require setting a date
+			Log.d("Entry Error", "No expiration date set! Sad day.");
+			Toast.makeText(getApplicationContext(), "Please enter an expiration date", Toast.LENGTH_SHORT).show();
+			return;
+		}//Else the date is set and the user is clear to continue
+		//Clear item and date fields
 		date.setText("");
+		name.setText("");
 		
 		//Build item
 		FoodItem item = new FoodItem();
@@ -295,13 +318,11 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	}
 	
 	public void cancelTrip(){
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
+		finish();
 	}
 	public void saveTrip(){
-		Intent intent = new Intent(this, MainActivity.class);
 		enterTripToDatabase();
-		startActivity(intent);
+		finish();
 	}
 	private String generateTripName(){
 		Calendar c = Calendar.getInstance();
@@ -325,14 +346,20 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 		TabInfo tabInfo = null;
-		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab1").setIndicator("Add Items\n by Category"), ( tabInfo = new TabInfo("Tab1", EF_Categories_Frag.class, args)));
+		
+		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Trip").setIndicator("      Items in\nCurrent Trip"), ( tabInfo = new TabInfo("Trip", EF_CurTrip_Frag.class, args)));
 		this.mapTabInfo.put(tabInfo.tag, tabInfo);
-		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator("Items in\n Current Trip"), ( tabInfo = new TabInfo("Tab2", EF_CurTrip_Frag.class, args)));
+		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Cat").setIndicator("   Add Items\nby Category"), ( tabInfo = new TabInfo("Cat", EF_Categories_Frag.class, args)));
 		this.mapTabInfo.put(tabInfo.tag, tabInfo);
 		// Default to first tab
-		this.onTabChanged("Tab1");
-		//
-		mTabHost.setOnTabChangedListener(this);
+		this.onTabChanged("Trip");
+		//Set tab text colors
+		for(int i=0;i<mTabHost.getTabWidget().getChildCount();i++) 
+	    {
+	        TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+	        tv.setTextColor(Color.parseColor("#ffffff"));
+	    } 
+		mTabHost.setOnTabChangedListener(this);      
 	}
 
 	private static void addTab(Enter_Foods activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
@@ -360,6 +387,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	public void onTabChanged(String tag) {
 		TabInfo newTab = this.mapTabInfo.get(tag);
 		if (mLastTab != newTab) {
+			Log.d("Enter Foods", "Tab changed");
 			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
 			if (mLastTab != null) {
 				if (mLastTab.fragment != null) {
@@ -402,6 +430,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 
 	public void openDatePicker(EditText editText){
 		DialogFragment newFragment = new DatePickerFragment(editText);
+		newFragment.setCancelable(false);
 		newFragment.show(getSupportFragmentManager(), "datePicker");
 	}
 	/******************************************************************
