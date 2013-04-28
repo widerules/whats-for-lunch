@@ -74,7 +74,7 @@ public class CategoriesAdapter extends BaseAdapter {
             @Override
             public void onClick(View arg) { 
             	//Log.d("Categories", "category: "+getItem(pos)+" selected");
-            	_frag.updateCategories(getItem(pos));
+            	_frag.enterCategory(getItem(pos));
             }
         });
         

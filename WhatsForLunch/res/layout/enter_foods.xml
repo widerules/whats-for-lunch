@@ -1,46 +1,59 @@
-<LinearLayout android:layout_width="fill_parent"
+<?xml version="1.0" encoding="UTF-8"?><LinearLayout android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/leather"
+    android:background="@drawable/greentextured"
     android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android"
     android:descendantFocusability="beforeDescendants"
 	android:focusableInTouchMode="true">
-
-    <AutoCompleteTextView
-        android:id="@+id/itemName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:singleLine="true"
-        android:imeOptions="actionDone"
-        android:hint="@string/enter_foods_add"
-        android:textColorHint="#A9A9A9" />
-
+     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:orientation="horizontal">
-            
-	    <EditText
-        	android:id="@+id/dateText"
-        	android:hint="Expire date"
-        	android:textColorHint="#A9A9A9"
-        	android:layout_width="0dp"
-        	android:layout_height="wrap_content"
-        	android:layout_weight="3"
-        	android:focusableInTouchMode="false"
-        	android:ems="10" >
-    	</EditText>
-    	<Button
-            android:id="@+id/enter_add"
+        android:orientation="horizontal"> 
+        
+        <AutoCompleteTextView
+	       	android:id="@+id/itemName"
+	       	android:layout_width="0dp"
+	       	android:layout_weight="3"
+	       	android:layout_height="wrap_content"
+	       	android:ems="10"
+	       	android:singleLine="true"
+	       	android:imeOptions="actionDone"
+	       	android:hint="@string/enter_foods_add"
+	       	android:textColorHint="#A9A9A9"
+	       	 />
+		<!-- Dummy view to make autocomplete view same size as expiration date view -->
+        <TextView 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Add"
-            android:onClick="addItemToTrip" />
+            android:layout_weight="2"/>
+	</LinearLayout>
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">   
+        
+        <EditText
+	       	android:id="@+id/dateText"
+	       	android:hint="Expiration date"
+	       	android:textColorHint="#A9A9A9"
+	       	android:layout_width="0dp"
+	       	android:layout_weight="3"
+	       	android:layout_height="wrap_content"
+	       	android:focusableInTouchMode="false"
+	       	android:ems="10" />
+         
+        <Button
+        	android:id="@+id/enter_add"
+        	android:layout_width="0dp"
+        	android:layout_weight="2"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="-7dp"
+			android:text="Add"
+        	android:onClick="addItemToTrip" />
 
     </LinearLayout>
-
-    <TabHost
+		    
+    <com.example.whatsforlunch.ReclickableTabHost
         android:id="@android:id/tabhost"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -59,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:layout_gravity="center"
+                android:background="@drawable/leather"
                 />
  
             <FrameLayout
@@ -66,14 +80,15 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="0"/>
- 
+ 			<!-- This pattern is downloaded from www.subtlepatterns.com -->
+			<!-- If you need more, that's where to get'em.-->
             <FrameLayout
                 android:id="@+android:id/realtabcontent"
-                android:background="@drawable/paper"
+                android:background="@drawable/white_wall_hash"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
         </LinearLayout>
-    </TabHost>
+    </com.example.whatsforlunch.ReclickableTabHost>
 
     </LinearLayout>
