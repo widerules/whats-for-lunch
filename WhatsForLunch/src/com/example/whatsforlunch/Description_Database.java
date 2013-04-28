@@ -1,6 +1,8 @@
 package com.example.whatsforlunch;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -27,6 +29,8 @@ public class Description_Database extends SQLiteAssetHelper {
     private final String TABLE_ROW_FOUR = "fridge";
     private final String TABLE_ROW_FIVE = "freezer";
     private final String TABLE_ROW_SIX = "category";
+    
+    public final String NOT_IN_SYSTEM = "NiS";
     
     public Description_Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION); 
@@ -352,5 +356,93 @@ public class Description_Database extends SQLiteAssetHelper {
             // return the ArrayList containing the given row from the database.
             return cats;
     }
+    /**********************************************************************
+     * FINDING SOONEST EXPIRATION DATE
+     *
+     * Looks for the soonest expiration date of the given item. Use
+     * when looking for the worst case scenario expiration time for 
+     * an item. 
+     *
+     * @param item name needing an expiration date
+     * @return formatted string of the soonest expiration date
+     */
+    public String findSoonestExpiration(String item)
+    {
+            // create an array list to store data from the database row.
+           
+           
+            //CREATE ARRAYLIST 
+            ArrayList<Object> rowArray = new ArrayList<Object>();
+            Cursor cursor;
+    		
+            try
+            {
+                    // this is a database call that creates a "cursor" object.
+                    // the cursor object store the information collected from the
+                    // database and is used to iterate through the data.
+                    cursor = 
+                    		db.query
+                    (
+                                    TABLE_NAME,
+                                    new String[]{TABLE_ROW_THREE,
+                                    			 TABLE_ROW_FOUR,
+                                    			 TABLE_ROW_FIVE},     
+                                    TABLE_ROW_ONE+ " =?", new String[] {item},
+                                    null, null, null, null
+                    );
+     
+                    // move the pointer to position zero in the cursor.
+                    cursor.moveToFirst();
+     
+                    // if there is data available after the cursor's pointer, add
+                    // it to the ArrayList that will be returned by the method.
+                    if (!cursor.isAfterLast())
+                    {
+                            do
+                            {
+                                    rowArray.add(cursor.getInt(0));
+                                    rowArray.add(cursor.getInt(1));
+                                    rowArray.add(cursor.getInt(2));
+                            }
+                            while (cursor.moveToNext());
+                    }
+     
+                    // let java know done with with the cursor.
+                    cursor.close();
+            }
+            catch (SQLException e)
+            {
+                    Log.e("DB ERROR", e.toString());
+                    e.printStackTrace();
+            }
+            //Find soonest expiration date
+            int minTime = Integer.MAX_VALUE;
+            for(Object i : rowArray){
+            	if( (Integer)i != 0 && (Integer)i < minTime){
+            		minTime = (Integer)i;
+            	}
+            }
+            //If item was not in the system
+            if(minTime == Integer.MAX_VALUE){
+            	return NOT_IN_SYSTEM;//Not in System
+            }
+            
+            // calculate and return the expiration date
+            return calculateDate(minTime);
+    }
+    /**
+     * CALCULATES FUTURE DATE
+     * 
+     * Gets a date the specified days in the future
+     * @param days
+     * @return
+     */
+    private String calculateDate(Integer days){
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, days);
+		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+		
+		return df.format(c.getTime());
+	}
     
  }

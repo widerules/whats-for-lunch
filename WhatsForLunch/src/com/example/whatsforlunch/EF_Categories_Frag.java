@@ -1,10 +1,12 @@
 package com.example.whatsforlunch;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
@@ -41,6 +43,12 @@ public class EF_Categories_Frag extends ListFragment{
 	     * @param category
 	     */
 	    public void enterCategory(String category){
+	    	//Hide the keyboard so the user can see the items
+	    	InputMethodManager inputManager = (InputMethodManager)
+                    getActivity().getSystemService(Context.INPUT_METHOD_SERVICE); 
+	    	inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                       InputMethodManager.HIDE_NOT_ALWAYS);
+	    	//Get all categories
 	    	String[] food = ((Enter_Foods) getActivity()).getFoodsInCategory(category);
 	    	//A category was selected
 	    	if(food!=null && food.length > 0){
@@ -48,7 +56,7 @@ public class EF_Categories_Frag extends ListFragment{
 	    	}
 	    	//A food item was selected within a category
 	    	else{
-	    		((Enter_Foods) getActivity()).setFoodPicked(category); 
+	    		((Enter_Foods) getActivity()).setFoodPicked(category);
 	    	}
 	    }
 }
