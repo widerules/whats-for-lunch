@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 import com.google.gson.Gson;
 
@@ -31,6 +32,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
 public class Trip_Edit extends ListActivity {
 
     //MyAdapter mListAdapter;
@@ -44,6 +46,10 @@ public class Trip_Edit extends ListActivity {
     ArrayList<Integer> yellow = new ArrayList<Integer>();
     ArrayList<Long> ids = new ArrayList<Long>();
     int type;
+    public static Long id_delete;
+    public static boolean delete = false;
+    public static boolean save = false;
+    public static String[] args = new String[5];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +84,7 @@ public class Trip_Edit extends ListActivity {
 			public boolean onItemLongClick(AdapterView<?> arg0, View view,
 					int position, long arg3) {
 				int color;
+				id_delete = ids.get(position);
 				if(red.contains(position)){
 					color = Color.RED;
 				}else if(yellow.contains(position)){
@@ -104,8 +111,34 @@ public class Trip_Edit extends ListActivity {
     @Override
 	protected void onRestart() {
 		super.onRestart();
+		if(delete){
+			cancelAlarmsUpdateFoods(id_delete);
+			myDb.deleteRow(id_delete);
+			delete = false;
+		}else if(save){
+			cancelAlarmsUpdateFoods(id_delete);
+			myDb.updateRow(id_delete, args[0], args[1], args[2], args[3], args[4]);
+			updateAlarm(id_delete);
+			save = false;
+		}
 		updateTripList();
 	}
+    
+    void updateAlarm(long rowID){
+    	Gson gson = new Gson();
+		String json;
+		Intent intent = new Intent(this, FoodExpAlarm.class);
+	    json = gson.toJson(intent);
+		myDb.updateRow(rowID ,args[0], args[1], args[2], 
+				args[3], args[4], json);
+		FoodItem i = new FoodItem(args[0]);
+		i.setExpiration(args[4]);
+		i.setCondition("Normal");
+		i.setPurchaseDate(args[3]);
+		i.setTripName(args[1]);
+		Enter_Foods e = new Enter_Foods();
+		//e.prepareAlarm(false, i);
+    }
 
 
     @Override
@@ -248,8 +281,8 @@ public class Trip_Edit extends ListActivity {
 
     	 //remove rows
     	 for(long j : removes){
-    		 myDb.deleteRow(j);
     		 cancelAlarmsUpdateFoods(j);
+    		 myDb.deleteRow(j);
     	 }
     		 
     	 updateTripList();
@@ -258,7 +291,8 @@ public class Trip_Edit extends ListActivity {
 	 void cancelAlarmsUpdateFoods(long rowID) {
 		 String concat = "";
     	 String exp = "SavedExpDates";
-    	 SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
+    	 Context context = getBaseContext();
+    	 SharedPreferences.Editor savedExpDates = context.getSharedPreferences(exp, MODE_PRIVATE).edit();
     		 //update related alarm data structures so we don't use old values when making
     		 //alarm calculations
     	 	 Database_Manager db = new Database_Manager(this);
@@ -299,7 +333,6 @@ public class Trip_Edit extends ListActivity {
     			 
     		 }
     		 savedExpDates.commit();
- 
 	}
     
     public void deleteTrip(){
@@ -332,8 +365,8 @@ public class Trip_Edit extends ListActivity {
 		    myCur.moveToNext();
 		}
 		for(Long id : removes){
-			myDb.deleteRow(id);
 			cancelAlarmsUpdateFoods(id);
+			myDb.deleteRow(id);
 		}
 		
 	}
@@ -346,8 +379,8 @@ public class Trip_Edit extends ListActivity {
 			myCur.moveToNext();
 		}
 		for(Long id : removes){
-			myDb.deleteRow(id);
 			cancelAlarmsUpdateFoods(id);
+			myDb.deleteRow(id);
 		}
 	}
 

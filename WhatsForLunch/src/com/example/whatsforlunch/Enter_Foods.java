@@ -522,14 +522,14 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		
 	}
 	
-private boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
-		
+	boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
+
 		expDate = fItemDatetoDateTime(i);
 		DateTime current= new DateTime();
-		
+
 		//TODO: this is where the desired user settings is taken into account
 		//needs to come from user settings, default of 3 currently
-		
+
 		int daysBeforeDesiredNotif=3;
 		DateTime currentPlus=current.plusDays(daysBeforeDesiredNotif);
 		//add food to day
@@ -538,7 +538,7 @@ private boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
 			temp= foodAndDate.get(expDate);
 		temp.add(i.getItemName());
 		foodAndDate.put(expDate, temp);
-		
+
 		//if currentPlus is after or on expDate 
 		if(!foodAlreadyExp && (currentPlus.compareTo(expDate)>=0)){
 			foodAlreadyExp = true;
@@ -555,11 +555,11 @@ private boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
 				alarmsSet.add(expDate);
 				Duration dur = new Duration(current,notifDate);
 				callAlarms((int)dur.getStandardDays(),0,false);
-				
+
 			}
 		}
-		
-		
+
+
 		//ad.addRow(Integer.toString(expDate.getMonthOfYear()), 
 		//		Integer.toString(expDate.getDayOfMonth()), 
 		//		Integer.toString(expDate.getYear()));
