@@ -144,7 +144,7 @@ public class Trip_Edit extends ListActivity {
         			ids.add(myCur.getLong(0));
         		}
             	date = myCur.getString(5).split("/");
-			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 23, 59);
 			    expY = exp.plusDays(-3);
 			    if(now.isAfter(exp)){
 			    	red.add(count);
@@ -177,7 +177,7 @@ public class Trip_Edit extends ListActivity {
             		items.add(myCur.getString(1));
             		ids.add(myCur.getLong(0));
                 	date = myCur.getString(5).split("/");
-    			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+    			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 23, 59);
     			    expY = exp.plusDays(-3);
     			    if(now.isAfter(exp)){
     			    	red.add(count);
@@ -231,7 +231,7 @@ public class Trip_Edit extends ListActivity {
 				DateTime now = new DateTime();
 				DateTime exp;
 				date = myCur.getString(5).split("/");
-			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+			    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 23, 59);
 			    exp = exp.plusDays(DAYS_BEFORE_EXPIRATION);
 			    if(now.isAfter(exp) && ids.contains(myCur.getString(1))){
 			    	removes.add(myCur.getLong(0));
@@ -325,7 +325,7 @@ public class Trip_Edit extends ListActivity {
 		
 		while(!myCur.isAfterLast()){
 			date = myCur.getString(5).split("/");
-		    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 12, 0);
+		    exp = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]), 23, 59);
 		    exp = exp.plusDays(DAYS_BEFORE_EXPIRATION);
 		    if(now.isAfter(exp)){
 		    	removes.add(myCur.getLong(0));

@@ -268,8 +268,9 @@ public class WhatsForLunch extends ListActivity {
 		ready = false;
 		ArrayList<String> rec_strings = new ArrayList<String>(wfl.size());
 		for(int n = 10; n < wfl.size(); n += 10){
-			while(n < wfl.size() && (wfl.get(n-10).getName().equals(wfl.get(n).getName())))
-				wfl.remove(wfl.get(n-10));
+			while(n < wfl.size())
+				if(wfl.get(n-10).getName().equals(wfl.get(n).getName()))
+					wfl.remove(wfl.get(n-10));
 		}
 		for(Recipe r : wfl){
 			rec_strings.add(r.getName());
