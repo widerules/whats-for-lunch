@@ -126,8 +126,8 @@ public class Trip_Edit extends ListActivity {
     
 
 	private void updateTripList() {
+		myCur.close();
     	myCur = myDb.getCursor();
-    	myCur.moveToFirst();
     	items.clear();
     	red.clear();
     	yellow.clear();
@@ -173,7 +173,7 @@ public class Trip_Edit extends ListActivity {
         }else{
         	int count = 0;
         	while(!myCur.isAfterLast()){
-            	if(myCur.getString(3).equals(trip_name)){
+            	if(myCur.getString(2).equals(trip_name)){
             		items.add(myCur.getString(1));
             		ids.add(myCur.getLong(0));
                 	date = myCur.getString(5).split("/");
@@ -202,7 +202,6 @@ public class Trip_Edit extends ListActivity {
         }
         listView.clearChoices();
         list.notifyDataSetChanged();
-        //colorCode();
 	}
 
 	public void removeItems(){
@@ -238,7 +237,7 @@ public class Trip_Edit extends ListActivity {
 			    	ids.remove(myCur.getString(1));
 			    }
     		}else{
-    			if((myCur.getString(3).equals(trip_name))&&(ids.contains(myCur.getString(1)))){
+    			if((myCur.getString(2).equals(trip_name))&&(ids.contains(myCur.getString(1)))){
 	         		removes.add(myCur.getLong(0)); //avoiding ConcurrentModification Exception?
 	         		ids.remove(myCur.getString(1)); //only needed if we allow duplicates in a single trip
 	         	}
@@ -249,10 +248,9 @@ public class Trip_Edit extends ListActivity {
 
     	 //remove rows
     	 for(long j : removes){
-    		 
-         cancelAlarmsUpdateFoods(j);	
-         myDb.deleteRow(j);
- 		}
+    		 myDb.deleteRow(j);
+    		 cancelAlarmsUpdateFoods(j);
+    	 }
     		 
     	 updateTripList();
     }
@@ -263,7 +261,8 @@ public class Trip_Edit extends ListActivity {
     	 SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
     		 //update related alarm data structures so we don't use old values when making
     		 //alarm calculations
-    		 ArrayList<Object> row= myDb.getRowAsArray_ID(rowID);
+    	 	 Database_Manager db = new Database_Manager(this);
+    		 ArrayList<Object> row= db.getRowAsArray_ID(rowID);
     		 FoodItem fi= new FoodItem(row.get(1).toString());
     		 fi.setExpiration(row.get(5).toString());
     		 //This is for foodAndDates
