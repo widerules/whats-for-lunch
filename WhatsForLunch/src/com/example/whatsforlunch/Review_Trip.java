@@ -41,6 +41,7 @@ public class Review_Trip extends Activity {
 	private final Integer TRIPNAME = 3;
 	private final Integer TRIPDATE = 4;
 	private final Integer EXPDATE = 5;
+	private final Integer PendingI = 6;
 	private final String  DEFAULTTRIPNAME = "default trip name";
 	
 	private Database_Manager db;
@@ -97,7 +98,8 @@ public class Review_Trip extends Activity {
 						(String) o.get(ITEMCONDITION), 
 						generateTripName(), 					//generate trip name
 						(String) o.get(TRIPDATE), 
-						(String) o.get(EXPDATE));
+						(String) o.get(EXPDATE),
+						(String) o.get(PendingI));
 			}
 		}else{
 			for(ArrayList<Object> o : food){
@@ -106,7 +108,8 @@ public class Review_Trip extends Activity {
 						(String) o.get(ITEMCONDITION), 
 						tripName,
 						(String) o.get(TRIPDATE), 
-						(String) o.get(EXPDATE));
+						(String) o.get(EXPDATE),
+						(String) o.get(PendingI));
 				}
 		}
 	}

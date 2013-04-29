@@ -88,9 +88,11 @@
     <string name="user_recipes_enter_recipe">Recipe</string>
     <string name="save_user_recipes">Save</string>
     <string name="user_recipe_title">Add My Recipe</string>
+    <string name="title_activity_notification">Nofif</string>
     <string name="whats_for_lunch_search_terms">Search Terms</string>
     <string name="item_edit_save">Save</string>
     <string name="item_edit_expiration_date">Expiration Date:</string>
     <string name="item_edit_delete_item">Delete Item</string>
+
 
 </resources>

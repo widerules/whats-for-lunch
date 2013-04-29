@@ -30,7 +30,6 @@ public class FoodExpAlarm extends BroadcastReceiver {
     	  CharSequence from = "Food Expiring Soon:";
     	  CharSequence message="";
     	  
-    	  
     	  //if there are more than 3 foods for the alarm, just get three
     	  if(Enter_Foods.foodAndDate.get(Enter_Foods.expDate).size()>=3){
     		  message=  Enter_Foods.foodAndDate.get(Enter_Foods.expDate).get(0) + ", " +
@@ -52,7 +51,7 @@ public class FoodExpAlarm extends BroadcastReceiver {
 		    .getSystemService(Context.NOTIFICATION_SERVICE);
 		  //i think this gets pending intent from the alarm that called this method
 		  PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-		    new Intent(), 0);
+		    new Intent(context,MainActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK);
 		  //creates notification object/icon, and set text to flow across top bar
 		  Notification notif = new Notification(R.drawable.ic_launcher,
 		    "Food expiring soon", System.currentTimeMillis());
@@ -65,5 +64,6 @@ public class FoodExpAlarm extends BroadcastReceiver {
 		  
 		  
 	}
+    
 }
 
