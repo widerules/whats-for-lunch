@@ -56,7 +56,7 @@ public class WhatsForLunch extends ListActivity {
 	RecipeList rec;
 	boolean all_foods;
 	boolean search_only; 		
-	boolean ready;
+	boolean ready = false;
 	TextView recipe_type;
 	Database_Manager myDb;
 	
@@ -66,10 +66,7 @@ public class WhatsForLunch extends ListActivity {
 		setContentView(R.layout.whats_for_lunch);
 		myDb = new Database_Manager(this);
 		rec = new RecipeList();
-		
-		
-		all_foods = true;
-		ready = false; 		
+		all_foods = true; 		
 		search_only = false;
 		recipe_type = (TextView)this.findViewById(R.id.recipeType);
 		final ListView listView = getListView();
@@ -214,10 +211,8 @@ public class WhatsForLunch extends ListActivity {
 			rList.clear();
 			if(all_foods)
 				rList.add("\nNo food in the system.\n");
-			else if(!search_only)
-				rList.add("\nNo expiring foods.\n");
 			else
-				rList.add("\nEnter search terms seperated by spaces.\n");
+				rList.add("\nNo expiring foods.\n");
 			rAd.notifyDataSetChanged();
 		}else{
 			EditText e = (EditText) findViewById(R.id.query);
@@ -246,13 +241,13 @@ public class WhatsForLunch extends ListActivity {
 		Button b = (Button)view.findViewById(R.id.foodChange);
 		if(search_only){
 			b.setText("All Foods");
-			recipe_type.setText("Generated Recipes(Search Only)");
+			recipe_type.setText("Recipes(Search Only)");
 		}else if(all_foods){
 			b.setText("Expiring Foods");
-			recipe_type.setText("Generated Recipes(All Foods)");
+			recipe_type.setText("Recipes(All Foods)");
 		}else{
 			b.setText("Search Only");
-			recipe_type.setText("Generated Recipes(Expiring)");
+			recipe_type.setText("Recipes(Expiring)");
 		}
 		foodChange();
 	}
@@ -272,6 +267,10 @@ public class WhatsForLunch extends ListActivity {
 	private void updateList() {
 		ready = false;
 		ArrayList<String> rec_strings = new ArrayList<String>(wfl.size());
+		for(int n = 10; n < wfl.size(); n += 10){
+			while(n < wfl.size() && (wfl.get(n-10).getName().equals(wfl.get(n).getName())))
+				wfl.remove(wfl.get(n-10));
+		}
 		for(Recipe r : wfl){
 			rec_strings.add(r.getName());
 		}
@@ -283,21 +282,21 @@ public class WhatsForLunch extends ListActivity {
 					rList.add("\nNo food in the system.\n");
 				else if(!search_only)
 					rList.add("\nNo expiring foods.\n");
-				else
-					rList.add("\nEnter search terms seperated by spaces and press \"Search\".\n");
+				else{
+					EditText e = (EditText) findViewById(R.id.query);
+			    	String s = e.getText().toString();
+					if(s.equals("")){
+						rList.add("\nEnter search terms seperated by spaces and press \"Search\".\n");
+					}else{
+						rList.add("\nNo recipes found.\n");
+					}
+				}
 			}else
 				rList.add("\nNo recipes found.\nYou may have spelled your ingredients or query in a way we don't recognize.\n");
 		}else{
 			ready = true;
 		}
 		rAd.notifyDataSetChanged();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.whats_for_lunch, menu);
-		return true;
 	}
 
 	@SuppressWarnings("serial")
@@ -460,15 +459,17 @@ public class WhatsForLunch extends ListActivity {
 	    
 	    class AsyncPuppy extends AsyncTask<String, Void, Void> {
 	    	protected Void doInBackground(String... urls) {
-	    		PuppyHandler pup = new PuppyHandler();
-	    		//ArrayList<Recipe> result = new ArrayList<Recipe>();
-	        	try {
-	        		for(String u : urls)
-	        			pup.parse(downloadUrl(u));
-	    		} catch (IOException e) {
-	    			e.printStackTrace();
+	    		synchronized(this){
+		    		PuppyHandler pup = new PuppyHandler();
+		    		//ArrayList<Recipe> result = new ArrayList<Recipe>();
+		        	try {
+		        		for(String u : urls)
+		        			pup.parse(downloadUrl(u));
+		    		} catch (IOException e) {
+		    			e.printStackTrace();
+		    		}
+					return null;
 	    		}
-				return null;
 	    	}
 
 	    	@Override

@@ -121,7 +121,7 @@ public class Trip_Select extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_trip_edit, menu);
+		getMenuInflater().inflate(R.menu.menu_trip_select, menu);
 		return true;
 	}
 	
