@@ -16,27 +16,8 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/remove"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/trip_name" />
-
-    <Button
-        android:id="@+id/remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/trip_name"
-        android:onClick="removeItems"
-        android:text="@string/trip_edit_remove" />
-
-    <Button
-        android:id="@+id/delete_trip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/trip_name"
-        android:onClick="deleteTrip"
-        android:text="@string/trip_edit_delete_trip" />
 
     <TextView
         android:id="@+id/trip_edit_name"

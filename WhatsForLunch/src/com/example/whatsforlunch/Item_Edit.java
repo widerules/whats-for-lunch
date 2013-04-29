@@ -17,9 +17,12 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,6 +45,7 @@ public class Item_Edit extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.item_edit);
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		Bundle b = getIntent().getExtras();
 		id = b.getLong("id");
 		color = b.getInt("color");
@@ -58,9 +62,32 @@ public class Item_Edit extends FragmentActivity {
 		name_view.setText(name);
 		name_view.setTextColor(color);
 		TextView trip_view = (TextView)this.findViewById(R.id.item_edit_trip);
-		trip_view.setText(trip + " - " + trip_date);
+		trip_view.setText(trip + " on " + trip_date);
 		changeDays();
 	    datepickerSetup();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_item_edit, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.menu_delete_item:
+	    	deleteItem();
+	        return true;
+	    case R.id.menu_save:
+	    	save();
+	        return true;
+	    default:
+	        //return false;
+	    	return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	public void changeDays(){
@@ -100,7 +127,7 @@ public class Item_Edit extends FragmentActivity {
 	}
 	
 	
-	public void save(View view){
+	public void save(){
 		if(!name_view.getText().toString().equals(""))
 			name = name_view.getText().toString();
 		db.updateRow(id, name, "normal", trip, trip_date, date.getText().toString());
@@ -110,7 +137,7 @@ public class Item_Edit extends FragmentActivity {
 	}
 	
 	// TODO: cancel alarms
-	public void delete_item(View view){
+	public void deleteItem(){
 		db.deleteRow(id);
 		Trip_Edit temp = new Trip_Edit();
 		temp.cancelAlarmsUpdateFoods(id);

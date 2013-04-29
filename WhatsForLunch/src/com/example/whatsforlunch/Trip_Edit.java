@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -107,6 +108,22 @@ public class Trip_Edit extends ListActivity {
 	}
 
 
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.menu_delete_trip:
+	    	deleteTrip();
+	        return true;
+	    case R.id.menu_remove:
+	    	removeItems();
+	        return true;
+	    default:
+	        //return false;
+	    	return super.onOptionsItemSelected(item);
+	    }
+	}
+    
 
 	private void updateTripList() {
     	myCur = myDb.getCursor();
@@ -148,8 +165,11 @@ public class Trip_Edit extends ListActivity {
 			    	count++;
             	myCur.moveToNext();
             }
-        	Button deleteTrip = (Button)this.findViewById(R.id.delete_trip);
-        	deleteTrip.setText("Delete All");
+        	TextView deleteTrip = (TextView)this.findViewById(R.id.menu_delete_trip);
+        	try{
+        		deleteTrip.setText("Delete All");
+        	}catch(Exception e){
+        	}
         }else{
         	int count = 0;
         	while(!myCur.isAfterLast()){
@@ -185,7 +205,7 @@ public class Trip_Edit extends ListActivity {
         //colorCode();
 	}
 
-	public void removeItems(View view){
+	public void removeItems(){
     	 ArrayList<String> ids = new ArrayList<String>();
     	 
     	 //get names of all food to be removed
@@ -283,7 +303,7 @@ public class Trip_Edit extends ListActivity {
  
 	}
     
-    public void deleteTrip(View view){
+    public void deleteTrip(){
     	if(type == 1){
     		deleteAll();
     	}else if(type == 2){
