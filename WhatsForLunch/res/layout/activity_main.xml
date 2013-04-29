@@ -1,60 +1,93 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".MainActivity"
-
-    android:background="@drawable/greentextured" >
-        
+    android:background="@drawable/backrepeat" >
+     
     <!-- New Shopping Trip -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
     <Button
         android:id="@+id/enter_food_button1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
-        android:text="@string/main_new_trip"
+        android:background="@drawable/newtrip"
         android:onClick="launchEnterFoods" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/main_new_trip"
+        android:textColor="#ffffff" />
+    </LinearLayout>
     
     <!-- Edit Shopping Trip -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
     <Button
         android:id="@+id/button2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/enter_food_button1"
+        android:background="@drawable/tripedit"
         android:onClick="launchTripSelect"
-        android:text="@string/main_edit_trip" />
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_edit_trip" 
+        android:textColor="#ffffff"/>
+    </LinearLayout>
     
 	<!-- See What's for Lunch -->
+	<LinearLayout
+	    android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
     <Button
         android:id="@+id/Button03"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:text="@string/main_see_whats_for_lunch" 
+        android:background="@drawable/whatsforlunch"
         android:onClick="launchSeeLunch"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/main_see_whats_for_lunch"
+        android:textColor="#ffffff" />
+    </LinearLayout>
 
     <!-- User Settings -->
-    <Button
-        android:id="@+id/Button04"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Button03"
-        android:layout_centerHorizontal="true"
-        android:text="@string/main_user_settings"
-        android:onClick="launchSettings" />
+<!--    <Button	-->
+<!--        android:id="@+id/Button04"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/Button03"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:text="@string/main_user_settings"-->
+<!--        android:onClick="launchSettings" />-->
 
     <!-- General Food Tips -->
-    <Button
-        android:id="@+id/Button05"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/Button04"
-        android:text="@string/main_general_food_tips" />
+<!--     <Button -->
+<!--         android:id="@+id/Button05" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_below="@+id/Button04" -->
+<!--         android:text="@string/main_general_food_tips" /> -->
 
 
-</RelativeLayout>
+</LinearLayout>
