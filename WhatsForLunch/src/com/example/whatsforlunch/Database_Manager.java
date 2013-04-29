@@ -146,6 +146,36 @@ public class Database_Manager {//test comment
                         e.printStackTrace();
                 }
         }
+        
+        /**********************************************************************
+         * UPDATING A ROW IN THE DATABASE TABLE
+         *
+         * This is an example of how to update a row in the database table
+         * using this class. edit this method to fit WHATS FOR LUNCH.
+         *
+         * @param rowID the SQLite database identifier for the row to update.
+         * @param rowStringOne the new value for the row's first column
+         * @param rowStringTwo the new value for the row's second column
+         */
+       
+        public void updateRow(long rowID, String name, String condition, String tripname, String tripdate, String expdate)
+        {
+                // this is a key value pair holder used by android's SQLite functions
+                ContentValues values = new ContentValues();
+                values.put(TABLE_ROW_ONE, name);
+                values.put(TABLE_ROW_TWO, condition);
+                values.put(TABLE_ROW_THREE, tripname);
+                values.put(TABLE_ROW_FOUR, tripdate);
+                values.put(TABLE_ROW_FIVE, expdate);
+         
+                // ask the database object to update the database row of given rowID
+                try {db.update(TABLE_NAME, values, TABLE_ROW_ID + "=" + rowID, null);}
+                catch (Exception e)
+                {
+                        Log.e("DB Error", e.toString());
+                        e.printStackTrace();
+                }
+        }
        
         /**********************************************************************
          * RETRIEVING ALL ROWS FROM THE DATABASE TABLE

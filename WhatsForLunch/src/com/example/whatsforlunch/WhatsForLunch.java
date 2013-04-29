@@ -309,24 +309,53 @@ public class WhatsForLunch extends ListActivity {
 		}
 		
 		//initialize with a String[] of ingredients
+		// TODO: ings don't work
 		public RecipeList(String...food){
 			ingredients = new ArrayList<String>(food.length);
 			unused = new ArrayList<String>(food.length);
-			for(String i : food)
+			for(String i : food){
+				if(i.indexOf(",") != -1)
+					i = i.substring(0, i.indexOf(","));
+				if(i.indexOf("\"") != -1)
+					i = i.substring(0, i.indexOf("\""));
+				if(i.indexOf("(") != -1)
+					i = i.substring(0, i.indexOf("("));
+				i = i.replaceAll(" ", "%20");
 				unused.add(i);
+			}
 			concatIngredients();
 		}
 		
 		//initialize with an ArrayList<String> of ingredients
 		public RecipeList(ArrayList<String> food){
-			ingredients = new ArrayList<String>();
-			unused = food;			
+			ingredients = new ArrayList<String>(food.size());
+			unused = new ArrayList<String>(food.size());
+			for(String i : food){
+				if(i.indexOf(",") != -1)
+					i = i.substring(0, i.indexOf(","));
+				if(i.indexOf("\"") != -1)
+					i = i.substring(0, i.indexOf("\""));
+				if(i.indexOf("(") != -1)
+					i = i.substring(0, i.indexOf("("));
+				i = i.replaceAll(" ", "%20");
+				unused.add(i);
+			}
 			concatIngredients();
 		}
 		
 		//add ArrayList<String> of ingredients
 		public void addIngredients(ArrayList<String> list) {
-			unused = list;
+			unused = new ArrayList<String>(list.size());
+			for(String i : list){
+				if(i.indexOf(",") != -1)
+					i = i.substring(0, i.indexOf(","));
+				if(i.indexOf("\"") != -1)
+					i = i.substring(0, i.indexOf("\""));
+				if(i.indexOf("(") != -1)
+					i = i.substring(0, i.indexOf("("));
+				i = i.replaceAll(" ", "%20");
+				unused.add(i);
+			}
 			concatIngredients();
 	    }
 		
@@ -404,6 +433,7 @@ public class WhatsForLunch extends ListActivity {
 	    	int page = (wfl.size() / 10) + 1;
 	    	u = u.concat("&p=");
 	    	u = u.concat(Integer.toString(page));
+	    	System.out.println(u);
 	    	//test = u;
 	    	new AsyncPuppy().execute(u);
 	    }
@@ -502,6 +532,7 @@ public class WhatsForLunch extends ListActivity {
 	    			public void end(String body) {
 	    				body = body.replaceAll("\\n","");
 	    				body = body.replaceAll("&amp;","&");
+	    				body = body.replaceAll("&quot;","&");
 	    				body = body.replaceAll("\\t","");
 	    				body = body.replaceAll("\\f","");
 	    				body = body.replaceAll("\\r","");
