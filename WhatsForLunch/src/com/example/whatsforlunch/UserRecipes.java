@@ -21,6 +21,8 @@ public class UserRecipes extends Activity {
 		setContentView(R.layout.user_recipes);
 	}
 	
+
+	
 	public void createRecipe(View view) throws IOException{
 		
 		String file = "userRecipes";
@@ -36,22 +38,24 @@ public class UserRecipes extends Activity {
 		//get text fields
 		EditText nameView = (EditText) findViewById(R.id.user_recipes_name);
 		String nameText = nameView.getText().toString();
-		nameView.setText("");
 		EditText ingredientView = (EditText) findViewById(R.id.user_recipes_ingredients);
 		String ingredientText = ingredientView.getText().toString();
-		ingredientView.setText("");
 		EditText recipeView = (EditText) findViewById(R.id.user_recipe_recipe);
 		String recipeText = recipeView.getText().toString();
-		recipeView.setText("");
 		
 		//Format text before writing to file
-		nameText = newField + nameText + " ";
-		userRes.add(nameText);
-		ingredientText =newField + ingredientText + " ";
-		userRes.add(ingredientText);
-		recipeText = newField + recipeText + endRecipe;
-		userRes.add(recipeText);
-		
+		if(nameText!=""){
+			nameText = newField + nameText + " ";
+			userRes.add(nameText);
+		}
+		if(ingredientText!=""){
+			ingredientText =newField + ingredientText + " ";
+			userRes.add(ingredientText);
+		}
+		if(recipeText!=""){
+			recipeText = newField + recipeText + endRecipe;
+			userRes.add(recipeText);
+		}
 	    BufferedWriter writer = null;
 		  try {
 		    writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(file, MODE_APPEND)));
@@ -69,7 +73,9 @@ public class UserRecipes extends Activity {
 		    }
 		    }
 		  }
+	finish();	  
 	} 	
+	
 	
 }
 

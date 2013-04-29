@@ -1,13 +1,22 @@
 package com.example.whatsforlunch;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.joda.time.DateTime;
 
+import com.google.gson.Gson;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.ListActivity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -217,12 +226,62 @@ public class Trip_Edit extends ListActivity {
          	myCur.moveToNext();
          }
     	 
+
     	 //remove rows
     	 for(long j : removes){
-    		 myDb.deleteRow(j);
-    	 }
+    		 
+         cancelAlarmsUpdateFoods(j);	
+         myDb.deleteRow(j);
+ 		}
+    		 
     	 updateTripList();
     }
+
+	 void cancelAlarmsUpdateFoods(long rowID) {
+		 String concat = "";
+    	 String exp = "SavedExpDates";
+    	 SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
+    		 //update related alarm data structures so we don't use old values when making
+    		 //alarm calculations
+    		 ArrayList<Object> row= myDb.getRowAsArray_ID(rowID);
+    		 FoodItem fi= new FoodItem(row.get(1).toString());
+    		 fi.setExpiration(row.get(5).toString());
+    		 //This is for foodAndDates
+    		 DateTime dt= Enter_Foods.fItemDatetoDateTime(fi);
+    		 
+    		 ArrayList<String> temp = new ArrayList<String>(Enter_Foods.foodAndDate.get(dt));
+    		 temp.remove(fi.getItemName());
+    		 
+    		 if(!temp.isEmpty()){
+    			//foods are left for a dt, remove foods and update dt, cancel alarm
+    			 Enter_Foods.foodAndDate.put(dt, temp);
+	    		//This is for shared pref
+	 			 Iterator<String> iter = temp.iterator();
+	 			 while(iter.hasNext()){
+	 				concat += iter.next() + "/";
+	 			 }
+	 			 savedExpDates.putString(dt.toString(),concat );
+
+    		 }
+    		 //no foods left for a given dt, so remove dt
+    		 else {
+    			 Enter_Foods.foodAndDate.remove(dt);
+    		//	 while(Enter_Foods.alarmsSet.contains(dt))
+    			 	Enter_Foods.alarmsSet.remove(dt);
+    			 savedExpDates.remove(dt.toString());
+ 	 			//cancel future alarm
+ 	 			AlarmManager alarmMan = (AlarmManager) 
+ 	 					getSystemService(Context.ALARM_SERVICE);
+ 	 			Gson gson = new Gson();
+ 	 			Intent intent = gson.fromJson((String) row.get(6), Intent.class);
+ 	 			PendingIntent pend = PendingIntent.getBroadcast(this, 0,
+ 					      intent, PendingIntent.FLAG_ONE_SHOT);
+ 	 			alarmMan.cancel(pend);
+    			 
+    		 }
+    		 savedExpDates.commit();
+ 
+	}
     
     public void deleteTrip(View view){
     	if(type == 1){
@@ -235,6 +294,7 @@ public class Trip_Edit extends ListActivity {
     	this.finish();
     }
 
+    
     private void deleteExp() {
     	myCur.moveToFirst();
 		ArrayList<Long> removes = new ArrayList<Long>();
@@ -252,8 +312,10 @@ public class Trip_Edit extends ListActivity {
 		    }
 		    myCur.moveToNext();
 		}
-		for(Long id : removes)
+		for(Long id : removes){
 			myDb.deleteRow(id);
+			cancelAlarmsUpdateFoods(id);
+		}
 		
 	}
 
@@ -264,8 +326,10 @@ public class Trip_Edit extends ListActivity {
 			removes.add(myCur.getLong(0));
 			myCur.moveToNext();
 		}
-		for(Long id : removes)
+		for(Long id : removes){
 			myDb.deleteRow(id);
+			cancelAlarmsUpdateFoods(id);
+		}
 	}
 
 	/*

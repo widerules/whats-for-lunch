@@ -58,11 +58,13 @@ public class WhatsForLunch extends ListActivity {
 	boolean search_only; 		
 	boolean ready;
 	TextView recipe_type;
+	Database_Manager myDb;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.whats_for_lunch);
+		myDb = new Database_Manager(this);
 		rec = new RecipeList();
 		
 		
@@ -111,8 +113,12 @@ public class WhatsForLunch extends ListActivity {
 		
 		rAd = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, rList);
 		setListAdapter(rAd);
-		printUserRecipes();
 		foodChange();
+	}
+	
+	public void onResume(){
+		super.onResume();
+		printUserRecipes();
 	}
 	
 	private void printUserRecipes() {
@@ -124,6 +130,8 @@ public class WhatsForLunch extends ListActivity {
 		String newField = "uniqueStartofFieldMarkerabcxyz ";
 		String endRecipe = "uniqueIdentifierMarksEndOfOneRecipeabcxyz ";
 		String [] out;
+		
+		
 		
 		TextView viewOut =(TextView) this.findViewById(R.id.displayUserRecipes);
 		  String eol = System.getProperty("line.separator");
@@ -172,7 +180,7 @@ public class WhatsForLunch extends ListActivity {
 	
 	private void foodChange(){
 		ready = false;
-		Database_Manager myDb = new Database_Manager(this);
+		//Database_Manager myDb = new Database_Manager(this);
 	    Cursor myCur = myDb.getCursor();
 	    ArrayList<String> i = new ArrayList<String>();
 	    myCur.moveToFirst();

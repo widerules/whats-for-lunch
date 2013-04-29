@@ -11,8 +11,12 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import com.example.whatsforlunch.PromptTripNameDialog.NoticeDialogListener;
+import org.joda.time.IllegalFieldValueException;
 
+import com.example.whatsforlunch.PromptTripNameDialog.NoticeDialogListener;
+import com.google.gson.Gson;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -29,13 +33,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -43,12 +47,10 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Enter_Foods extends FragmentActivity implements OnTabChangeListener, NoticeDialogListener{
-
 	final static String UNKNOWN_EXPIRATION = "unknown exp date";
 	Database_Manager db;
 	Description_Database ddb;
@@ -204,74 +206,38 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	protected FoodItem[] getTripItems(){
 		return currentTrip.toArray(new FoodItem[currentTrip.size()]);
 	}
-	protected String[] getCategories(){
-		//return currentTrip.toArray(new String[currentTrip.size()]);
-		ArrayList<String> cats = ddb.getCategories();
-		return cats.toArray(new String[cats.size()]);
-	}
-	protected String[] getFoodsInCategory(String category){
-		ArrayList<String> food = ddb.getFoodsInCategory(category);
-		return food.toArray(new String[food.size()]);
-	}
-	protected void removeItemFromTrip(int pos){
-		currentTrip.remove(pos);
-	}
-	protected void setFoodPicked(String item){
-		//TODO If item already picked, add to list automatically
-		AutoCompleteTextView nameField = 
-				(AutoCompleteTextView) findViewById(R.id.itemName);
-		//Remove focus so the dropdown does not pop up and cover the date field
-		nameField.clearFocus();
-		//If item already picked, add to list automatically
-		if(nameField.getText().toString().equals(item)){
-			addItemToTrip(null);
-			Toast.makeText(getApplicationContext(), item+" added to shopping trip", Toast.LENGTH_SHORT).show();
-		}else{
-			//Else, place item name in field
-			nameField.setText(item);
-		}
-	}
+	
 	protected void resetCategories(){
-		Log.d("Enter_Foods", "Categories reset");
-		EF_Categories_Frag frag = 
-				(EF_Categories_Frag) getSupportFragmentManager()
-					.findFragmentById(R.id.realtabcontent);
-		frag.setCategories();
-	}
+					Log.d("Enter_Foods", "Categories reset");
+					EF_Categories_Frag frag =
+							(EF_Categories_Frag) getSupportFragmentManager()
+								.findFragmentById(R.id.realtabcontent);
+					frag.setCategories();
+				}
 	
 	public void addItemToTrip(View view){
 		//Get Item data
 		//Get Item Name
-		AutoCompleteTextView name = 
-				(AutoCompleteTextView) findViewById(R.id.itemName);
-		String itemName = name.getText().toString().trim();
+		AutoCompleteTextView name = (AutoCompleteTextView) findViewById(R.id.itemName);
+		String itemName = name.getText().toString();
 		if(itemName.length() == 0){
 			//No item set, require setting an item name
 			Log.d("Entry Error", "No item name set! Sad day.");
-			hideKeyboard();
 			Toast.makeText(getApplicationContext(), "Please enter an item name", Toast.LENGTH_SHORT).show();
 			return;
 		}//Else the name is set and the user is clear to continue
-		//Get Expiration Date
+		 //Get Expiration Date
 		EditText date = (EditText) findViewById(R.id.dateText);
 		String itemDate = date.getText().toString();
 		if(itemDate.length() == 0){
-			//No date set, attempt to find a date
-			itemDate = ddb.findSoonestExpiration(itemName);
-			//Item not found. Prompt for date
-			if(itemDate == ddb.NOT_IN_SYSTEM){
-				Log.d("Database Error", "No expiration date found for: "+itemName);
-				hideKeyboard();
-				Toast.makeText(getApplicationContext(), " Item not found. Please\nenter an expiration date.", Toast.LENGTH_SHORT).show();
-				return;
-			}else{
-				//Item found, accept add item request
-			}
+			//No date set, require setting a date
+			Log.d("Entry Error", "No expiration date set! Sad day.");
+			Toast.makeText(getApplicationContext(), "Please enter an expiration date", Toast.LENGTH_SHORT).show();
+			return;
 		}//Else the date is set and the user is clear to continue
-		//Clear item and date fields
+		 //Clear item and date fields
 		date.setText("");
 		name.setText("");
-		
 		//Build item
 		FoodItem item = new FoodItem();
 		//Values will default to empty string if not set
@@ -298,6 +264,24 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 			//current_trip fragment is not open
 		}	
 	}
+	
+	protected String[] getCategories(){
+					//return currentTrip.toArray(new String[currentTrip.size()]);
+					ArrayList<String> cats = ddb.getCategories();
+					return cats.toArray(new String[cats.size()]);
+				}
+				protected String[] getFoodsInCategory(String category){
+					ArrayList<String> food = ddb.getFoodsInCategory(category);
+					return food.toArray(new String[food.size()]);
+				}
+				protected void removeItemFromTrip(int pos){
+					currentTrip.remove(pos);
+				}
+				protected void setFoodPicked(String food){
+					AutoCompleteTextView nameField =
+							(AutoCompleteTextView) findViewById(R.id.itemName);
+					nameField.setText(food);
+				}
 	private void enterTripToDatabase(){
 		//this keeps track of if we have set an alarm for this trip or not
 		boolean foodAlreadyExp =false;	
@@ -307,14 +291,25 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		for(FoodItem i : currentTrip){
 			try{
 				db.addRow(
-						i.getItemName(),
+						i.getItemName(), 
 						i.getCondition(), 
 						i.getTripName(), 
 						i.getDatePurchased(), 
-						i.getExpiration(),
-						null);
-				if((String) i.getExpiration()!="")
+						i.getExpiration(), Database_Manager.default_pendingIntent);
+				if((String) i.getExpiration()!=""){
+					Gson gson = new Gson();
+					String json;
+					Intent intent = new Intent(this, FoodExpAlarm.class);
+				    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+				      intent, PendingIntent.FLAG_ONE_SHOT);
+				    json = gson.toJson(intent);
+				    ArrayList<Object> row=
+				    		db.getRowAsArray_Food_Trip(i.getItemName(), i.getTripName());
+				    long id = (Long) row.get(0);
+					db.updateRow(id ,i.getItemName(), i.getTripName(), i.getCondition(), 
+							i.getDatePurchased(), i.getExpiration(), json);
 					foodAlreadyExp= prepareAlarm(foodAlreadyExp, i);
+				}
 			}catch(NullPointerException e){
 				e.printStackTrace();
 			}
@@ -341,11 +336,12 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		finish();
 	}
 	public void saveTrip(){
+		Intent intent = new Intent(this, MainActivity.class);
 		enterTripToDatabase();
-		finish();
+		startActivity(intent);
 	}
 	private String generateTripName(){
-		Calendar c = Calendar.getInstance();
+		Calendar c = Calendar.getInstance();	
 		SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
 		
 		return df.format(c.getTime());
@@ -366,7 +362,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 		TabInfo tabInfo = null;
-		
 		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Trip").setIndicator("      Items in\nCurrent Trip"), ( tabInfo = new TabInfo("Trip", EF_CurTrip_Frag.class, args)));
 		this.mapTabInfo.put(tabInfo.tag, tabInfo);
 		Enter_Foods.addTab(this, this.mTabHost, this.mTabHost.newTabSpec("Cat").setIndicator("   Add Items\nby Category"), ( tabInfo = new TabInfo("Cat", EF_Categories_Frag.class, args)));
@@ -374,12 +369,13 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		// Default to first tab
 		this.onTabChanged("Trip");
 		//Set tab text colors
-		for(int i=0;i<mTabHost.getTabWidget().getChildCount();i++) 
-	    {
-	        TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-	        tv.setTextColor(Color.parseColor("#ffffff"));
-	    } 
-		mTabHost.setOnTabChangedListener(this);      
+		for(int i=0;i<mTabHost.getTabWidget().getChildCount();i++)
+		    {
+		        TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+		        tv.setTextColor(Color.parseColor("#ffffff"));
+		    }
+		
+		mTabHost.setOnTabChangedListener(this);
 	}
 
 	private static void addTab(Enter_Foods activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
@@ -406,9 +402,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	 */
 	public void onTabChanged(String tag) {
 		TabInfo newTab = this.mapTabInfo.get(tag);
-		
-		hideKeyboard();
-		
 		if (mLastTab != newTab) {
 			Log.d("Enter Foods", "Tab changed");
 			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
@@ -431,13 +424,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 			ft.commit();
 			this.getSupportFragmentManager().executePendingTransactions();
 		}
-	}
-	private void hideKeyboard() {
-		//Hide the keyboard so the user can see the items
-    	InputMethodManager inputManager = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE); 
-    	inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), 
-    			InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 	
 	/*****************************************************************
@@ -470,10 +456,15 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	 * 	text of the given edit_text field.
 	 *
 	 */
-	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 
+	
+	public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 		public EditText activity_edittext;
 
+		
+		
+		
+		
 		public DatePickerFragment(EditText edit_text) {
 			activity_edittext = edit_text;
 		}
@@ -515,18 +506,8 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	}
 	
 	private boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
-		String[] date= i.getExpiration().split("/");
-		int month = Integer.parseInt(date[0]);
-		int day = Integer.parseInt(date[1]);
-		int year = Integer.parseInt(date[2]);
-
-		//just going to set to noon for now, can change it later
-		int hour = 12;
-		int minute = 0;
-
-
-			expDate= new DateTime(year,month,day,hour,minute);
 		
+		expDate = fItemDatetoDateTime(i);
 		DateTime current= new DateTime();
 		
 		//TODO: this is where the desired user settings is taken into account
@@ -557,6 +538,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 				alarmsSet.add(expDate);
 				Duration dur = new Duration(current,notifDate);
 				callAlarms((int)dur.getStandardDays(),0,false);
+				
 			}
 		}
 		
@@ -566,6 +548,18 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		//		Integer.toString(expDate.getYear()));
 
 		return foodAlreadyExp;
+	}
+	public static DateTime fItemDatetoDateTime(FoodItem i) {
+		String[] date= i.getExpiration().split("/");
+		int month = Integer.parseInt(date[0]);
+		int day = Integer.parseInt(date[1]);
+		int year = Integer.parseInt(date[2]);
+
+		//just going to set to noon for now, can change it later
+		int hour = 12;
+		int minute = 0;
+		
+		return new DateTime(year,month,day,hour,minute);
 	}
 	
 	public void setOneTimeAlarm(int daysAfterSet) {
@@ -590,7 +584,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	    alarmMan.setRepeating(AlarmManager.RTC_WAKEUP, 
 	       System.currentTimeMillis() +(daysAfterSet * AlarmManager.INTERVAL_DAY),
 	      daysBetween * AlarmManager.INTERVAL_DAY, pendingIntent);
-	    System.out.println("Alarm repeating every 5");
 	 }
 	
 }
+

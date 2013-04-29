@@ -85,6 +85,13 @@
         android:hint="@string/whats_for_lunch_search_terms" >
         <requestFocus />
     </EditText>
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+    
+
     <TextView
         android:id="@+id/displayUserRecipes"
         android:layout_width="wrap_content"
@@ -93,6 +100,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView2"
-        android:ems="10" >
-    </TextView>
+        android:ems="10" />
+    
+    </ScrollView>
     </RelativeLayout>

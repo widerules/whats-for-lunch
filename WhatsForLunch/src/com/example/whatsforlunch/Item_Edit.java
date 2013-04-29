@@ -99,19 +99,21 @@ public class Item_Edit extends FragmentActivity {
 	    }
 	}
 	
-	// TODO: cancel alarms
+	
 	public void save(View view){
 		if(!name_view.getText().toString().equals(""))
 			name = name_view.getText().toString();
 		db.updateRow(id, name, "normal", trip, trip_date, date.getText().toString());
-		//cancelAlarmsUpdateFoods(id);
+		Trip_Edit temp= new Trip_Edit();
+		temp.cancelAlarmsUpdateFoods(id);
 		finish();
 	}
 	
 	// TODO: cancel alarms
 	public void delete_item(View view){
 		db.deleteRow(id);
-		//cancelAlarmsUpdateFoods(id);
+		Trip_Edit temp = new Trip_Edit();
+		temp.cancelAlarmsUpdateFoods(id);
 		finish();
 	}
 

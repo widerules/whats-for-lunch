@@ -14,7 +14,7 @@ import java.util.Calendar;
  */
 	
 public class FoodItem{
-	
+	public static final String default_date = "unknown exp date";
 	private String itemName;
 	private String condition = "Normal";
 	private String tripName = "default trip name";
@@ -23,7 +23,7 @@ public class FoodItem{
 	//TODO: Might want to look into Java Calendar and Date classes
 	//use joda --Ford
 	private String tripDate = Today();
-	private String expDate = "unknown exp date";
+	private String expDate = default_date;
 
 	public FoodItem(){}
 	public FoodItem(String name){

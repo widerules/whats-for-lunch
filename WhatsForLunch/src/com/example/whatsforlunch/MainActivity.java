@@ -11,6 +11,11 @@ package com.example.whatsforlunch;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.example.whatsforlunch.FoodItem;
 import android.os.Bundle;
@@ -19,6 +24,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.View;
@@ -43,9 +49,10 @@ public class MainActivity extends Activity {
 		//TextView txt = (TextView) findViewById(R.id.enter_food_button1);  
 		//Typeface font = Typeface.createFromAsset(getAssets(), "fonts/custFont.ttf");  
 		//txt.setTypeface(font);
-	
+		restoreFoodAndDate();
 		db = new Description_Database(this);
 		ad = new Alert_Database(this);
+		
 		
 		
 		Calendar alert = Calendar.getInstance();
@@ -104,6 +111,25 @@ public class MainActivity extends Activity {
 	public void launchSettings(View view){
 		Intent intent = new Intent(this, User_Settings.class);
 		startActivity(intent);
+	}
+	
+	public void restoreFoodAndDate(){
+	String exp = "SavedExpDates";
+		
+	SharedPreferences preferences = getSharedPreferences(exp, Context.MODE_PRIVATE);
+	
+	//read from shared pref
+	Map<String, ?> items = preferences.getAll();
+	for(String s : items.keySet()){
+		ArrayList<String> temp = new ArrayList<String>();
+		temp.add(preferences.getString(s, "errorEmpty"));
+		String str=temp.remove(0);
+		temp.add(str.replace("/", ""));
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		DateTime dt = formatter.parseDateTime(s);
+	    Enter_Foods.foodAndDate.put(dt, temp);
+
+	}
 	}
 
 }
