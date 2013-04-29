@@ -206,7 +206,34 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	protected FoodItem[] getTripItems(){
 		return currentTrip.toArray(new FoodItem[currentTrip.size()]);
 	}
-	
+
+	protected String[] getCategories(){
+		//return currentTrip.toArray(new String[currentTrip.size()]);
+		ArrayList<String> cats = ddb.getCategories();
+		return cats.toArray(new String[cats.size()]);
+	}
+	protected String[] getFoodsInCategory(String category){
+		ArrayList<String> food = ddb.getFoodsInCategory(category);
+		return food.toArray(new String[food.size()]);
+	}
+	protected void removeItemFromTrip(int pos){
+		currentTrip.remove(pos);
+	}
+	protected void setFoodPicked(String item){
+		AutoCompleteTextView nameField = 
+				(AutoCompleteTextView) findViewById(R.id.itemName);
+		//Remove focus so the dropdown does not pop up and cover the date field
+		nameField.clearFocus();
+		//If item already picked, add to list automatically
+		if(nameField.getText().toString().equals(item)){
+			addItemToTrip(null);
+			Toast.makeText(getApplicationContext(), item+" added to shopping trip", Toast.LENGTH_SHORT).show();
+		}else{
+			//Else, place item name in field
+			nameField.setText(item);
+		}
+	}
+
 	protected void resetCategories(){
 					Log.d("Enter_Foods", "Categories reset");
 					EF_Categories_Frag frag =
@@ -264,24 +291,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 			//current_trip fragment is not open
 		}	
 	}
-	
-	protected String[] getCategories(){
-					//return currentTrip.toArray(new String[currentTrip.size()]);
-					ArrayList<String> cats = ddb.getCategories();
-					return cats.toArray(new String[cats.size()]);
-				}
-				protected String[] getFoodsInCategory(String category){
-					ArrayList<String> food = ddb.getFoodsInCategory(category);
-					return food.toArray(new String[food.size()]);
-				}
-				protected void removeItemFromTrip(int pos){
-					currentTrip.remove(pos);
-				}
-				protected void setFoodPicked(String food){
-					AutoCompleteTextView nameField =
-							(AutoCompleteTextView) findViewById(R.id.itemName);
-					nameField.setText(food);
-				}
 	private void enterTripToDatabase(){
 		//this keeps track of if we have set an alarm for this trip or not
 		boolean foodAlreadyExp =false;	
