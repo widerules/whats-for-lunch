@@ -90,14 +90,15 @@ public class WhatsForLunch extends ListActivity {
 
 			@Override 		
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { 		
-				if(ready){ 		
+				if(ready){
 					int lastItem = firstVisibleItem + visibleItemCount; 		
 					if(lastItem == totalItemCount) { 		
 						EditText e = (EditText) findViewById(R.id.query); 		
 						String s = e.getText().toString(); 		
-						if(!search_only || !s.equals("")) 		
+						if(!search_only || !s.equals("")){ 		
 							rec.getRecipes(); 		
-					} 		
+						}
+					} 
 				} 		
 			} 		
 
@@ -268,8 +269,7 @@ public class WhatsForLunch extends ListActivity {
 		ready = false;
 		ArrayList<String> rec_strings = new ArrayList<String>(wfl.size());
 		for(int n = 10; n < wfl.size(); n += 10){
-			while(n < wfl.size())
-				if(wfl.get(n-10).getName().equals(wfl.get(n).getName()))
+			while(n < wfl.size() && wfl.get(n-10).getName().equals(wfl.get(n).getName()))
 					wfl.remove(wfl.get(n-10));
 		}
 		for(Recipe r : wfl){
