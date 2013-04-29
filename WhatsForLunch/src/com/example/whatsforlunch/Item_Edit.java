@@ -108,6 +108,7 @@ public class Item_Edit extends FragmentActivity {
 		finish();
 	}
 	
+	// TODO: cancel alarms
 	public void delete_item(View view){
 		db.deleteRow(id);
 		//cancelAlarmsUpdateFoods(id);
