@@ -67,8 +67,17 @@ public class Trip_Edit extends ListActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View view,
 					int position, long arg3) {
+				int color;
+				if(red.contains(position)){
+					color = Color.RED;
+				}else if(yellow.contains(position)){
+					color = Color.YELLOW;
+				}else{
+					color = Color.BLACK;
+				}
 				Intent i = new Intent(Trip_Edit.this, Item_Edit.class);
 				i.putExtra("id", ids.get(position));
+				i.putExtra("color", color);
 				startActivity(i);
 				return true;
 			}
@@ -80,7 +89,17 @@ public class Trip_Edit extends ListActivity {
         updateTripList();
     }
     
-    private void updateTripList() {
+    
+    
+    @Override
+	protected void onRestart() {
+		super.onRestart();
+		updateTripList();
+	}
+
+
+
+	private void updateTripList() {
     	myCur = myDb.getCursor();
     	myCur.moveToFirst();
     	items.clear();
@@ -304,6 +323,8 @@ public class Trip_Edit extends ListActivity {
 				text.setTextColor(Color.RED);
 			else if(yellow.contains(position)){
 				text.setTextColor(Color.YELLOW);
+			}else{
+				text.setTextColor(Color.BLACK);
 			}
 			text.setText(items.get(position));
 			return text;

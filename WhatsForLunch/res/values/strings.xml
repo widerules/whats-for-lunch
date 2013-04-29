@@ -90,5 +90,7 @@
     <string name="user_recipe_title">Add My Recipe</string>
     <string name="whats_for_lunch_search_terms">Search Terms</string>
     <string name="item_edit_save">Save</string>
+    <string name="item_edit_expiration_date">Expiration Date:</string>
+    <string name="item_edit_delete_item">Delete Item</string>
 
 </resources>
