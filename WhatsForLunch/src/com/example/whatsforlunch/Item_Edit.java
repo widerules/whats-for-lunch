@@ -52,7 +52,7 @@ public class Item_Edit extends FragmentActivity {
 		db = new Database_Manager(this);
 		ArrayList<Object> row = db.getRowAsArray(id);
 		name = (String) row.get(1);
-		trip = (String) row.get(3);
+		trip = (String) row.get(2);
 		trip_date = (String) row.get(4);
 		exp = (String) row.get(5);
 		date = (EditText) findViewById(R.id.item_date);

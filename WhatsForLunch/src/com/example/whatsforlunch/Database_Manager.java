@@ -107,7 +107,7 @@ public class Database_Manager {//test comment
                 try
                 {
                 	
-                    db.delete(TABLE_NAME, TABLE_ROW_THREE + "=?", new String[] {tripName});
+                    db.delete(TABLE_NAME, TABLE_ROW_TWO + "=?", new String[] {tripName});
             }
                 catch (Exception e)
                 {

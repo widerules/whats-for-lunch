@@ -65,15 +65,15 @@ public class Trip_Select extends ListActivity {
     }
 
 	private void updateTrips() {
+		myCur.close();
 		myCur = myDb.getCursor();
-		myCur.moveToFirst();
         String name;
         trips.clear();
         trips.add("All Trips");
         trips.add("Expiring Foods");
         
         while(!myCur.isAfterLast()){
-        	name = myCur.getString(3);//name of trip
+        	name = myCur.getString(2);//name of trip
         	if(!trips.contains(name))//check if we already have this trip
         		trips.add(name);
         	myCur.moveToNext();
