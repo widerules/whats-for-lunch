@@ -309,7 +309,6 @@ public class WhatsForLunch extends ListActivity {
 		}
 		
 		//initialize with a String[] of ingredients
-		// TODO: ings don't work
 		public RecipeList(String...food){
 			ingredients = new ArrayList<String>(food.length);
 			unused = new ArrayList<String>(food.length);
