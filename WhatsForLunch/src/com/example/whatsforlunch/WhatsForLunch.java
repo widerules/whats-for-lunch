@@ -460,17 +460,15 @@ public class WhatsForLunch extends ListActivity {
 	    
 	    class AsyncPuppy extends AsyncTask<String, Void, Void> {
 	    	protected Void doInBackground(String... urls) {
-	    		synchronized(this){
-		    		PuppyHandler pup = new PuppyHandler();
-		    		//ArrayList<Recipe> result = new ArrayList<Recipe>();
-		        	try {
-		        		for(String u : urls)
-		        			pup.parse(downloadUrl(u));
-		    		} catch (IOException e) {
-		    			e.printStackTrace();
-		    		}
-					return null;
+	    		PuppyHandler pup = new PuppyHandler();
+	    		//ArrayList<Recipe> result = new ArrayList<Recipe>();
+	    		try {
+	    			for(String u : urls)
+	    				pup.parse(downloadUrl(u));
+	    		} catch (IOException e) {
+	    			e.printStackTrace();
 	    		}
+	    		return null;
 	    	}
 
 	    	@Override

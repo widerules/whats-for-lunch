@@ -40,6 +40,7 @@ public class Item_Edit extends FragmentActivity {
 	String name, trip, trip_date, exp;
 	EditText date;
 	EditText name_view;
+	Trip_Edit t;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class Item_Edit extends FragmentActivity {
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		Bundle b = getIntent().getExtras();
 		id = b.getLong("id");
-		color = b.getInt("color");
+		color = b.getInt("color");		
 		db = new Database_Manager(this);
 		ArrayList<Object> row = db.getRowAsArray(id);
 		name = (String) row.get(1);
@@ -130,17 +131,21 @@ public class Item_Edit extends FragmentActivity {
 	public void save(){
 		if(!name_view.getText().toString().equals(""))
 			name = name_view.getText().toString();
-		db.updateRow(id, name, "normal", trip, trip_date, date.getText().toString());
-		Trip_Edit temp= new Trip_Edit();
-		temp.cancelAlarmsUpdateFoods(id);
+		//Trip_Edit.new_name = name;
+		//Trip_Edit.new_date = date.getText().toString();
+		Trip_Edit.save = true;
+		Trip_Edit.args[0] = name;
+		Trip_Edit.args[1] = trip;
+		Trip_Edit.args[2] = "Normal";
+		Trip_Edit.args[3] = trip_date;
+		Trip_Edit.args[4] = date.getText().toString();
 		finish();
 	}
 	
 	// TODO: cancel alarms
 	public void deleteItem(){
-		db.deleteRow(id);
-		Trip_Edit temp = new Trip_Edit();
-		temp.cancelAlarmsUpdateFoods(id);
+		Trip_Edit.delete = true;
+		Trip_Edit.id_delete = id;
 		finish();
 	}
 
