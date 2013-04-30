@@ -96,7 +96,8 @@ public class WhatsForLunch extends ListActivity {
 						EditText e = (EditText) findViewById(R.id.query); 		
 						String s = e.getText().toString(); 		
 						if(!search_only || !s.equals("")){ 		
-							rec.getRecipes(); 		
+							ready = false;
+							rec.getRecipes();
 						}
 					} 
 				} 		
@@ -231,6 +232,7 @@ public class WhatsForLunch extends ListActivity {
 	}
 	
 	public void foodButton(View view){
+		rec.count = 1;
 		if(search_only){
 			search_only = false;
 			all_foods = true;
@@ -268,36 +270,34 @@ public class WhatsForLunch extends ListActivity {
 	private void updateList() {
 		ready = false;
 		ArrayList<String> rec_strings = new ArrayList<String>(wfl.size());
-		for(int n = 10; n < wfl.size(); n += 10){
-			while(n < wfl.size() && wfl.get(n-10).getName().equals(wfl.get(n).getName()))
-					wfl.remove(wfl.get(n-10));
-		}
 		for(Recipe r : wfl){
 			rec_strings.add(r.getName());
 		}
-		rList.clear();
-		rList.addAll(rec_strings);
-		if(rList.isEmpty()){
-			if(rec.getIngredients().isEmpty()){
-				if(all_foods)
-					rList.add("\nNo food in the system.\n");
-				else if(!search_only)
-					rList.add("\nNo expiring foods.\n");
-				else{
-					EditText e = (EditText) findViewById(R.id.query);
-			    	String s = e.getText().toString();
-					if(s.equals("")){
-						rList.add("\nEnter search terms seperated by spaces and press \"Search\".\n");
-					}else{
-						rList.add("\nNo recipes found.\n");
+		if(!rList.equals(rec_strings)){
+			rList.clear();
+			rList.addAll(rec_strings);
+			if(rList.isEmpty()){
+				if(rec.getIngredients().isEmpty()){
+					if(all_foods)
+						rList.add("\nNo food in the system.\n");
+					else if(!search_only)
+						rList.add("\nNo expiring foods.\n");
+					else{
+						EditText e = (EditText) findViewById(R.id.query);
+				    	String s = e.getText().toString();
+						if(s.equals("")){
+							rList.add("\nEnter search terms seperated by spaces and press \"Search\".\n");
+						}else{
+							rList.add("\nNo recipes found.\n");
+						}
 					}
-				}
-			}else
-				rList.add("\nNo recipes found.\nYou may have spelled your ingredients or query in a way we don't recognize.\n");
-		}else{
-			ready = true;
+				}else
+					rList.add("\nNo recipes found.\nYou may have spelled your ingredients or query in a way we don't recognize.\n");
+			}else{
+				ready = true;
+			}
+			rAd.notifyDataSetChanged();
 		}
-		rAd.notifyDataSetChanged();
 	}
 
 	@SuppressWarnings("serial")
@@ -309,6 +309,8 @@ public class WhatsForLunch extends ListActivity {
 		//public String test;
 		private String url = "http://www.recipepuppy.com/api/?format=xml&i=";
 		//public AsyncTask<String,Void,Void> task;
+		public int count = 1;
+		private String current_q = "";
 		
 		public RecipeList(){
 			ingredients = new ArrayList<String>();
@@ -435,11 +437,15 @@ public class WhatsForLunch extends ListActivity {
 	    	String u = url;
 	    	EditText q = (EditText) findViewById(R.id.query);
 	    	String query = q.getText().toString();
+	    	if(!query.equals(current_q)){
+	    		count = 1;
+	    		current_q = query;
+	    	}
 	    	u = u.concat("&q=");
 	    	u = u.concat(query);
-	    	int page = (wfl.size() / 10) + 1;
 	    	u = u.concat("&p=");
-	    	u = u.concat(Integer.toString(page));
+	    	u = u.concat(Integer.toString(count));
+	    	count++;
 	    	System.out.println(u);
 	    	//test = u;
 	    	new AsyncPuppy().execute(u);
