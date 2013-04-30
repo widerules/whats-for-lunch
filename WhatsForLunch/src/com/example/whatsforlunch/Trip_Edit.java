@@ -125,7 +125,7 @@ public class Trip_Edit extends ListActivity {
     @Override
 	protected void onResume() {
 		super.onResume();
-		//updateTripList();
+		updateTripList();
 	}
 
 
