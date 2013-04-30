@@ -59,6 +59,9 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	public static Map<DateTime,ArrayList<String>> foodAndDate = new HashMap<DateTime,ArrayList<String>>();
 	//use to see if an alarm has been set on a certain day
 	public static ArrayList<DateTime> alarmsSet = new ArrayList<DateTime>();
+	//can change it later
+	public static final int hour = 23;
+	public static final int minute = 59;
 
 	//Used to build trip currently being created
 	private List<FoodItem> currentTrip = new ArrayList<FoodItem>();
@@ -560,10 +563,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		}
 
 
-		//ad.addRow(Integer.toString(expDate.getMonthOfYear()), 
-		//		Integer.toString(expDate.getDayOfMonth()), 
-		//		Integer.toString(expDate.getYear()));
-
 		return foodAlreadyExp;
 	}
 	public static DateTime fItemDatetoDateTime(FoodItem i) {
@@ -572,9 +571,6 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		int day = Integer.parseInt(date[1]);
 		int year = Integer.parseInt(date[2]);
 
-		//just going to set to noon for now, can change it later
-		int hour = 12;
-		int minute = 0;
 		
 		return new DateTime(year,month,day,hour,minute);
 	}

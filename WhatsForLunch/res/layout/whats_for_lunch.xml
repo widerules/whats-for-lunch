@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/greentextured">
-
+    android:background="@drawable/mochagrunge"
+    android:orientation="vertical" >
 
     <!-- Heading for the recipes we give the user -->
 
@@ -14,8 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/whats_for_lunch_given_recipes"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textColor="@color/white" />
+
+        
     
     <!-- Button to send recipes to API, need to put recipes below heading/above button 
     	 TODO: make button test better, need to advertise recipes are weighted toward expiring foods
@@ -54,7 +56,8 @@
         android:layout_below="@+id/foodChange"
         android:textStyle="bold"
         android:text="@string/whats_for_lunch_my_recipes"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/moreRecipes"

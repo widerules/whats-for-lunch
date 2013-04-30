@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
 
@@ -34,8 +36,8 @@ import android.widget.TextView;
 
 
 public class Trip_Edit extends ListActivity {
-
     //MyAdapter mListAdapter;
+	String exp = "SavedExpDates";
     Database_Manager myDb;
     ListView listView;
     Cursor myCur;
@@ -45,6 +47,7 @@ public class Trip_Edit extends ListActivity {
     ArrayList<Integer> red = new ArrayList<Integer>();
     ArrayList<Integer> yellow = new ArrayList<Integer>();
     ArrayList<Long> ids = new ArrayList<Long>();
+    AlarmManager alarmMan;
     int type;
     public static Long id_delete;
     public static boolean delete = false;
@@ -137,6 +140,8 @@ public class Trip_Edit extends ListActivity {
 			myDb.deleteRow(id_delete);
 			delete = false;
 		}else if(save){
+			//change name/date in shared Pref
+			updateSharedPref(id_delete, args);
 			cancelAlarmsUpdateFoods(id_delete);
 			myDb.updateRow(id_delete, args[0], args[1], args[2], args[3], args[4]);
 			updateAlarm(id_delete);
@@ -144,6 +149,31 @@ public class Trip_Edit extends ListActivity {
 		}
 		//updateTripList();
 	}
+    
+    void updateSharedPref(long id, String[] args){
+    	SharedPreferences get = getSharedPreferences(exp,MODE_PRIVATE);
+	   	SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
+	   	DateTime dt = new DateTime();
+	   	ArrayList<Object> row = new ArrayList<Object>();
+	   	String temp;
+	   	//get old item
+	   	row = myDb.getRowAsArray(id_delete);
+	   	//get all foods at that date
+	   	temp = get.getString((String) row.get(4),"Food not in DB");
+	   	FoodItem convert = new FoodItem(args[0]);
+	   	convert.setExpiration(args[4]);
+	   	dt =Enter_Foods.fItemDatetoDateTime(convert);
+	   	if(!temp.equals("Food not in DB")){
+	   	//key expdate, value food name
+	   		//this is if other foods share same date
+		   	temp.concat(temp + args[0] + "/");
+		   	savedExpDates.putString(dt.toString(), temp);
+	   	}
+	   		//if no other foods in that date
+	   		savedExpDates.putString(dt.toString(), args[0]);
+		   	savedExpDates.commit();
+		   	
+    }
     
     void updateAlarm(long rowID){
     	Gson gson = new Gson();
@@ -157,11 +187,102 @@ public class Trip_Edit extends ListActivity {
 		i.setCondition("Normal");
 		i.setPurchaseDate(args[3]);
 		i.setTripName(args[1]);
-		Enter_Foods e = new Enter_Foods();
-		//e.prepareAlarm(false, i);
+		prepareAlarm(false, i);
     }
+    
+    boolean prepareAlarm(boolean foodAlreadyExp, FoodItem i) {
+
+		Enter_Foods.expDate = fItemDatetoDateTime(i);
+		DateTime current= new DateTime();
+
+		//TODO: this is where the desired user settings is taken into account
+		//needs to come from user settings, default of 3 currently
+
+		int daysBeforeDesiredNotif=3;
+		DateTime currentPlus=current.plusDays(daysBeforeDesiredNotif);
+		//add food to day
+		ArrayList<String> temp= new ArrayList<String>();
+		//if other alarms are already on that day, get the foods
+		if(Enter_Foods.foodAndDate.get(Enter_Foods.expDate)!=null)
+			temp= Enter_Foods.foodAndDate.get(Enter_Foods.expDate);
+		//add new food to list
+		temp.add(i.getItemName());
+		Enter_Foods.foodAndDate.put(Enter_Foods.expDate, temp);
+
+		//if currentPlus is after or on expDate 
+		if(!foodAlreadyExp && (currentPlus.compareTo(Enter_Foods.expDate)>=0)){
+			foodAlreadyExp = true;
+			callAlarms(0,0,false);
+		}
+		//if currentPlus is before expDate
+		else if(currentPlus.compareTo(Enter_Foods.expDate)<0){
+			//TODO: if individual times are ever set, this will need to change
+			//checks to see if an alarm for the day exists
+			//currently it compares exact dates and times, 
+			//but hour and minute are same for all so effectively only compares days
+			if((!Enter_Foods.alarmsSet.contains(Enter_Foods.expDate))){
+				DateTime notifDate = Enter_Foods.expDate.minusDays(daysBeforeDesiredNotif);
+				Enter_Foods.alarmsSet.add(Enter_Foods.expDate);
+				Duration dur = new Duration(current,notifDate);
+				callAlarms((int)dur.getStandardDays(),0,false);
+
+			}
+		}
 
 
+		return foodAlreadyExp;
+    }
+    
+    public void callAlarms(int daysAfterSet,int daysBetween,boolean recurring){
+		//for now I am going to make this as general as possible
+		//takes as param number of days after setting it will first go off
+		//and false for one alarm, true for recurring alarm	
+		alarmMan = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		if(recurring)
+			setRepeatingAlarm(daysAfterSet,daysBetween);
+		else
+			setOneTimeAlarm(daysAfterSet);
+		
+	
+	
+	
+	}
+	public static DateTime fItemDatetoDateTime(FoodItem i) {
+		String[] date= i.getExpiration().split("/");
+		int month = Integer.parseInt(date[0]);
+		int day = Integer.parseInt(date[1]);
+		int year = Integer.parseInt(date[2]);
+
+		//just going to set to noon for now, can change it later
+		int hour = 12;
+		int minute = 0;
+		
+		return new DateTime(year,month,day,hour,minute);
+	}
+	public void setOneTimeAlarm(int daysAfterSet) {
+	    //declare intent using class that will handle alarm
+		Intent intent = new Intent(this, FoodExpAlarm.class);
+	    //retrieve pending intent for broadcast, flag one shot means will only set once
+	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+	      intent, PendingIntent.FLAG_ONE_SHOT);
+	    //params: specify to use system clock use RTC_WAKEUP to wakeup phone for notification,
+	    //time to wait, intent
+	    alarmMan.set(AlarmManager.RTC_WAKEUP,
+	      System.currentTimeMillis() + (daysAfterSet * AlarmManager.INTERVAL_DAY), pendingIntent);
+	 }
+
+	public void setRepeatingAlarm(int daysAfterSet,int daysBetween) {
+		//Pretty sure we will end up using this one	 
+	    //same as single except FLAG_CANCEL_CURRENT repeats, and days specifies how many days apart
+	    Intent intent = new Intent(this, FoodExpAlarm.class);
+	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+	      intent, PendingIntent.FLAG_CANCEL_CURRENT);
+	    alarmMan.setRepeating(AlarmManager.RTC_WAKEUP, 
+	       System.currentTimeMillis() +(daysAfterSet * AlarmManager.INTERVAL_DAY),
+	      daysBetween * AlarmManager.INTERVAL_DAY, pendingIntent);
+	 }
+	
+	
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle item selection
@@ -310,11 +431,9 @@ public class Trip_Edit extends ListActivity {
 
 	 void cancelAlarmsUpdateFoods(long rowID) {
 		 String concat = "";
-    	 String exp = "SavedExpDates";
-    	 Context context = getBaseContext();
-    	 SharedPreferences.Editor savedExpDates = context.getSharedPreferences(exp, MODE_PRIVATE).edit();
-    		 //update related alarm data structures so we don't use old values when making
-    		 //alarm calculations
+    	 SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
+    		 //update foodAndDates, setAlarms and save in shared pref 
+    	     //so we don't use old values when making alarm calculations
     	 	 Database_Manager db = new Database_Manager(this);
     		 ArrayList<Object> row= db.getRowAsArray_ID(rowID);
     		 FoodItem fi= new FoodItem(row.get(1).toString());
@@ -322,11 +441,12 @@ public class Trip_Edit extends ListActivity {
     		 //This is for foodAndDates
     		 DateTime dt= Enter_Foods.fItemDatetoDateTime(fi);
     		 
+    		 //get items all foods with same date
     		 ArrayList<String> temp = new ArrayList<String>(Enter_Foods.foodAndDate.get(dt));
     		 temp.remove(fi.getItemName());
     		 
     		 if(!temp.isEmpty()){
-    			//foods are left for a dt, remove foods and update dt, cancel alarm
+    			//foods are left for a dt, remove food and update dt, cancel alarm
     			 Enter_Foods.foodAndDate.put(dt, temp);
 	    		//This is for shared pref
 	 			 Iterator<String> iter = temp.iterator();
@@ -339,9 +459,9 @@ public class Trip_Edit extends ListActivity {
     		 //no foods left for a given dt, so remove dt
     		 else {
     			 Enter_Foods.foodAndDate.remove(dt);
-    		//	 while(Enter_Foods.alarmsSet.contains(dt))
-    			 	Enter_Foods.alarmsSet.remove(dt);
+    			 Enter_Foods.alarmsSet.remove(dt);
     			 savedExpDates.remove(dt.toString());
+    			 
  	 			//cancel future alarm
  	 			AlarmManager alarmMan = (AlarmManager) 
  	 					getSystemService(Context.ALARM_SERVICE);
