@@ -17,12 +17,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 import org.joda.time.DateTime;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -222,6 +220,7 @@ public class WhatsForLunch extends ListActivity {
     		if(!search_only || !s.equals("")){
 				rec.addIngredients(i);
 				rec.getRecipes();
+				rAd.notifyDataSetChanged();
 				ready = true;
     		} else{
     			rList.clear();
@@ -545,7 +544,7 @@ public class WhatsForLunch extends ListActivity {
 	    			public void end(String body) {
 	    				body = body.replaceAll("\\n","");
 	    				body = body.replaceAll("&amp;","&");
-	    				body = body.replaceAll("&quot;","&");
+	    				body = body.replaceAll("&quot;","\"");
 	    				body = body.replaceAll("\\t","");
 	    				body = body.replaceAll("\\f","");
 	    				body = body.replaceAll("\\r","");
