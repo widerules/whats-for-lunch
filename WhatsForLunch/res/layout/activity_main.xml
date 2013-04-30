@@ -9,16 +9,8 @@
      
     <!-- New Shopping Trip -->
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.24"
-        android:gravity="center"
-        android:text="@string/title_activity_whats_for_lunch"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <LinearLayout
+        android:id="@+id/enter_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,7 +20,7 @@
         android:id="@+id/enter_food_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/newtrip"
+        android:background="@drawable/newtrip_unselected"
         android:onClick="launchEnterFoods" />
     <TextView
         android:layout_width="wrap_content"
@@ -40,6 +32,7 @@
     
     <!-- Edit Shopping Trip -->
     <LinearLayout
+        android:id="@+id/edit_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -61,6 +54,7 @@
     
 	<!-- See What's for Lunch -->
 	<LinearLayout
+	    android:id="@+id/lunch_layout"
 	    android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"

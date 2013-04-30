@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.sax.Element;
@@ -37,6 +38,7 @@ import android.util.Xml;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView; 		
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -255,6 +257,7 @@ public class WhatsForLunch extends ListActivity {
 	}
 	
 	public void search(View view){
+		hideKeyboard();
 		wfl.clear();
 		EditText e = (EditText) findViewById(R.id.query);
     	String s = e.getText().toString();
@@ -264,6 +267,13 @@ public class WhatsForLunch extends ListActivity {
     		wfl.clear();
     		updateList();
     	}
+	}
+	private void hideKeyboard() {
+		//Hide the keyboard so the user can see the items
+    	InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE); 
+    	inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), 
+    			InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	private void updateList() {
