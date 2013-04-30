@@ -50,6 +50,16 @@ public class Trip_Edit extends ListActivity {
     public static boolean delete = false;
     public static boolean save = false;
     public static String[] args = new String[5];
+    private Menu menu;
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_trip_edit, menu);
+		this.menu = menu;
+		updateTripList();
+		return true;
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,12 +113,23 @@ public class Trip_Edit extends ListActivity {
 
         listView.setItemsCanFocus(false);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        updateTripList();
     }
     
     
     
+    
+    
     @Override
+	protected void onResume() {
+		super.onResume();
+		//updateTripList();
+	}
+
+
+
+
+
+	@Override
 	protected void onRestart() {
 		super.onRestart();
 		if(delete){
@@ -121,7 +142,7 @@ public class Trip_Edit extends ListActivity {
 			updateAlarm(id_delete);
 			save = false;
 		}
-		updateTripList();
+		//updateTripList();
 	}
     
     void updateAlarm(long rowID){
@@ -169,6 +190,8 @@ public class Trip_Edit extends ListActivity {
     	DateTime exp;
     	DateTime expY;
     	String[] date = new String[3];
+    	MenuItem deleteTrip = menu.findItem(R.id.menu_delete_trip);
+    	
         if(type != 0){
         	int count = 0;
         	while(!myCur.isAfterLast()){
@@ -198,11 +221,7 @@ public class Trip_Edit extends ListActivity {
 			    	count++;
             	myCur.moveToNext();
             }
-        	TextView deleteTrip = (TextView)this.findViewById(R.id.menu_delete_trip);
-        	try{
-        		deleteTrip.setText("Delete All");
-        	}catch(Exception e){
-        	}
+        	deleteTrip.setTitle("Delete All");
         }else{
         	int count = 0;
         	while(!myCur.isAfterLast()){
@@ -229,6 +248,7 @@ public class Trip_Edit extends ListActivity {
             	}
             	myCur.moveToNext();
             }
+        	deleteTrip.setTitle("Delete Trip");
         }
         if(items.isEmpty()){
         	this.finish();
@@ -414,12 +434,6 @@ public class Trip_Edit extends ListActivity {
         }
     }
     */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_trip_edit, menu);
-		return true;
-	}
 	
 	// adapter for colors
 	class ColoredAdapter extends ArrayAdapter<String> {
