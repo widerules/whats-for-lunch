@@ -53,14 +53,19 @@ public class Trip_Edit extends ListActivity {
     public static boolean delete = false;
     public static boolean save = false;
     public static String[] args = new String[5];
-    private Menu menu;
+    //private Menu menu;
     
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_trip_edit, menu);
-		this.menu = menu;
-		updateTripList();
+		//this.menu = menu;
+		MenuItem deleteTrip = menu.findItem(R.id.menu_delete_trip);
+		if(type == 0)
+			deleteTrip.setTitle("Delete Trip");
+		else
+			deleteTrip.setTitle("Delete All");
+		//updateTripList();
 		return true;
 	}
 
@@ -311,7 +316,6 @@ public class Trip_Edit extends ListActivity {
     	DateTime exp;
     	DateTime expY;
     	String[] date = new String[3];
-    	MenuItem deleteTrip = menu.findItem(R.id.menu_delete_trip);
     	
         if(type != 0){
         	int count = 0;
@@ -342,7 +346,6 @@ public class Trip_Edit extends ListActivity {
 			    	count++;
             	myCur.moveToNext();
             }
-        	deleteTrip.setTitle("Delete All");
         }else{
         	int count = 0;
         	while(!myCur.isAfterLast()){
@@ -369,7 +372,6 @@ public class Trip_Edit extends ListActivity {
             	}
             	myCur.moveToNext();
             }
-        	deleteTrip.setTitle("Delete Trip");
         }
         if(items.isEmpty()){
         	this.finish();
