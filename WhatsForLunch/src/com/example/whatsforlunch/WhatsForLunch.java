@@ -34,6 +34,7 @@ import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.sax.StartElementListener;
+import android.util.Log;
 import android.util.Xml;
 import android.view.Menu;
 import android.view.View;
@@ -113,6 +114,7 @@ public class WhatsForLunch extends ListActivity {
 		rAd = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, rList);
 		setListAdapter(rAd);
 		foodChange();
+		Log.d("measure", "whats for lunch launch");
 	}
 	
 	public void onResume(){
