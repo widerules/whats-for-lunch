@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +74,9 @@ public class Trip_Edit extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   
         setContentView(R.layout.trip_edit);
+        
+        Log.d("measure", "edit trip launch");
+        
         myDb = new Database_Manager(this);
         myCur = myDb.getCursor();
         Bundle b = getIntent().getExtras();
@@ -432,7 +436,7 @@ public class Trip_Edit extends ListActivity {
     }
 
 	 void cancelAlarmsUpdateFoods(long rowID) {
-		 String concat = "";
+		 String concat = "/";
     	 SharedPreferences.Editor savedExpDates = getSharedPreferences(exp, MODE_PRIVATE).edit();
     		 //update foodAndDates, setAlarms and save in shared pref 
     	     //so we don't use old values when making alarm calculations
@@ -453,7 +457,7 @@ public class Trip_Edit extends ListActivity {
 	    		//This is for shared pref
 	 			 Iterator<String> iter = temp.iterator();
 	 			 while(iter.hasNext()){
-	 				concat += iter.next() + "/";
+	 				concat = concat + iter.next();
 	 			 }
 	 			 savedExpDates.putString(dt.toString(),concat );
 

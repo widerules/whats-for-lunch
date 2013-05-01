@@ -124,6 +124,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab")); //set the tab as per the saved state
 		}
+		Log.d("measure", "enter foods launch");
 	}
 	/**********************************************
 	 * Menu functions
@@ -353,6 +354,7 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	}
 	public void saveTrip(){
 		enterTripToDatabase();
+		
 		finish();
 	}
 	private String generateTripName(){

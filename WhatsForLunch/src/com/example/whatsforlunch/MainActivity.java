@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -67,6 +68,7 @@ public class MainActivity extends Activity {
 				ad.deleteRow(Long.parseLong(c.get(0).toString()));
 			}
 		}
+		Log.d("measure", "app launched");
 	}
 
 
