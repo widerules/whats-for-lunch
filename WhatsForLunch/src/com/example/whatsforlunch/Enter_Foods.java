@@ -354,7 +354,10 @@ public class Enter_Foods extends FragmentActivity implements OnTabChangeListener
 	}
 	public void saveTrip(){
 		enterTripToDatabase();
-		
+		//Recalculate notification times
+		//A notification will be shown after saving the trip by default
+		Intent intent = new Intent(this, AlarmSetter.class);
+		startService(intent);
 		finish();
 	}
 	private String generateTripName(){

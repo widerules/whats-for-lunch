@@ -27,7 +27,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.example.whatsforlunch.FoodExpAlarm" />
+        <!-- Notification alarm receiver -->
+        <receiver android:name="com.example.whatsforlunch.FoodExpAlarm2" />
 
         <activity
             android:name="com.example.whatsforlunch.Enter_Foods"
@@ -86,7 +87,7 @@
         </activity>
 
         <service
-            android:name="com.example.whatsforlunch.BootService"
+            android:name="com.example.whatsforlunch.AlarmSetter"
             android:label="myBootClass" >
         </service>
 

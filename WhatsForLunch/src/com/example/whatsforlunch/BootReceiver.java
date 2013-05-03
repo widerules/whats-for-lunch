@@ -9,7 +9,7 @@ public class BootReceiver extends BroadcastReceiver {
 	
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent alarmIntent = new Intent(context, BootService.class);
+        Intent alarmIntent = new Intent(context, AlarmSetter.class);
         Log.d("boot", "Calling Service");
         context.startService(alarmIntent);
     }

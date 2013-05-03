@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -98,7 +99,7 @@ public class Database_Manager {//test comment
                 {
                         Log.e("DB ERROR", e.toString());
                         e.printStackTrace();
-                }
+                }//TODO update alarms
         }
         
         public void deleteTrip(String tripName)
@@ -113,7 +114,7 @@ public class Database_Manager {//test comment
                 {
                         Log.e("DB ERROR", e.toString());
                         e.printStackTrace();
-                }
+                }//TODO update alarms
         }
        
         /**********************************************************************
@@ -144,7 +145,7 @@ public class Database_Manager {//test comment
                 {
                         Log.e("DB Error", e.toString());
                         e.printStackTrace();
-                }
+                }//TODO update alarms
         }
         
         /**********************************************************************
@@ -174,7 +175,7 @@ public class Database_Manager {//test comment
                 {
                         Log.e("DB Error", e.toString());
                         e.printStackTrace();
-                }
+                }//TODO update alarms
         }
        
         /**********************************************************************
@@ -554,8 +555,58 @@ public class Database_Manager {//test comment
                 return rowArray;
         }
        
-       
-       
+        /****************************************************************************
+         * GET ITEMS AND DATES
+         * 
+         * Finds and returns all items and expiration dates in the user database.
+         * 
+         * @return A list of a list of every item with its corresponding expiration date
+         */
+        public ArrayList<ArrayList<Object>> getItemDates()
+        {
+                //CREATE ARRAYLIST 
+        		ArrayList<ArrayList<Object>> rows = new ArrayList<ArrayList<Object>>();
+        		Cursor cursor;
+                
+                try
+                {
+                        // ask the database object to create the cursor.
+                        cursor = db.query(
+                                        TABLE_NAME,
+                                        new String[]{TABLE_ROW_ONE,
+                                        			 TABLE_ROW_FIVE},
+                                        null, null, null, null, null
+                        );
+                      
+                        // move the cursor's pointer to position zero.
+                        cursor.moveToFirst();
+         
+                        // if there is data after the current cursor position, add it
+                        // to the ArrayList.
+                        if (!cursor.isAfterLast())
+                        {
+                                do
+                                {
+                                        ArrayList<Object> dataList = new ArrayList<Object>();
+
+                                        dataList.add(cursor.getString(0));
+                                        dataList.add(cursor.getString(1));
+                                        rows.add(dataList);
+                                }
+                                // move the cursor's pointer up one position.
+                                while (cursor.moveToNext());
+                        }
+                }
+                catch (SQLException e)
+                {
+                        Log.e("DB Error", e.toString());
+                        e.printStackTrace();
+                }
+         
+                // return the ArrayList that holds the data collected from
+                // the database.
+                return rows;
+        }
        
         /**
          * This class is designed to check if there is a database that currently
