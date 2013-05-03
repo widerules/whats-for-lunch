@@ -39,9 +39,31 @@ public class AlarmSetter extends Service{
 	
 	private void setAlarms(){
 		Log.i(TAG, "setting alarms");
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
 		HashMap<Date, ArrayList<String>> alarmMap = new HashMap<Date, ArrayList<String>>();
+		ArrayList<String> foodExpiring = new ArrayList<String>();	//Assemble expiring list
+		ArrayList<Date> toBeRemoved = new ArrayList<Date>();		//Assemble dates for removal
 		alarmMap = createAlarmMap(alarmMap);
-		
+		//Find all expiring foods
+		for(Date date : alarmMap.keySet()){
+			//If expiring soon
+			if(daysTill(date) < 3){
+				//Get food
+				for(String s : alarmMap.get(date)){
+					foodExpiring.add(s);
+				}
+				//schedule delete
+				toBeRemoved.add(date);
+			}
+		}
+		//delete old dates
+		for(Date d : toBeRemoved){
+			alarmMap.remove(d);
+		}
+		//Create single new date for expiring foods
+		alarmMap.put(today, foodExpiring);
+		//Set alarms
 		for(Date date : alarmMap.keySet()){
 			setOneTimeAlarm(daysTill(date) - 3);
 		}
