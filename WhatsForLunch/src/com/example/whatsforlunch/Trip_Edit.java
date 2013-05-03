@@ -525,7 +525,7 @@ public class Trip_Edit extends ListActivity {
 			myCur.moveToNext();
 		}
 		for(Long id : removes){
-			cancelAlarmsUpdateFoods(id);
+			//cancelAlarmsUpdateFoods(id);
 			myDb.deleteRow(id);
 		}
 	}
